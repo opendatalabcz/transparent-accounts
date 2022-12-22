@@ -1,15 +1,20 @@
+import os
 from collections import namedtuple
-from celery import Celery
-from account_fetcher import CSASAccountFetcher, FioASAccountFetcher, KBAccountFetcher
-from transaction_fetcher import CSASTransactionFetcher, FioTransactionFetcher, KBTransactionFetcher
 
-app = Celery('data-fetcher')
+from celery import Celery
+
+from .fetcher.csac import CSASAccountFetcher, CSASTransactionFetcher
+from .fetcher.fio import FioAccountFetcher, FioTransactionFetcher
+from .fetcher.kb import KBAccountFetcher, KBTransactionFetcher
+
+
+app = Celery('data-fetcher', broker=os.getenv('CELERY_BROKER_URL'))
 
 Fetcher = namedtuple('Fetcher', 'account transaction')
 
 banks = {
     '0800': Fetcher(CSASAccountFetcher, CSASTransactionFetcher),
-    '2010': Fetcher(FioASAccountFetcher, FioTransactionFetcher),
+    '2010': Fetcher(FioAccountFetcher, FioTransactionFetcher),
     '0100': Fetcher(KBAccountFetcher, KBTransactionFetcher),
 }
 
@@ -17,6 +22,11 @@ banks = {
 @app.task
 def test(self):
     print('Request: {0!r}'.format(self.request))
+
+
+@app.task
+def add(a, b):
+    return a + b
 
 
 @app.task

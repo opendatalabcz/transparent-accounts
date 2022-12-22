@@ -23,18 +23,29 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
+      - TZ=Europe/Prague
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
     depends_on:
       - db
       - rabbitmq
     
   analysis-api:
     build: ./analysis-api
+    environment:
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+    ports:
+      - "5000:5000"
     depends_on:
       - db
       - data-fetcher
+      - rabbitmq
 
   rabbitmq:
     image: rabbitmq
+    environment:
+      - TZ=Europe/Prague
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -42,10 +53,10 @@ services:
   flower:
     image: mher/flower
     environment:
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
       - FLOWER_PORT=8888
     ports:
-      - "8889:8888"
+      - "8888:8888"
     depends_on:
       - rabbitmq
 

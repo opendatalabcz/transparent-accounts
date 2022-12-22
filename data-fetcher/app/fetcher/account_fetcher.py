@@ -1,5 +1,9 @@
-class AccountFetcher:
+from abc import ABC, abstractmethod
 
+
+class AccountFetcher(ABC):
+
+    @abstractmethod
     def fetch(self) -> None:
         """
         - projet vsechny ucty

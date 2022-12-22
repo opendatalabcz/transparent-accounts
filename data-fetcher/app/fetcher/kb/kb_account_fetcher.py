@@ -1,4 +1,4 @@
-from app.account_fetcher.account_fetcher import AccountFetcher
+from ..account_fetcher import AccountFetcher
 
 
 class KBAccountFetcher(AccountFetcher):

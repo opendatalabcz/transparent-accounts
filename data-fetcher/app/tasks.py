@@ -3,6 +3,7 @@ from collections import namedtuple
 
 from celery import Celery
 
+from .queries import save_accounts
 from .fetcher.csac import CSASAccountFetcher, CSASTransactionFetcher
 from .fetcher.fio import FioAccountFetcher, FioTransactionFetcher
 from .fetcher.kb import KBAccountFetcher, KBTransactionFetcher
@@ -35,7 +36,8 @@ def fetch_accounts(bank_code: str):
         return  # TODO
 
     fetcher = banks.get(bank_code).account()
-    fetcher.fetch()
+    accounts = fetcher.fetch()
+    save_accounts(accounts)
 
 
 @app.task

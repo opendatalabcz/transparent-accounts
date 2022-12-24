@@ -1,9 +1,10 @@
 import os
 from collections import namedtuple
+from datetime import date
 
 from celery import Celery
 
-from .queries import save_accounts
+from .queries import get_account, save_accounts, save_transactions
 from .fetcher.csac import CSASAccountFetcher, CSASTransactionFetcher
 from .fetcher.fio import FioAccountFetcher, FioTransactionFetcher
 from .fetcher.kb import KBAccountFetcher, KBTransactionFetcher
@@ -21,16 +22,6 @@ banks = {
 
 
 @app.task
-def test(self):
-    print('Request: {0!r}'.format(self.request))
-
-
-@app.task
-def add(a, b):
-    return a + b
-
-
-@app.task
 def fetch_accounts(bank_code: str):
     if bank_code not in banks:
         return  # TODO
@@ -45,5 +36,15 @@ def fetch_transactions(bank_code: str, acc_num: str):
     if bank_code not in banks:
         return  # TODO
 
-    fetcher = banks.get(bank_code).transaction(acc_num)
-    fetcher.fetch()
+    account = get_account(acc_num)
+
+    if account is None:
+        return  # TODO
+
+    if account.archived:
+        return  # TODO
+
+    fetcher = banks.get(bank_code).transaction(account)
+    transactions = fetcher.fetch()
+    account.last_fetched = date.today()
+    save_transactions(account, transactions)

@@ -69,7 +69,7 @@ class Transaction(Base):
     constant_symbol: Mapped[str]
     specific_symbol: Mapped[str]
     description: Mapped[str]
-    account_id: Mapped[int] = mapped_column(ForeignKey("account.number"))
+    account_number: Mapped[int] = mapped_column(ForeignKey("account.number"))
 
     def __repr__(self) -> str:
         return f"Transaction({str(self.__dict__)})"

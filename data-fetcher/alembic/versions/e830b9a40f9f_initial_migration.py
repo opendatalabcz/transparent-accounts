@@ -43,8 +43,8 @@ def upgrade() -> None:
     sa.Column('constant_symbol', sa.String(), nullable=False),
     sa.Column('specific_symbol', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
-    sa.Column('account_id', sa.String(length=17), nullable=False),
-    sa.ForeignKeyConstraint(['account_id'], ['account.number'], ),
+    sa.Column('account_number', sa.String(length=17), nullable=False),
+    sa.ForeignKeyConstraint(['account_number'], ['account.number'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

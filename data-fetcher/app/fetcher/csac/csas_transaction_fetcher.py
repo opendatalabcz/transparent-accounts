@@ -42,5 +42,5 @@ class CSASTransactionFetcher(TransactionFetcher):
             constant_symbol=t.get('sender').get('constantSymbol', ''),
             specific_symbol=t.get('sender').get('specificSymbol', ''),
             description=t.get('sender').get('description', ''),
-            account_id=self.account.number
+            account_number=self.account.number
         )

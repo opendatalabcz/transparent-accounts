@@ -48,7 +48,7 @@ class Account(Base):
     description: Mapped[Optional[str]]
     created: Mapped[Optional[date]]
     last_updated: Mapped[datetime]
-    last_fetched: Mapped[Optional[datetime]]
+    last_fetched: Mapped[Optional[date]]
     archived: Mapped[Any] = mapped_column(Boolean, default=False)
     inserted: Mapped[datetime] = mapped_column(default=datetime.now())
     transactions: Mapped[list["Transaction"]] = relationship()
@@ -63,7 +63,7 @@ class Transaction(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     date: Mapped[date]
     amount: Mapped[float]
-    counter_account: Mapped[str]
+    counter_account: Mapped[Optional[str]]
     type: Mapped[str]
     variable_symbol: Mapped[str]
     constant_symbol: Mapped[str]

@@ -28,7 +28,7 @@ def upgrade() -> None:
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('created', sa.Date(), nullable=True),
     sa.Column('last_updated', sa.DateTime(), nullable=False),
-    sa.Column('last_fetched', sa.DateTime(), nullable=True),
+    sa.Column('last_fetched', sa.Date(), nullable=True),
     sa.Column('archived', sa.Boolean(), nullable=False),
     sa.Column('inserted', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('number')
@@ -37,7 +37,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
     sa.Column('amount', sa.Float(), nullable=False),
-    sa.Column('counter_account', sa.String(), nullable=False),
+    sa.Column('counter_account', sa.String(), nullable=True),
     sa.Column('type', sa.String(), nullable=False),
     sa.Column('variable_symbol', sa.String(), nullable=False),
     sa.Column('constant_symbol', sa.String(), nullable=False),

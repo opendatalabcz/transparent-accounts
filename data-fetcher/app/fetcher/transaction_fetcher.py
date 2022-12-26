@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from abc import ABC, abstractmethod
 
-from ..models import Account
+from ..models import Account, Transaction
 
 
 class TransactionFetcher(ABC):
@@ -10,12 +10,7 @@ class TransactionFetcher(ABC):
         self.account = account
 
     @abstractmethod
-    def fetch(self) -> None:
-        """
-        - podivat se u uctu na "last_fetched", to je datum, kdy byly transakce naposled stazeny
-        - stahnout transakce ode dne "last_fetched" + 1 do dne "today" - 1
-        :return:
-        """
+    def fetch(self) -> list[Transaction]:
         pass
 
     def get_date_from(self) -> date:
@@ -37,3 +32,6 @@ class TransactionFetcher(ABC):
         :return: the date to which the transactions should be fetched
         """
         return date.today() - timedelta(1)
+
+    def check_date_interval(self, transaction: Transaction) -> bool:
+        return self.get_date_from() <= transaction.date <= self.get_date_to()

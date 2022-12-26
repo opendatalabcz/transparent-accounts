@@ -23,7 +23,7 @@ def upgrade() -> None:
     sa.Column('bank_code', sa.String(length=4), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('owner', sa.String(), nullable=False),
-    sa.Column('balance', sa.Float(), nullable=False),
+    sa.Column('balance', sa.Float(), nullable=True),
     sa.Column('currency', sa.Enum('CZK', 'EUR', 'USD', 'GBP', name='currency'), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('created', sa.Date(), nullable=True),

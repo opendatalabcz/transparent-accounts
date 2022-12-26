@@ -27,7 +27,7 @@ class Currency(Enum):
                 return Currency.USD
             case 'GBP':
                 return Currency.GBP
-        raise NotImplementedError
+        raise NotImplementedError(label)
 
 
 class Base(DeclarativeBase):
@@ -43,7 +43,7 @@ class Account(Base):
     bank_code: Mapped[str] = mapped_column(String(4))
     name: Mapped[str]
     owner: Mapped[str]
-    balance: Mapped[float]
+    balance: Mapped[Optional[float]]
     currency: Mapped[Currency]
     description: Mapped[Optional[str]]
     created: Mapped[Optional[date]]

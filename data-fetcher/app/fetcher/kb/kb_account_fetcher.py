@@ -1,12 +1,10 @@
 import re
-from time import sleep
 
 import requests
 import bs4
 
 from ..account_fetcher import AccountFetcher
 from ...models import Account, Currency
-from .utils import get_api_formatted_acc_num
 from ...utils import get_fully_qualified_acc_num
 
 
@@ -15,27 +13,24 @@ class KBAccountFetcher(AccountFetcher):
     URL = 'https://www.kb.cz/cs/transparentni-ucty?page={}'
     API_BALANCE_URL = 'https://www.kb.cz/transparentsapi/balance/{}'
 
-    def __init__(self) -> None:
-        # Prepare session
-        self.s = requests.Session()
-        super().__init__()
-
     def fetch(self) -> list:
+        # Prepare session
+        s = requests.Session()
         # First request to get the number of pages
-        response = self.s.get(self.URL.format(1))
+        response = s.get(self.URL.format(1))
         soup = bs4.BeautifulSoup(response.text, 'html.parser')
         last_page = int(soup.find(class_='pagination__page-number').string)
 
         # Scrape page by page and add accounts to the result list
         accounts = []
         for page in range(1, last_page + 1):
-            accounts += self.scrape_page(page)
+            accounts += self.scrape_page(page, s)
 
         return accounts
 
-    def scrape_page(self, page: int) -> list:
+    def scrape_page(self, page: int, s: requests.Session) -> list:
         # Get list of divs containing account info
-        response = self.s.get(self.URL.format(page))
+        response = s.get(self.URL.format(page))
         soup = bs4.BeautifulSoup(response.text, 'html.parser')
         divs = soup.find_all(class_='d-md-flex w-100')
 
@@ -57,19 +52,9 @@ class KBAccountFetcher(AccountFetcher):
         owner, currency, number = search.groups()
         # Get fully qualified account number
         number = get_fully_qualified_acc_num(number)
-        # A simple API call is required to get the account balance
-        # Special format of the account number is required by the KB API
-        url = self.API_BALANCE_URL.format(get_api_formatted_acc_num(number))
-        sleep(10)  # TODO temporary 10 seconds sleep
-        response = self.s.get(url).json()
-        # Parse the account balance using regex
-        pattern = r'(\d*,\d*).*'
-        balance = re.search(pattern, response.get('balance')).group(1)
-        balance = float(balance.replace(',', '.'))
 
         return Account(number=number,
                        bank_code='0100',
                        name=name,
                        owner=owner,
-                       balance=balance,
                        currency=Currency.from_str(currency))

@@ -11,10 +11,10 @@ from sqlalchemy.orm import relationship
 
 
 class Currency(Enum):
-    CZK = 0
-    EUR = 1
-    USD = 2
-    GBP = 3
+    CZK = 1
+    EUR = 2
+    USD = 3
+    GBP = 4
 
     @staticmethod
     def from_str(label: str) -> Currency:
@@ -28,6 +28,15 @@ class Currency(Enum):
             case 'GBP':
                 return Currency.GBP
         raise NotImplementedError(label)
+
+
+class TransactionType(Enum):
+    INCOMING = 1,
+    OUTGOING = 2
+
+    @staticmethod
+    def from_float(num: float) -> TransactionType:
+        return TransactionType.INCOMING if num > 0 else TransactionType.OUTGOING
 
 
 class Base(DeclarativeBase):
@@ -64,7 +73,8 @@ class Transaction(Base):
     date: Mapped[date]
     amount: Mapped[float]
     counter_account: Mapped[Optional[str]]
-    type: Mapped[str]
+    type: Mapped[TransactionType]
+    str_type: Mapped[str]
     variable_symbol: Mapped[str]
     constant_symbol: Mapped[str]
     specific_symbol: Mapped[str]

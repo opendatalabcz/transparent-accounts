@@ -11,7 +11,6 @@ from ...utils import get_fully_qualified_acc_num
 class KBAccountFetcher(AccountFetcher):
 
     URL = 'https://www.kb.cz/cs/transparentni-ucty?page={}'
-    API_BALANCE_URL = 'https://www.kb.cz/transparentsapi/balance/{}'
 
     def fetch(self) -> list:
         # Prepare session

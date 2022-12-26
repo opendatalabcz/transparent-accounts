@@ -2,7 +2,7 @@ from datetime import datetime
 
 import requests
 
-from ...models import Transaction
+from ...models import Transaction, TransactionType
 from ..transaction_fetcher import TransactionFetcher
 
 
@@ -30,14 +30,23 @@ class CSASTransactionFetcher(TransactionFetcher):
         url = f"{url}&size={record_count}"
         response = s.get(url).json()
 
+        # Close the session
+        s.close()
+
         return map(self.transaction_to_class, response.get('transactions', []))
 
     def transaction_to_class(self, t: dict) -> Transaction:
+        """
+        :param t: transaction in a dictionary format
+        :return: transaction as class
+        """
+        amount = t.get('amount').get('value')
         return Transaction(
             date=datetime.strptime(t.get('processingDate'), '%Y-%m-%dT00:00:00').date(),
-            amount=t.get('amount').get('value'),
+            amount=amount,
             counter_account=t.get('sender').get('name'),
-            type=t.get('typeDescription'),
+            type=TransactionType.from_float(amount),
+            str_type=t.get('typeDescription'),
             variable_symbol=t.get('sender').get('variableSymbol', ''),
             constant_symbol=t.get('sender').get('constantSymbol', ''),
             specific_symbol=t.get('sender').get('specificSymbol', ''),

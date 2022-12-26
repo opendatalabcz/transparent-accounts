@@ -1,11 +1,11 @@
 from datetime import date
 
-from app.models import Account, Currency
+from app.models import Account, Currency, TransactionType
 from app.fetcher.csac.csas_account_fetcher import CSASAccountFetcher
 from app.fetcher.csac.csas_transaction_fetcher import CSASTransactionFetcher
 
 
-def test_csac_account_map():
+def test_csac_account_to_class():
     raw = {
         'accountNumber': '000000-0123456789',
         'bankCode': '0800',
@@ -36,7 +36,7 @@ def test_csac_account_map():
     assert not acc.transactions
 
 
-def test_csac_transaction_map():
+def test_csac_transaction_to_class():
     raw = {
         "amount": {
             "value": -10000.0,
@@ -68,7 +68,8 @@ def test_csac_transaction_map():
     assert t.date == date(2022, 11, 24)
     assert t.amount == -10000
     assert t.counter_account == '000000-9876543210/3030'
-    assert t.type == 'Tuzemská odchozí úhrada'
+    assert t.type == TransactionType.OUTGOING
+    assert t.str_type == 'Tuzemská odchozí úhrada'
     assert t.variable_symbol == ''
     assert t.constant_symbol == '0'
     assert t.specific_symbol == '12345'

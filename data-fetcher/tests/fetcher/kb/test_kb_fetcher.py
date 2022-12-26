@@ -1,12 +1,78 @@
-import pytest
-from app.fetcher.kb.utils import get_api_formatted_acc_num
+from datetime import date
+
+from app.models import Account, TransactionType
+from app.fetcher.kb import KBTransactionFetcher
 
 
-@pytest.mark.parametrize('acc_num', ('123456-1234567890', '123-1234567890', '1234567890', '12345', '00-00', '1-123456'))
-def test_get_fully_qualified_acc_num(acc_num):
-    assert(get_api_formatted_acc_num('123456-1234567890') == '1234561234567890')
-    assert (get_api_formatted_acc_num('123-1234567890') == '1231234567890')
-    assert (get_api_formatted_acc_num('1234567890') == '1234567890')
-    assert (get_api_formatted_acc_num('12345') == '12345')
-    assert (get_api_formatted_acc_num('00-00') == '00')
-    assert (get_api_formatted_acc_num('001-123456') == '1123456')
+def test_parse_money_amount():
+    assert KBTransactionFetcher.parse_money_amount('100,00 CZK') == 100
+    assert KBTransactionFetcher.parse_money_amount('-6,00 CZK') == -6
+    assert KBTransactionFetcher.parse_money_amount('4 186,33 EUR') == 4186.33
+    assert KBTransactionFetcher.parse_money_amount('-1 100,00 EUR') == -1100
+    assert KBTransactionFetcher.parse_money_amount('-2,47 EUR') == -2.47
+    assert KBTransactionFetcher.parse_money_amount('0,01 CZK') == 0.01
+    assert KBTransactionFetcher.parse_money_amount('1 567 601,25 CZK') == 1567601.25
+    assert KBTransactionFetcher.parse_money_amount('-1 567 601,25 CZK') == -1567601.25
+
+
+def test_parse_date():
+    assert KBTransactionFetcher.parse_date('01.&nbsp;01.&nbsp;2022') == date(2022, 1, 1)
+
+
+def test_parse_details():
+    assert KBTransactionFetcher.parse_details('1<br />2<br />3', TransactionType.INCOMING) == ('1', '2', '3')
+    assert KBTransactionFetcher.parse_details('1<br />2', TransactionType.INCOMING) == ('1', '2', '')
+    assert KBTransactionFetcher.parse_details('1<br />2', TransactionType.OUTGOING) == (None, '1', '2')
+    assert KBTransactionFetcher.parse_details('1', TransactionType.OUTGOING) == (None, '1', '')
+
+
+def test_kb_transaction_to_class_incoming():
+    raw = {
+            "id": "361-24122022 1086 086143 100448",
+            "date": "24.&nbsp;11.&nbsp;2022",
+            "amount": "0,01 EUR",
+            "symbols": "1 / 2 / 3",
+            "notes": "Testovací uživatel<br />Příchozí platba<br />Testovací popis"
+        }
+
+    account = Account(number='000000-0123456789')
+    fetcher = KBTransactionFetcher(account)
+
+    t = fetcher.transaction_to_class(raw)
+
+    assert t.date == date(2022, 11, 24)
+    assert t.amount == 0.01
+    assert t.counter_account == 'Testovací uživatel'
+    assert t.type == TransactionType.INCOMING
+    assert t.str_type == 'Příchozí platba'
+    assert t.variable_symbol == '1'
+    assert t.constant_symbol == '2'
+    assert t.specific_symbol == '3'
+    assert t.description == 'Testovací popis'
+    assert t.account_number == '000000-0123456789'
+
+
+def test_kb_transaction_to_class_outgoing():
+    raw = {
+            "id": "361-24122022 1086 086143 100448",
+            "date": "24.&nbsp;11.&nbsp;2022",
+            "amount": "-10 000,00 CZK",
+            "symbols": "0 / 0 / 12345",
+            "notes": "Odchozí platba<br />Testovací popis"
+        }
+
+    account = Account(number='000000-0123456789')
+    fetcher = KBTransactionFetcher(account)
+
+    t = fetcher.transaction_to_class(raw)
+
+    assert t.date == date(2022, 11, 24)
+    assert t.amount == -10000
+    assert t.counter_account is None
+    assert t.type == TransactionType.OUTGOING
+    assert t.str_type == 'Odchozí platba'
+    assert t.variable_symbol == '0'
+    assert t.constant_symbol == '0'
+    assert t.specific_symbol == '12345'
+    assert t.description == 'Testovací popis'
+    assert t.account_number == '000000-0123456789'

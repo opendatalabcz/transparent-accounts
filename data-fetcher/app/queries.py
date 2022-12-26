@@ -17,7 +17,7 @@ def save_accounts(accounts: list) -> None:
     # Save current datetime
     updated = datetime.now()
     # This way of upserting is very slow, but very clear
-    # Speed is not important here (can be made faster though)
+    # Speed is not crucial here (could be made faster though)
     with Session(engine) as s:
         for account in accounts:
             # Mark account as just updated and not archived

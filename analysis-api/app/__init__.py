@@ -1,9 +1,10 @@
 import os
 
 from flask import Flask, Blueprint
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 from celery import Celery
 
+import app.models
 from app.config import Config
 
 app = Flask(__name__)
@@ -12,8 +13,10 @@ app.config.from_object(Config)
 
 bp = Blueprint('api', __name__)
 
-db = SQLAlchemy(app)
 celery = Celery('analysis-api', broker=os.getenv('CELERY_BROKER_URL'))
+
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@db:5432/postgres'
+engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
 
 from . import controllers
 

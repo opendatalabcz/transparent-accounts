@@ -1,5 +1,4 @@
 flask
-flask_sqlalchemy
-sqlalchemy # 2.0.0b4
+sqlalchemy
 psycopg2-binary
 celery

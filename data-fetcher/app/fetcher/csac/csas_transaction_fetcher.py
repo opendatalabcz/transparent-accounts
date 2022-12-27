@@ -41,10 +41,11 @@ class CSASTransactionFetcher(TransactionFetcher):
         :return: transaction as class
         """
         amount = t.get('amount').get('value')
+        counter_account = t.get('sender').get('name') if t.get('sender').get('name') != '-' else None
         return Transaction(
             date=datetime.strptime(t.get('processingDate'), '%Y-%m-%dT00:00:00').date(),
             amount=amount,
-            counter_account=t.get('sender').get('name'),
+            counter_account=counter_account,
             type=TransactionType.from_float(amount),
             str_type=t.get('typeDescription'),
             variable_symbol=t.get('sender').get('variableSymbol', ''),

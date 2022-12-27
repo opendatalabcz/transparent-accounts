@@ -7,7 +7,7 @@ from . import engine
 from .models import Account
 
 
-def get_account(acc_num: str) -> Optional[Account]:
+def find_account(acc_num: str) -> Optional[Account]:
     with Session(engine) as s:
         account = s.get(Account, acc_num)
     return account

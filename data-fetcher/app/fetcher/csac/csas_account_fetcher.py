@@ -18,13 +18,13 @@ class CSASAccountFetcher(AccountFetcher):
 
         # First request to get the number of records
         response = s.get(self.API_URL).json()
-        record_count = response.get('recordCount', 0)
+        record_count = response.get('recordCount')
 
         # Second request to get all records
         url = f"{self.API_URL}/?size={record_count}"
         response = s.get(url).json()
 
-        return map(self.account_to_class, response.get('accounts'), [])
+        return map(self.account_to_class, response.get('accounts'))
 
     @staticmethod
     def account_to_class(acc: dict) -> Account:

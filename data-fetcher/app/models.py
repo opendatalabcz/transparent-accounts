@@ -46,9 +46,9 @@ class Base(DeclarativeBase):
 class Account(Base):
     __tablename__ = "account"
 
-    # Max length 16 digits (prefix max 6, separator 1, account number max 10)
+    # Fixed length 17 digits (prefix 6, separator 1, account number 10)
     number: Mapped[str] = mapped_column(String(17), primary_key=True)
-    # Bank code has fixed length 4 digits
+    # Fixed length 4 digits
     bank_code: Mapped[str] = mapped_column(String(4))
     name: Mapped[Optional[str]]
     owner: Mapped[str]

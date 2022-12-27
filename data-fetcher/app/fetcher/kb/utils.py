@@ -20,7 +20,7 @@ def get_html_formatted_acc_num(acc_num: str) -> str:
     Returns KB html pages formatted account number.
     Account number format required by the KB html pages is such that:
     It does not contain leading zeros in the prefix.
-    It containS a dash.
+    It contains a dash.
     It does not contain leading zeros in the account number itself.
     :param acc_num: account number in the fully qualified format
     :return: account number in the format required by the KB html pages

@@ -50,10 +50,10 @@ class Account(Base):
     number: Mapped[str] = mapped_column(String(17), primary_key=True)
     # Bank code has fixed length 4 digits
     bank_code: Mapped[str] = mapped_column(String(4))
-    name: Mapped[str]
+    name: Mapped[Optional[str]]
     owner: Mapped[str]
     balance: Mapped[Optional[float]]
-    currency: Mapped[Currency]
+    currency: Mapped[Optional[Currency]]
     description: Mapped[Optional[str]]
     created: Mapped[Optional[date]]
     last_updated: Mapped[datetime]

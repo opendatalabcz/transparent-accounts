@@ -1,7 +1,7 @@
 import re
 
-import requests
 import bs4
+import requests
 
 from ..account_fetcher import AccountFetcher
 from ...models import Account, Currency
@@ -15,11 +15,8 @@ class KBAccountFetcher(AccountFetcher):
     def fetch(self) -> list:
         # Prepare session
         s = requests.Session()
-        # First request to get the number of pages
-        response = s.get(self.URL.format(1))
-        soup = bs4.BeautifulSoup(response.text, 'html.parser')
-        last_page = int(soup.find(class_='pagination__page-number').string)
-
+        # First request to get the last page
+        last_page = self.get_last_page(s)
         # Scrape page by page and add accounts to the result list
         accounts = []
         for page in range(1, last_page + 1):
@@ -27,10 +24,16 @@ class KBAccountFetcher(AccountFetcher):
 
         return accounts
 
+    def get_last_page(self, s: requests.Session) -> int:
+        response_text = s.get(self.URL.format(1)).text
+        soup = bs4.BeautifulSoup(response_text, 'html.parser')
+        last_page = int(soup.find(class_='pagination__page-number').string)
+        return last_page
+
     def scrape_page(self, page: int, s: requests.Session) -> list:
         # Get list of divs containing account info
-        response = s.get(self.URL.format(page))
-        soup = bs4.BeautifulSoup(response.text, 'html.parser')
+        response_text = s.get(self.URL.format(page)).text
+        soup = bs4.BeautifulSoup(response_text, 'html.parser')
         divs = soup.find_all(class_='d-md-flex w-100')
 
         # Scrape div by div and add accounts to the result list

@@ -2,7 +2,7 @@ import json
 
 from app import app, celery, bp
 from app.queries import find_account
-from app.utils import json_encode
+from app.utils import object_encode
 
 
 @bp.get("/accounts/<acc_num>")
@@ -13,7 +13,7 @@ def get_account(acc_num):
         return  # TODO
 
     response = app.response_class(
-        response=json.dumps(account, default=json_encode),
+        response=json.dumps(account, default=object_encode),
         mimetype='application/json'
     )
     return response

@@ -1,7 +1,13 @@
 from app.models import Account, Transaction
 
 
-def json_encode(o):
+def object_encode(o) -> dict | str:
+    """
+    Encodes any object as dict or str.
+    Special care is applied for Account and Transaction type, other types are encoded using str function.
+    :param o: object of any type
+    :return: encoded object as dict or str
+    """
     match o:
         case Account():
             return {

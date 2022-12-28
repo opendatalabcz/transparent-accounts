@@ -8,6 +8,7 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
+      - TZ=Europe/Prague
     ports:
       - "5432:5432"
     volumes:
@@ -23,16 +24,26 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+      - TZ=Europe/Prague
+    depends_on:
+      - db
+      - rabbitmq
+
+  scheduler:
+    build: ./scheduler
+    environment:
       - TZ=Europe/Prague
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
     depends_on:
-      - db
+      - data-fetcher
       - rabbitmq
     
   analysis-api:
     build: ./analysis-api
     environment:
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+      - TZ=Europe/Prague
     ports:
       - "5000:5000"
     depends_on:
@@ -43,9 +54,9 @@ services:
   rabbitmq:
     image: rabbitmq
     environment:
-      - TZ=Europe/Prague
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin
+      - TZ=Europe/Prague
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -55,6 +66,7 @@ services:
     environment:
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
       - FLOWER_PORT=8888
+      - TZ=Europe/Prague
     ports:
       - "8888:8888"
     depends_on:

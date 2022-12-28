@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Flask, Blueprint
 from sqlalchemy import create_engine
@@ -8,6 +9,8 @@ app = Flask(__name__)
 app.secret_key = 'dev'
 
 bp = Blueprint('api', __name__)
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s')
 
 celery = Celery('analysis-api', broker=os.getenv('CELERY_BROKER_URL'))
 

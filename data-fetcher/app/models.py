@@ -9,6 +9,12 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 
+class Bank(Enum):
+    CSAC = '0800'
+    FIO = '2010'
+    KB = '0100'
+
+
 class Currency(Enum):
     CZK = 1
     EUR = 2
@@ -47,8 +53,7 @@ class Account(Base):
 
     # Fixed length 17 digits (prefix 6, separator 1, account number 10)
     number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
-    # Fixed length 4 digits
-    bank_code: Mapped[str] = mapped_column(String(4), CheckConstraint('LENGTH(bank_code) = 4'))
+    bank: Mapped[Bank]
     name: Mapped[Optional[str]]
     owner: Mapped[str]
     balance: Mapped[Optional[float]]

@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 
 from app import engine
-from app.models import Account
+from app.models import Account, Bank
 
 
 def find_account(acc_num: str) -> Optional[Account]:
@@ -16,7 +16,7 @@ def find_account(acc_num: str) -> Optional[Account]:
     return account
 
 
-def save_accounts(accounts: list) -> None:
+def save_accounts(accounts: list, bank: Bank) -> None:
     """
     Performs the correct operation - update or insert - based on the primary key of the account.
     Then marks all non-updated or not inserted accounts as archived.
@@ -33,8 +33,8 @@ def save_accounts(accounts: list) -> None:
             account.archived = False
             s.merge(account)
 
-        # Mark accounts that have not been updated as archived
-        s.query(Account).filter(Account.last_updated != updated).update({Account.archived: True})
+        # Mark accounts from the same bank that have not been updated as archived
+        s.query(Account).filter(Account.bank == bank, Account.last_updated != updated).update({Account.archived: True})
         s.commit()
 
 

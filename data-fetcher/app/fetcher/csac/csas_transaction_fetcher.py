@@ -11,7 +11,7 @@ class CSASTransactionFetcher(TransactionFetcher):
     API_URL = 'https://api.csas.cz/webapi/api/v3/transparentAccounts/{}/transactions?dateFrom={}&dateTo={}'
     API_KEY = 'efbeb527-a609-4909-a1b9-1565d89d36dc'
 
-    def fetch(self) -> map:
+    def fetch(self) -> list[Transaction]:
         # Fill the account number and the date interval into the url
         url = self.API_URL.format(self.account.number, self.get_date_from(), self.get_date_to())
         # Prepare session with fixed API key
@@ -29,7 +29,7 @@ class CSASTransactionFetcher(TransactionFetcher):
         # Close the session
         s.close()
 
-        return map(self.transaction_to_class, response_data.get('transactions', []))
+        return list(map(self.transaction_to_class, response_data['transactions']))
 
     def transaction_to_class(self, t: dict) -> Transaction:
         amount = t['amount']['value']

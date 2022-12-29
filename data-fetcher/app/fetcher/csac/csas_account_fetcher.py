@@ -32,6 +32,6 @@ class CSASAccountFetcher(AccountFetcher):
                        bank_code='0800',
                        name=acc['name'],
                        owner=acc['name'],
-                       balance=acc.get('balance', 0),
+                       balance=acc.get('balance'),
                        currency=Currency.from_str(acc['currency']),
                        created=datetime.strptime(acc['transparencyFrom'], '%Y-%m-%dT00:00:00').date())

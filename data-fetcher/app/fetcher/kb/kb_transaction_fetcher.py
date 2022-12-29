@@ -5,7 +5,7 @@ from datetime import datetime, date
 import requests
 
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.fetcher.kb.utils import get_api_formatted_acc_num, get_html_formatted_acc_num
+from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.models import Account, Transaction, TransactionType
 
 
@@ -20,11 +20,11 @@ class KBTransactionFetcher(TransactionFetcher):
     def __init__(self, account: Account):
         super().__init__(account)
         # Modify the account number so that it can be used in KB API
-        self.acc_num = get_api_formatted_acc_num(self.account.number)
+        self.acc_num = get_kb_formatted_acc_num(self.account.number, True)
         # It is crucial to use session here because of the required session cookies
         self.s = requests.Session()
 
-    def fetch(self) -> list:
+    def fetch(self) -> list[Transaction]:
         # Set account balance
         self.account.balance = self.fetch_balance()
         # Get initial pure token and set session cookies by accessing the html page
@@ -36,11 +36,12 @@ class KBTransactionFetcher(TransactionFetcher):
 
         transactions = map(self.transaction_to_class, fetched)
 
+        # Filter out transactions that does not belong to desired interval
         return list(filter(self.check_date_interval, transactions))
 
     def get_token_and_set_cookies(self) -> str:
         # First request to get the initial pure token and session cookies
-        url = self.URL.format(get_html_formatted_acc_num(self.account.number))
+        url = self.URL.format(get_kb_formatted_acc_num(self.account.number, False))
         response = self.s.get(url)
         # Parse the initial pure token using regex
         pattern = r"token: '(.*)'"

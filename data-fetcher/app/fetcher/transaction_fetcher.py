@@ -27,8 +27,7 @@ class TransactionFetcher(ABC):
     @staticmethod
     def get_date_to() -> date:
         """
-        Returns the date to which the transactions should be fetched.
-        The date is always yesterday.
+        Returns the date to which the transactions should be fetched. The date is always yesterday.
         :return: the date to which the transactions should be fetched
         """
         return date.today() - timedelta(1)

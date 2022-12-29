@@ -3,17 +3,24 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from . import engine
-from .models import Account
+from app import engine
+from app.models import Account
 
 
 def find_account(acc_num: str) -> Optional[Account]:
+    """
+    Finds Account by its number.
+    """
     with Session(engine) as s:
         account = s.get(Account, acc_num)
     return account
 
 
 def save_accounts(accounts: list) -> None:
+    """
+    Performs the correct operation - update or insert - based on the primary key of the account.
+    Then marks all non-updated or not inserted accounts as archived.
+    """
     # Save current datetime
     updated = datetime.now()
     # This way of upserting is very slow, but very clear
@@ -21,6 +28,7 @@ def save_accounts(accounts: list) -> None:
     with Session(engine) as s:
         for account in accounts:
             # Mark account as just updated and not archived
+            # Attribute archived is False by default, but it may happen that we make the archived account active again
             account.last_updated = updated
             account.archived = False
             s.merge(account)
@@ -31,6 +39,9 @@ def save_accounts(accounts: list) -> None:
 
 
 def save_transactions(account: Account, transactions: list) -> None:
+    """
+    Updates the account and inserts transactions in the database.
+    """
     with Session(engine) as s:
         s.add(account)
         s.add_all(transactions)

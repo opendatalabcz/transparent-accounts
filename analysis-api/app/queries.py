@@ -8,9 +8,7 @@ from app.models import Account
 
 def find_account(acc_num: str) -> Optional[Account]:
     """
-    Find Account with Transactions by the account number in the database.
-    :param acc_num: fully qualified account number
-    :return: optional of Account
+    Find Account with Transactions by its number.
     """
     with Session(engine) as s:
         # Select account with transactions, it's important to force joinedload here

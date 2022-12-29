@@ -1,41 +1,47 @@
 import re
-from datetime import datetime
+from datetime import datetime, date
 
 import bs4
 import requests
 
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.fetcher.fio.utils import get_html_formatted_acc_num
+from app.fetcher.fio.utils import get_fio_formatted_acc_num
 from app.models import Transaction, TransactionType, Currency
+from app.utils import float_from_cz
 
 
 class FioTransactionFetcher(TransactionFetcher):
 
-    URL = 'https://ib.fio.cz/ib/transparent?a={}&f={}t={}'
+    URL = 'https://ib.fio.cz/ib/transparent?a={}&f={}&t={}'
 
     def fetch(self) -> list:
         # Get the html page
-        acc_num = get_html_formatted_acc_num(self.account.number)
-        response_text = requests.get(self.URL.format(acc_num, self.get_date_from(), self.get_date_to())).text
+        acc_num = get_fio_formatted_acc_num(self.account.number)
+        # Get date interval
+        date_from = self.get_date_from().strftime('%d.%m.%Y')
+        date_to = self.get_date_to().strftime('%d.%m.%Y')
+        response_text = requests.get(self.URL.format(acc_num, date_from, date_to)).text
         soup = bs4.BeautifulSoup(response_text, 'html.parser')
         # Set account info
         self.account.name, self.account.balance, self.account.currency = self.scrape_account_info(soup)
 
-        return self.scrape_transactions(soup)
+        transactions = self.scrape_transactions(soup)
+        # Filter out transactions that does not belong to the desired interval
+        # In the case where the date_from is greater than the date_to, Fio does not cooperate
+        # and still returns some transactions
+        return list(filter(self.check_date_interval, transactions))
 
     def scrape_account_info(self, soup: bs4.BeautifulSoup) -> tuple[str, float, Currency]:
-        name = soup.select_one('.col-md-6 div:nth-child(3)').get_text(strip=True)
+        # Parse name
+        name = soup.select_one('.col-md-6 div:nth-child(3)').contents[2].get_text(strip=True)
+        # Parse balance and currency
         raw_balance = soup.select_one('.col-md-9 td:nth-child(6)').get_text(strip=True)
         balance, currency = self.parse_money_amount(raw_balance)
         return name, balance, currency
 
-    def scrape_transactions(self, soup: bs4.BeautifulSoup) -> list:
+    def scrape_transactions(self, soup: bs4.BeautifulSoup) -> list[Transaction]:
         rows = soup.find_all('tbody')[1].find_all('tr')
-        result = []
-        for row in rows:
-            result.append(self.scrape_transaction(row))
-
-        return result
+        return [self.scrape_transaction(row) for row in rows]
 
     def scrape_transaction(self, row: bs4.element.Tag) -> Transaction:
         cells = row.find_all('td')
@@ -64,8 +70,5 @@ class FioTransactionFetcher(TransactionFetcher):
         # Parse balance and currency using regex
         pattern = r'(-?[\d\s]+,[\d\s]+) ([A-Z]{3})'
         balance, currency = re.search(pattern, string).groups()
-        # Replace a comma with a dot, remove fixed spaces and cast to float
-        balance = float(balance.replace(',', '.').replace(' ', ''))
-        currency = Currency.from_str(currency)
-
-        return balance, currency
+        # Convert from str to corresponding type
+        return float_from_cz(balance), Currency.from_str(currency)

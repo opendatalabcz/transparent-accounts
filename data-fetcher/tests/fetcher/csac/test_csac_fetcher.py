@@ -22,7 +22,7 @@ def test_csac_account_to_class():
     acc = CSASAccountFetcher.account_to_class(raw)
 
     assert acc.number == '000000-0123456789'
-    assert acc.bank_code == '0800'
+    assert acc.bank == '0800'
     assert acc.name == 'Testovací účet'
     assert acc.owner == 'Testovací účet'
     assert acc.balance == 1200.85

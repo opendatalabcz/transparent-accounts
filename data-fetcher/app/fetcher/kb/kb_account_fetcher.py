@@ -4,7 +4,7 @@ import bs4
 import requests
 
 from app.fetcher.account_fetcher import AccountFetcher
-from app.models import Account, Currency
+from app.models import Account, Bank, Currency
 from app.utils import get_fully_qualified_acc_num
 
 
@@ -26,12 +26,13 @@ class KBAccountFetcher(AccountFetcher):
 
     def get_last_page(self, s: requests.Session) -> int:
         """
-        Scrapes the number of the last page. Should be determined by class 'pagination__page-number'.
+        Scrapes the number of the last page.
+        Should be determined by class 'pagination__page-number'.
         """
         response_text = s.get(self.URL.format(1)).text
         soup = bs4.BeautifulSoup(response_text, 'html.parser')
-        last_page = int(soup.select_one('.pagination__page-number').string)
-        return last_page
+        # Convert the last page number to int
+        return int(soup.select_one('.pagination__page-number').string)
 
     def scrape_page(self, page: int, s: requests.Session) -> list[Account]:
         """
@@ -40,12 +41,16 @@ class KBAccountFetcher(AccountFetcher):
         # Get list of divs containing account info
         response_text = s.get(self.URL.format(page)).text
         soup = bs4.BeautifulSoup(response_text, 'html.parser')
+        # Div with account is determined by classes 'd-md-flex' and 'w-100'
         divs = soup.select('.d-md-flex.w-100')
 
         # Scrape div by div and map then to the Account class
         return [self.scrape_account(div) for div in divs]
 
     def scrape_account(self, div: bs4.element.Tag) -> Account:
+        """
+        Scrapes an Account and maps it into Account instance.
+        """
         # Scrape the basic account info
         # It's important to strip whitespaces and to remove all newlines
         name = div.select_one('h2').get_text(strip=True)
@@ -54,11 +59,9 @@ class KBAccountFetcher(AccountFetcher):
         pattern = r'majitel: (.*), měna: (.*), číslo účtu: ([0-9]{0,6}-?[0-9]{1,10})'
         search = re.search(pattern, details)
         owner, currency, number = search.groups()
-        # Get fully qualified account number
-        number = get_fully_qualified_acc_num(number)
 
-        return Account(number=number,
-                       bank_code='0100',
+        return Account(number=get_fully_qualified_acc_num(number),
+                       bank=Bank.KB,
                        name=name,
                        owner=owner,
                        currency=Currency.from_str(currency))

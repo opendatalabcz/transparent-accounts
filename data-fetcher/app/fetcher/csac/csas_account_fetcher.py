@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 
 from app.fetcher.account_fetcher import AccountFetcher
-from app.models import Account, Currency
+from app.models import Account, Bank, Currency
 
 
 class CSASAccountFetcher(AccountFetcher):
@@ -15,11 +15,9 @@ class CSASAccountFetcher(AccountFetcher):
         # Prepare session with fixed API key
         s = requests.Session()
         s.headers.update({'Web-Api-Key': self.API_KEY})
-
         # First request to get the number of records
         response_data = s.get(self.API_URL).json()
         record_count = response_data['recordCount']
-
         # Second request to get all records
         url = f"{self.API_URL}/?size={record_count}"
         response_data = s.get(url).json()
@@ -29,7 +27,7 @@ class CSASAccountFetcher(AccountFetcher):
     @staticmethod
     def account_to_class(acc: dict) -> Account:
         return Account(number=acc['accountNumber'],  # Account number from CSAC is already fully qualified
-                       bank_code='0800',
+                       bank=Bank.CSAC,
                        name=acc['name'],
                        owner=acc['name'],
                        balance=acc.get('balance'),

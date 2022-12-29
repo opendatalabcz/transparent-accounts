@@ -17,23 +17,20 @@ class CSASTransactionFetcher(TransactionFetcher):
         # Prepare session with fixed API key
         s = requests.Session()
         s.headers.update({'Web-Api-Key': self.API_KEY})
-
         # First request to get the number of records
         response_data = s.get(url).json()
         record_count = response_data['recordCount']
-
         # Second request to get all records
         url = f"{url}&size={record_count}"
         response_data = s.get(url).json()
-
         # Close the session
         s.close()
 
-        return list(map(self.transaction_to_class, response_data['transactions']))
+        return list(map(self.transaction_to_class, response_data.get('transactions', [])))
 
     def transaction_to_class(self, t: dict) -> Transaction:
         amount = t['amount']['value']
-        counter_account = t['sender']['name'] if t['sender']['name'] != '-' else None
+        counter_account = t['sender'].get('name') if t['sender'].get('name') != '-' else None
         return Transaction(
             date=datetime.strptime(t['processingDate'], '%Y-%m-%dT00:00:00').date(),
             amount=amount,

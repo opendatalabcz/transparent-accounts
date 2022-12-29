@@ -7,6 +7,7 @@ import requests
 from app.fetcher.transaction_fetcher import TransactionFetcher
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.models import Account, Transaction, TransactionType
+from app.utils import float_from_cz
 
 
 class KBTransactionFetcher(TransactionFetcher):
@@ -36,7 +37,7 @@ class KBTransactionFetcher(TransactionFetcher):
 
         transactions = map(self.transaction_to_class, fetched)
 
-        # Filter out transactions that does not belong to desired interval
+        # Filter out transactions that does not belong to the desired interval
         return list(filter(self.check_date_interval, transactions))
 
     def get_token_and_set_cookies(self) -> str:
@@ -51,14 +52,12 @@ class KBTransactionFetcher(TransactionFetcher):
     def fetch_balance(self) -> float:
         url = self.API_BALANCE_URL.format(self.acc_num)
         response = requests.get(url).json()
-        return self.parse_money_amount(response.get('balance'))
+        return self.parse_money_amount(response['balance'])
 
     def fetch_transactions(self, pure_token) -> list:
         """
         Returns a list of transactions in a dictionary format.
         Fetches KB API as long as there are records or until it encounters transactions older than we are interested in.
-        :param pure_token: initial pure token
-        :return: list of transactions as dictionaries
         """
         result = []
         skip = 0
@@ -67,28 +66,24 @@ class KBTransactionFetcher(TransactionFetcher):
             # The resulting token is a sha256 of the static salt and the pure token
             token = hashlib.sha256((self.SALT + pure_token).encode('utf-8')).hexdigest()
             url = self.API_URL.format(self.acc_num, skip, token)
-            response = self.s.get(url).json()
+            response_data = self.s.get(url).json()
             # Add response to the result list
-            result += response.get('items')
+            result += response_data['items']
             # No more records to fetch - either the KB API announced the end of records
             # or we have encountered a transaction that is older than we are interested in
-            if not response.get('loadMore') or self.parse_date(result[-1].get('date')) < self.get_date_from():
+            if not response_data['loadMore'] or self.parse_date(result[-1]['date']) < self.get_date_from():
                 return result
             # Pure token for the next request
-            pure_token = response.get('token')
+            pure_token = response_data['token']
             skip += self.RECORDS_PER_REQUEST
 
     def transaction_to_class(self, t: dict) -> Transaction:
-        """
-        :param t: transaction in a dictionary format
-        :return: transaction as class
-        """
-        t_date = self.parse_date(t.get('date'))
-        amount = self.parse_money_amount(t.get('amount'))
+        t_date = self.parse_date(t['date'])
+        amount = self.parse_money_amount(t['amount'])
         t_type = TransactionType.from_float(amount)
         # Split symbols by slashes and remove whitespaces from them
-        variable_s, constant_s, specific_s = map(lambda s: s.replace(' ', ''),  t.get('symbols').split('/'))
-        counter_account, str_type, description = self.parse_details(t.get('notes'), t_type)
+        variable_s, constant_s, specific_s = map(lambda s: s.replace(' ', ''),  t['symbols'].split('/'))
+        counter_account, str_type, description = self.parse_details(t['notes'], t_type)
 
         return Transaction(
             date=t_date,
@@ -108,22 +103,17 @@ class KBTransactionFetcher(TransactionFetcher):
         """
         Parses amount of money from the KB API to float.
         Example of KB API amount of money: '4 186,33 EUR'.
-        :param string:
-        :return:
         """
         # Parse the amount of money using regex
         pattern = r'(-?[\d ]+,[\d ]+).*'
         balance = re.search(pattern, string).group(1)
-        # Replace a comma with a dot, remove fixed spaces and cast to float
-        return float(balance.replace(',', '.').replace(' ', ''))
+        return float_from_cz(balance)
 
     @staticmethod
     def parse_date(string: str) -> date:
         """
         Parses date from the KB API to the date object.
         Example of KB API date: '01.&nbsp;01.&nbsp;2022'.
-        :param string: date as a raw string
-        :return: date as object
         """
         return datetime.strptime(string, '%d.&nbsp;%m.&nbsp;%Y').date()
 

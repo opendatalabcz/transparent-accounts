@@ -4,9 +4,9 @@ from datetime import datetime, date
 
 import requests
 
-from ..transaction_fetcher import TransactionFetcher
-from .utils import get_api_formatted_acc_num, get_html_formatted_acc_num
-from ...models import Account, Transaction, TransactionType
+from app.fetcher.transaction_fetcher import TransactionFetcher
+from app.fetcher.kb.utils import get_api_formatted_acc_num, get_html_formatted_acc_num
+from app.models import Account, Transaction, TransactionType
 
 
 class KBTransactionFetcher(TransactionFetcher):

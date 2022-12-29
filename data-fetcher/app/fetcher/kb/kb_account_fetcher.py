@@ -3,9 +3,9 @@ import re
 import bs4
 import requests
 
-from ..account_fetcher import AccountFetcher
-from ...models import Account, Currency
-from ...utils import get_fully_qualified_acc_num
+from app.fetcher.account_fetcher import AccountFetcher
+from app.models import Account, Currency
+from app.utils import get_fully_qualified_acc_num
 
 
 class KBAccountFetcher(AccountFetcher):

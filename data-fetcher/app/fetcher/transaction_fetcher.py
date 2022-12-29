@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from abc import ABC, abstractmethod
 
-from ..models import Account, Transaction
+from app.models import Account, Transaction
 
 
 class TransactionFetcher(ABC):

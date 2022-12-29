@@ -4,10 +4,10 @@ from datetime import date
 
 from celery import Celery
 
-from .queries import find_account, save_accounts, save_transactions
-from .fetcher.csac import CSASAccountFetcher, CSASTransactionFetcher
-from .fetcher.fio import FioAccountFetcher, FioTransactionFetcher
-from .fetcher.kb import KBAccountFetcher, KBTransactionFetcher
+from app.queries import find_account, save_accounts, save_transactions
+from app.fetcher.csac import CSASAccountFetcher, CSASTransactionFetcher
+from app.fetcher.fio import FioAccountFetcher, FioTransactionFetcher
+from app.fetcher.kb import KBAccountFetcher, KBTransactionFetcher
 
 
 app = Celery('data-fetcher', broker=os.getenv('CELERY_BROKER_URL'))

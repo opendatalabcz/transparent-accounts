@@ -1,2 +1,2 @@
-from .csas_account_fetcher import CSASAccountFetcher
-from .csas_transaction_fetcher import CSASTransactionFetcher
+from app.fetcher.csac.csas_account_fetcher import CSASAccountFetcher
+from app.fetcher.csac.csas_transaction_fetcher import CSASTransactionFetcher

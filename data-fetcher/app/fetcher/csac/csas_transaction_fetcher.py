@@ -2,8 +2,8 @@ from datetime import datetime
 
 import requests
 
-from ...models import Transaction, TransactionType
-from ..transaction_fetcher import TransactionFetcher
+from app.models import Transaction, TransactionType
+from app.fetcher.transaction_fetcher import TransactionFetcher
 
 
 class CSASTransactionFetcher(TransactionFetcher):

@@ -1,2 +1,2 @@
-from .fio_account_fetcher import FioAccountFetcher
-from .fio_transaction_fetcher import FioTransactionFetcher
+from app.fetcher.fio.fio_account_fetcher import FioAccountFetcher
+from app.fetcher.fio.fio_transaction_fetcher import FioTransactionFetcher

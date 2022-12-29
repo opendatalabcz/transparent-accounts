@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ..models import Account
+from app.models import Account
 
 
 class AccountFetcher(ABC):

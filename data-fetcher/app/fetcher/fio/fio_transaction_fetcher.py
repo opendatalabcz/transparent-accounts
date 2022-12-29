@@ -4,9 +4,9 @@ from datetime import datetime
 import bs4
 import requests
 
-from ..transaction_fetcher import TransactionFetcher
-from .utils import get_html_formatted_acc_num
-from ...models import Transaction, TransactionType, Currency
+from app.fetcher.transaction_fetcher import TransactionFetcher
+from app.fetcher.fio.utils import get_html_formatted_acc_num
+from app.models import Transaction, TransactionType, Currency
 
 
 class FioTransactionFetcher(TransactionFetcher):

@@ -2,8 +2,8 @@ from datetime import datetime
 
 import requests
 
-from ..account_fetcher import AccountFetcher
-from ...models import Account, Currency
+from app.fetcher.account_fetcher import AccountFetcher
+from app.models import Account, Currency
 
 
 class CSASAccountFetcher(AccountFetcher):

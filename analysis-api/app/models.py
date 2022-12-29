@@ -53,7 +53,7 @@ class Account(Base):
 
     # Fixed length 17 digits (prefix 6, separator 1, account number 10)
     number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
-    bank_code: Mapped[Bank]
+    bank: Mapped[Bank]
     name: Mapped[Optional[str]]
     owner: Mapped[str]
     balance: Mapped[Optional[float]]

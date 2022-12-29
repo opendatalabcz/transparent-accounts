@@ -12,7 +12,7 @@ def object_encode(o) -> dict | str:
         case Account():
             return {
                 "number": o.number,
-                "bank_code": o.bank_code,
+                "bank_code": o.bank.value,
                 "name": o.name,
                 "owner": o.owner,
                 "balance": o.balance,

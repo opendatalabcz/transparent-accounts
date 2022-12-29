@@ -19,13 +19,13 @@ def get_account(acc_num):
     return response
 
 
-@bp.get("/accounts/tmp/<bank_code>")
+@bp.get("/admin/accounts/<bank_code>")
 def fetch_accounts(bank_code):
     celery.send_task('app.tasks.fetch_accounts', args=[bank_code])
     return "<h1>Success!</h1>"
 
 
-@bp.get("/transactions/tmp/<bank_code>/<acc_num>")
+@bp.get("/admin/transactions/<bank_code>/<acc_num>")
 def fetch_transactions(bank_code, acc_num):
     celery.send_task('app.tasks.fetch_transactions', args=[bank_code, acc_num])
     return "<h1>Success!</h1>"

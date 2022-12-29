@@ -2,8 +2,7 @@ from __future__ import annotations
 from enum import Enum
 from datetime import date, datetime
 from typing import Any, Optional
-from sqlalchemy import Boolean, String
-from sqlalchemy import ForeignKey
+from sqlalchemy import Boolean, String, ForeignKey, CheckConstraint
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -17,8 +16,8 @@ class Currency(Enum):
     GBP = 4
 
     @staticmethod
-    def from_str(label: str) -> Currency:
-        match label.upper():
+    def from_str(string: str) -> Currency:
+        match string.upper():
             case 'CZK':
                 return Currency.CZK
             case 'EUR':
@@ -27,7 +26,7 @@ class Currency(Enum):
                 return Currency.USD
             case 'GBP':
                 return Currency.GBP
-        raise NotImplementedError(label)
+        raise NotImplementedError(f"Unsupported currency: {string}")
 
 
 class TransactionType(Enum):
@@ -47,9 +46,9 @@ class Account(Base):
     __tablename__ = "account"
 
     # Fixed length 17 digits (prefix 6, separator 1, account number 10)
-    number: Mapped[str] = mapped_column(String(17), primary_key=True)
+    number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
     # Fixed length 4 digits
-    bank_code: Mapped[str] = mapped_column(String(4))
+    bank_code: Mapped[str] = mapped_column(String(4), CheckConstraint('LENGTH(bank_code) = 4'))
     name: Mapped[Optional[str]]
     owner: Mapped[str]
     balance: Mapped[Optional[float]]

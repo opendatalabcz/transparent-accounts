@@ -8,7 +8,7 @@ def test_currency():
     assert Currency.from_str('eur') == Currency.EUR
     assert Currency.from_str('Usd') == Currency.USD
     assert Currency.from_str('gBp') == Currency.GBP
-    with pytest.raises(NotImplementedError, match='CAD'):
+    with pytest.raises(NotImplementedError):
         Currency.from_str('CAD')
 
 

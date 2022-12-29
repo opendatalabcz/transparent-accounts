@@ -30,9 +30,16 @@ def fetch_accounts(bank_code: str):
         logging.warning(f"Unsupported bank: {bank_code}")
         return
 
+    logging.info(f"Fetching of {bank} accounts for started.")
     fetcher = banks[bank].account()
-    accounts = fetcher.fetch()
-    save_accounts(accounts, bank)
+
+    try:
+        accounts = fetcher.fetch()
+        save_accounts(accounts, bank)
+    except Exception:
+        logging.exception(f"Fetching of {bank} accounts for bank was interrupted.")
+
+    logging.info(f"Fetching of {bank} accounts for bank was successful.")
 
 
 @app.task
@@ -51,7 +58,14 @@ def fetch_transactions(bank_code: str, acc_num: str):
     if account.archived:
         return  # TODO
 
+    logging.info(f"Fetching of {bank}/{bank_code} transactions started.")
     fetcher = banks[bank].transaction(account)
-    transactions = fetcher.fetch()
-    account.last_fetched = date.today()
-    save_transactions(account, transactions)
+
+    try:
+        transactions = fetcher.fetch()
+        account.last_fetched = date.today()
+        save_transactions(account, transactions)
+    except Exception:
+        logging.exception(f"Fetching of {bank}/{bank_code} transactions was interrupted.")
+
+    logging.info(f"Fetching of {bank}/{bank_code} transactions was successful.")

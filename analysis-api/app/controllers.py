@@ -1,8 +1,10 @@
 import json
 
+from flask import request
+
 from app import app, celery, bp
-from app.queries import find_account
-from app.utils import object_encode
+from app.queries import find_account, find_accounts
+from app.utils import object_encode, generalize_query
 
 
 @bp.get("/accounts/<acc_num>")
@@ -14,6 +16,18 @@ def get_account(acc_num):
 
     response = app.response_class(
         response=json.dumps(account, default=object_encode),
+        mimetype='application/json'
+    )
+    return response
+
+
+@bp.get("/accounts")
+def get_accounts():
+    query = request.args.get('query')
+    query = generalize_query(query)
+    accounts = find_accounts(query)
+    response = app.response_class(
+        response=json.dumps(accounts, default=object_encode),
         mimetype='application/json'
     )
     return response

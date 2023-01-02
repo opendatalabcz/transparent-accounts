@@ -1,3 +1,6 @@
+import re
+from typing import Optional
+
 from app.models import Account, Transaction
 
 
@@ -38,3 +41,16 @@ def object_encode(o) -> dict | str:
             }
         case _:
             return str(o)
+
+
+def generalize_query(string: Optional[str]) -> Optional[str]:
+    """
+    Strips whitespace and tries to find a bank code in the query and removes it.
+    The aim is to generalize the query so that it can be used in a search.
+    """
+    # Empty query
+    if string is None:
+        return None
+
+    stripped = string.strip()
+    return re.sub(r'/[0-9]{4}$', '', stripped)

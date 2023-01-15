@@ -2,7 +2,7 @@ from __future__ import annotations
 from enum import Enum
 from datetime import date, datetime
 from typing import Any, Optional
-from sqlalchemy import Boolean, String, ForeignKey, CheckConstraint
+from sqlalchemy import Boolean, String, ForeignKey, ForeignKeyConstraint, CheckConstraint
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -53,9 +53,9 @@ class Account(Base):
 
     # Fixed length 17 digits (prefix 6, separator 1, account number 10)
     number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
-    bank: Mapped[Bank]
+    bank: Mapped[Bank] = mapped_column(primary_key=True)
     name: Mapped[Optional[str]]
-    owner: Mapped[str]
+    owner: Mapped[Optional[str]]
     balance: Mapped[Optional[float]]
     currency: Mapped[Optional[Currency]]
     description: Mapped[Optional[str]]
@@ -83,7 +83,12 @@ class Transaction(Base):
     constant_symbol: Mapped[str]
     specific_symbol: Mapped[str]
     description: Mapped[str]
-    account_number: Mapped[int] = mapped_column(ForeignKey("account.number"))
+    account_number: Mapped[str]
+    account_bank: Mapped[Bank]
+
+    __table_args__ = (ForeignKeyConstraint(["account_number", "account_bank"],
+                                           ["account.number", "account.bank"]),
+                      {})
 
     def __repr__(self) -> str:
         return f"Transaction({str(self.__dict__)})"

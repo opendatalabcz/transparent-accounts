@@ -4,16 +4,16 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 
 from app import engine
-from app.models import Account
+from app.models import Account, Bank
 
 
-def find_account(acc_num: str) -> Optional[Account]:
+def find_account(acc_num: str, bank: Bank) -> Optional[Account]:
     """
     Find Account with Transactions by its number.
     """
     with Session(engine) as s:
         # Select account with transactions, it's important to force joinedload here
-        account = s.get(Account, acc_num, options=[joinedload(Account.transactions)])
+        account = s.get(Account, (acc_num, bank), options=[joinedload(Account.transactions)])
     return account
 
 

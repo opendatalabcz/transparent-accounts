@@ -62,7 +62,8 @@ class FioTransactionFetcher(TransactionFetcher):
             constant_symbol=cells[6].get_text(strip=True),
             specific_symbol=cells[7].get_text(strip=True),
             description=description,
-            account_number=self.account.number
+            account_number=self.account.number,
+            account_bank=self.account.bank
         )
 
     @staticmethod

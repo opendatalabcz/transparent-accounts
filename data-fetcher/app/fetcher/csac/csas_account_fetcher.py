@@ -28,8 +28,8 @@ class CSASAccountFetcher(AccountFetcher):
     def account_to_class(acc: dict) -> Account:
         return Account(number=acc['accountNumber'],  # Account number from CSAC is already fully qualified
                        bank=Bank.CSAC,
-                       name=acc['name'],
-                       owner=acc['name'],
+                       name=acc.get('name'),
+                       owner=acc.get('name'),
                        balance=acc.get('balance'),
                        currency=Currency.from_str(acc['currency']),
-                       created=datetime.strptime(acc['transparencyFrom'], '%Y-%m-%dT00:00:00').date())
+                       created=datetime.strptime(acc.get('transparencyFrom'), '%Y-%m-%dT00:00:00').date())

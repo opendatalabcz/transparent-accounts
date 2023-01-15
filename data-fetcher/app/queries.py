@@ -7,12 +7,12 @@ from app import engine
 from app.models import Account, Bank
 
 
-def find_account(acc_num: str) -> Optional[Account]:
+def find_account(acc_num: str, bank: Bank) -> Optional[Account]:
     """
     Finds Account by its number.
     """
     with Session(engine) as s:
-        account = s.get(Account, acc_num)
+        account = s.get(Account, (acc_num, bank))
     return account
 
 

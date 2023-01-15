@@ -95,7 +95,8 @@ class KBTransactionFetcher(TransactionFetcher):
             constant_symbol=constant_s,
             specific_symbol=specific_s,
             description=description,
-            account_number=self.account.number
+            account_number=self.account.number,
+            account_bank=self.account.bank,
         )
 
     @staticmethod

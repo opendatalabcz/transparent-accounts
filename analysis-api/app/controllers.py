@@ -3,13 +3,19 @@ import json
 from flask import request
 
 from app import app, celery, bp
+from app.models import Bank
 from app.queries import find_account, find_accounts
 from app.utils import object_encode, generalize_query
 
 
-@bp.get("/accounts/<acc_num>")
-def get_account(acc_num):
-    account = find_account(acc_num)
+@bp.get("/accounts/<bank_code>/<acc_num>")
+def get_account(bank_code: str, acc_num: str):
+    try:
+        bank = Bank(bank_code)
+    except ValueError:
+        return  # TODO
+
+    account = find_account(acc_num, bank)
 
     if account is None:
         return  # TODO

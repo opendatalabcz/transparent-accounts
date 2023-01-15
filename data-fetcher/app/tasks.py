@@ -37,9 +37,9 @@ def fetch_accounts(bank_code: str):
         accounts = fetcher.fetch()
         save_accounts(accounts, bank)
     except Exception:
-        logging.exception(f"Fetching of {bank} accounts for bank was interrupted.")
+        logging.exception(f"Fetching of {bank} accounts was interrupted.")
 
-    logging.info(f"Fetching of {bank} accounts for bank was successful.")
+    logging.info(f"Fetching of {bank} accounts was successful.")
 
 
 @app.task

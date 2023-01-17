@@ -1,11 +1,11 @@
 from datetime import date
 
-from app.models import Account, Currency, TransactionType
-from app.fetcher.csac.csas_account_fetcher import CSASAccountFetcher
-from app.fetcher.csac.csas_transaction_fetcher import CSASTransactionFetcher
+from app.models import Account, Currency, TransactionType, Bank
+from app.fetcher.csas.csas_account_fetcher import CSASAccountFetcher
+from app.fetcher.csas.csas_transaction_fetcher import CSASTransactionFetcher
 
 
-def test_csac_account_to_class():
+def test_csas_account_to_class():
     raw = {
         'accountNumber': '000000-0123456789',
         'bankCode': '0800',
@@ -22,7 +22,7 @@ def test_csac_account_to_class():
     acc = CSASAccountFetcher.account_to_class(raw)
 
     assert acc.number == '000000-0123456789'
-    assert acc.bank == '0800'
+    assert acc.bank == Bank.CSAS
     assert acc.name == 'Testovací účet'
     assert acc.owner == 'Testovací účet'
     assert acc.balance == 1200.85
@@ -36,7 +36,7 @@ def test_csac_account_to_class():
     assert not acc.transactions
 
 
-def test_csac_transaction_to_class():
+def test_csas_transaction_to_class():
     raw = {
         "amount": {
             "value": -10000.0,

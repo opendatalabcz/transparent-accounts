@@ -26,8 +26,8 @@ class CSASAccountFetcher(AccountFetcher):
 
     @staticmethod
     def account_to_class(acc: dict) -> Account:
-        return Account(number=acc['accountNumber'],  # Account number from CSAC is already fully qualified
-                       bank=Bank.CSAC,
+        return Account(number=acc['accountNumber'],  # Account number from CSAS is already fully qualified
+                       bank=Bank.CSAS,
                        name=acc.get('name'),
                        owner=acc.get('name'),
                        balance=acc.get('balance'),

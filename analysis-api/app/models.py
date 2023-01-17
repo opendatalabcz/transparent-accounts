@@ -10,7 +10,7 @@ from sqlalchemy.orm import relationship
 
 
 class Bank(Enum):
-    CSAC = '0800'
+    CSAS = '0800'
     FIO = '2010'
     KB = '0100'
 

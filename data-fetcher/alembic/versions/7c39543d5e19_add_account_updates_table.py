@@ -25,7 +25,7 @@ def upgrade() -> None:
     sa.Column('started', sa.DateTime(), nullable=False),
     sa.Column('ended', sa.DateTime(), nullable=True),
     sa.Column('account_number', sa.String(), nullable=False),
-    sa.Column('account_bank', ENUM('CSAC', 'FIO', 'KB', name='bank', create_type=False), nullable=False),
+    sa.Column('account_bank', ENUM('CSAS', 'FIO', 'KB', name='bank', create_type=False), nullable=False),
     sa.ForeignKeyConstraint(['account_number', 'account_bank'], ['account.number', 'account.bank'], ),
     sa.PrimaryKeyConstraint('id')
     )

@@ -5,8 +5,8 @@ from datetime import date
 
 from celery import Celery
 
-from app.models import Bank
-from app.queries import find_account, save_accounts, save_transactions
+from app.models import Bank, UpdateStatus
+from app.queries import find_account, save_accounts, save_transactions, find_update, save_update
 from app.fetcher.csac import CSASAccountFetcher, CSASTransactionFetcher
 from app.fetcher.fio import FioAccountFetcher, FioTransactionFetcher
 from app.fetcher.kb import KBAccountFetcher, KBTransactionFetcher
@@ -38,35 +38,37 @@ def fetch_accounts(bank_code: str):
         save_accounts(accounts, bank)
     except Exception:
         logging.exception(f"Fetching of {bank} accounts was interrupted.")
+        return
 
     logging.info(f"Fetching of {bank} accounts was successful.")
 
 
 @app.task
-def fetch_transactions(bank_code: str, acc_num: str):
-    try:
-        bank = Bank(bank_code)
-    except ValueError:
-        logging.warning(f"Unsupported bank: {bank_code}")
+def fetch_transactions(update_id: int):
+    acc_update = find_update(update_id)
+
+    if acc_update is None:
+        logging.warning(f"Account update request with id {update_id} was not found.")
         return
 
-    account = find_account(acc_num, bank)
+    account = find_account(acc_update.account_number, acc_update.account_bank)
 
     if account is None:
-        return  # TODO
+        logging.warning(f"Account {acc_update.account_number}/{acc_update.account_bank.value} not found.")
+        save_update(acc_update, UpdateStatus.FAILED)
+        return
 
-    if account.archived:
-        return  # TODO
-
-    logging.info(f"Fetching of {bank}/{bank_code} transactions started.")
-    fetcher = banks[bank].transaction(account)
+    logging.info(f"Fetching of {account.number}/{account.bank.value} transactions started.")
+    fetcher = banks[account.bank].transaction(account)
 
     try:
         transactions = fetcher.fetch()
         account.last_fetched = date.today()
         save_transactions(account, transactions)
     except Exception:
-        logging.exception(f"Fetching of {bank}/{bank_code} transactions was interrupted.")
+        logging.exception(f"Fetching of {account.number}/{account.bank.value} transactions was interrupted.")
+        save_update(acc_update, UpdateStatus.FAILED)
         return
 
-    logging.info(f"Fetching of {bank}/{bank_code} transactions was successful.")
+    logging.info(f"Fetching of {account.number}/{account.bank.value} transactions was successful.")
+    save_update(acc_update, UpdateStatus.SUCCESS)

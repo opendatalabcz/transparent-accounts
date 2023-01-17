@@ -1,10 +1,11 @@
+from datetime import datetime
 from typing import Optional
 
 from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 
 from app import engine
-from app.models import Account, Bank
+from app.models import Account, Bank, AccountUpdate, UpdateStatus
 
 
 def find_account(acc_num: str, bank: Bank) -> Optional[Account]:
@@ -36,3 +37,24 @@ def find_accounts(query: Optional[str]) -> list[Account]:
     with Session(engine) as s:
         accounts = s.query(Account).filter(or_criteria).all()
     return accounts
+
+
+def find_update(update_id: int) -> Optional[AccountUpdate]:
+    """
+    Find AccountRequest by its ID.
+    """
+    with Session(engine) as s:
+        request = s.get(AccountUpdate, update_id)
+    return request
+
+
+def save_update(account_update: AccountUpdate, status: UpdateStatus) -> None:
+    """
+    Updates the AccountRequest status.
+    """
+    with Session(engine) as s:
+        account_update.status = status
+        account_update.started = datetime.now()
+        s.add(account_update)
+        s.commit()
+        s.refresh(account_update)

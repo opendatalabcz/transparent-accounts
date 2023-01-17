@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 
 from app import engine
-from app.models import Account, Bank
+from app.models import Account, Bank, AccountUpdate, UpdateStatus
 
 
 def find_account(acc_num: str, bank: Bank) -> Optional[Account]:
@@ -45,4 +45,25 @@ def save_transactions(account: Account, transactions: list) -> None:
     with Session(engine) as s:
         s.add(account)
         s.add_all(transactions)
+        s.commit()
+        s.refresh(account)
+
+
+def find_update(update_id: int) -> Optional[AccountUpdate]:
+    """
+    Find AccountUpdate by its ID.
+    """
+    with Session(engine) as s:
+        request = s.get(AccountUpdate, update_id)
+    return request
+
+
+def save_update(account_update: AccountUpdate, status: UpdateStatus) -> None:
+    """
+    Updates the AccountUpdate status.
+    """
+    with Session(engine) as s:
+        account_update.status = status
+        account_update.ended = datetime.now()
+        s.add(account_update)
         s.commit()

@@ -2,7 +2,7 @@ from __future__ import annotations
 from enum import Enum
 from datetime import date, datetime
 from typing import Any, Optional
-from sqlalchemy import Boolean, String, ForeignKey, ForeignKeyConstraint, CheckConstraint
+from sqlalchemy import Boolean, String, ForeignKeyConstraint, CheckConstraint
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -42,6 +42,12 @@ class TransactionType(Enum):
     @staticmethod
     def from_float(num: float) -> TransactionType:
         return TransactionType.INCOMING if num > 0 else TransactionType.OUTGOING
+
+
+class UpdateStatus(Enum):
+    PENDING = 1
+    SUCCESS = 2
+    FAILED = 3
 
 
 class Base(DeclarativeBase):
@@ -92,3 +98,21 @@ class Transaction(Base):
 
     def __repr__(self) -> str:
         return f"Transaction({str(self.__dict__)})"
+
+
+class AccountUpdate(Base):
+    __tablename__ = "account_update"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    status: Mapped[UpdateStatus]
+    started: Mapped[datetime]
+    ended: Mapped[Optional[datetime]]
+    account_number: Mapped[str]
+    account_bank: Mapped[Bank]
+
+    __table_args__ = (ForeignKeyConstraint(["account_number", "account_bank"],
+                                           ["account.number", "account.bank"]),
+                      {})
+
+    def __repr__(self) -> str:
+        return f"AccountUpdate({str(self.__dict__)})"

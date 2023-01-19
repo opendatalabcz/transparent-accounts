@@ -1,0 +1,9 @@
+.navbar {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.nav-link {
+    color: white;
+}

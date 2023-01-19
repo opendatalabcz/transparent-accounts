@@ -1,7 +1,7 @@
 import { LinkContainer } from 'react-router-bootstrap';
 import { BsBarChartFill, BsCurrencyExchange, BsBank2, BsGithub, BsChatRightTextFill, BsCodeSquare } from 'react-icons/bs';
-import {Navbar, Nav } from "react-bootstrap";
-import "./Header.css"
+import { Navbar, Nav } from 'react-bootstrap';
+import './Header.css'
 
 function Header() {
     return (

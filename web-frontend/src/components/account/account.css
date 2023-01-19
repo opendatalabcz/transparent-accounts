@@ -1,0 +1,12 @@
+.update-note {
+    font-size: 1rem;
+}
+
+dt, dd {
+    border-bottom: 1px solid;
+    margin: 0;
+}
+
+dt::after {
+    content: ":";
+}

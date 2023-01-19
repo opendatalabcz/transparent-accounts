@@ -4,8 +4,8 @@ import './account.css'
 
 function AccountDetails({ account }) {
     return (
-        <Container fluid>
-            <dl className="row">
+        <Container fluid className="px-0">
+            <dl className="row mx-1">
                 <dt className="col-4">Majitel účtu</dt>
                 <dd className="col-8 text-end">{account.owner}</dd>
 
@@ -27,12 +27,14 @@ function AccountDetails({ account }) {
                 <dt className="col-4">Měna</dt>
                 <dd className="col-8 text-end">{account.currency}</dd>
             </dl>
-            <Anchor className="row" href="https://www.csas.cz/cs/transparentni-ucty" target="_blank" rel="noreferrer">
-                <span className="text-end">
+            <div className="d-flex justify-content-end">
+                <Anchor href="https://www.csas.cz/cs/transparentni-ucty" target="_blank" rel="noreferrer">
+                <span>
                     <BsBoxArrowUpRight className="d-inline-block align-text-top me-1"/>
                     účet na stránkách banky
                 </span>
-            </Anchor>
+                </Anchor>
+            </div>
         </Container>
     )
 }

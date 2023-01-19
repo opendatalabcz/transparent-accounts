@@ -4,7 +4,7 @@ import { BsQuestionCircle } from 'react-icons/bs'
 
 function AccountMain({ account }) {
     return (
-        <Container className="account-main">
+        <Container fluid className="account-main">
             <CiBank size={64}/>
             <h2>
                 <div>{account.owner}</div>

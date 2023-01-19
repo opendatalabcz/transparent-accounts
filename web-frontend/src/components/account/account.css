@@ -10,3 +10,8 @@ dt, dd {
 dt::after {
     content: ":";
 }
+
+table {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+

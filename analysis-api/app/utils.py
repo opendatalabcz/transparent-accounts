@@ -29,6 +29,7 @@ def object_encode(o) -> dict | str:
             }
         case Transaction():
             return {
+                "id": o.id,
                 "date": o.date,
                 "amount": o.amount,
                 "counter_account": o.counter_account,

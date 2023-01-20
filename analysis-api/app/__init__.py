@@ -2,11 +2,13 @@ import os
 import logging
 
 from flask import Flask, Blueprint
+from flask_cors import CORS
 from sqlalchemy import create_engine
 from celery import Celery
 
 app = Flask(__name__)
 app.secret_key = 'dev'
+CORS(app)
 
 bp = Blueprint('api', __name__)
 

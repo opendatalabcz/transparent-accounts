@@ -1,0 +1,7 @@
+.sortable-th {
+    cursor: pointer;
+}
+
+.sortable-th div {
+    white-space: nowrap;
+}

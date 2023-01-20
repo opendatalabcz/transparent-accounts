@@ -1,66 +1,25 @@
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom'
 import { Container } from 'react-bootstrap'
 import AccountMain from './AccoutMain';
 import AccountDetails from './AccountDetails';
 import { BsChevronLeft } from 'react-icons/bs';
 import AccountSwitch from './AccountSwitch';
-import TransactionsFilter from './TransactionsFilter';
 import Transactions from './Transactions';
 
 function AccountPage() {
-    const account = {
-        number: "000123-8794230217",
-        bank_code: "0100",
-        name: "Volební účet - Kampaň prezidentské volby",
-        owner: "Andrej Babiš",
-        balance: 222221.58,
-        currency: "CZK",
-        description: null,
-        created: null,
-        last_updated: "2023-20-01",
-        last_fetched: "2023-19-01",
-        archived: false,
-        transactions: []
-    }
 
-    const transactions = [
-        {
-            "id": 1,
-            "date": "2022-01-01",
-            "amount": 2345523.12,
-            "counter_account": "ANO 2011",
-            "type": "INCOMING",
-            "type_detail": "Příchozí platba",
-            "variable_symbol": "2222",
-            "constant_symbol": "0",
-            "specific_symbol": "0",
-            "description": "Podpora"
-        },
-        {
-            "id": 2,
-            "date": "2022-01-01",
-            "amount": 2345523.12,
-            "counter_account": "ANO 2011",
-            "type": "INCOMING",
-            "type_detail": "Příchozí platba",
-            "variable_symbol": "2222",
-            "constant_symbol": "0",
-            "specific_symbol": "0",
-            "description": "Velmi dlouhá poznámka pro pana Babiše."
-        },
-        {
-            "id": 3,
-            "date": "2022-01-01",
-            "amount": 2345523.12,
-            "counter_account": "ANO 2011",
-            "type": "INCOMING",
-            "type_detail": "Příchozí platba",
-            "variable_symbol": "2222",
-            "constant_symbol": "0",
-            "specific_symbol": "0",
-            "description": "Podpora"
-        }
-    ]
+    const [account, setAccount] = useState({})
+    const [transactions, setTransactions] = useState([])
+
+    useEffect(() => {
+        fetch("http://localhost:5000/api/accounts/0800/000000-4776908073")
+            .then(response => response.json())
+            .then(data => {
+                setAccount(data)
+                setTransactions(data.transactions)
+            }).catch(error => console.log('Error: ' + error))
+    }, [])
 
     return (
         <main>
@@ -83,12 +42,7 @@ function AccountPage() {
             <div className="my-5">
                 <AccountSwitch />
             </div>
-            <div className="mb-5">
-                <TransactionsFilter />
-            </div>
-            <Container fluid>
-                <Transactions transactions={transactions}/>
-            </Container>
+            <Transactions transactions={transactions} />
         </main>
     );
 }

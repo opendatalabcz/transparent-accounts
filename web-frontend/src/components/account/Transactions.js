@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap';
 function Transactions({ transactions }) {
     return (
         <div className="table-responsive-lg">
-            <Table striped hover className="table-light">
+            <Table striped hover className="transactions-table table-light">
                 <thead>
                 <tr>
                     <th scope="col">Datum</th>

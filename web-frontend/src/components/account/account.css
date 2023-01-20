@@ -1,17 +1,13 @@
-.update-note {
-    font-size: 1rem;
-}
-
-dt, dd {
+.account-details > dt, dd {
     border-bottom: 1px solid;
     margin: 0;
 }
 
-dt::after {
+.account-details > dt::after {
     content: ":";
 }
 
-table {
+.transactions-table {
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 

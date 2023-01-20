@@ -4,15 +4,15 @@ import { BsQuestionCircle } from 'react-icons/bs'
 
 function AccountMain({ account }) {
     return (
-        <Container fluid className="account-main">
-            <CiBank size={64}/>
-            <h2>
+        <Container fluid>
+            <CiBank size={64} />
+            <h1 className="display-6">
                 <div>{account.owner}</div>
                 <div>{account.name}</div>
                 <div>{account.number}/{account.bank_code}</div>
-            </h2>
+            </h1>
             <Button>Aktualizovat</Button>
-            <div className="update-note">
+            <div>
                 Naposledy aktualizováno: {account.last_updated}
                 <BsQuestionCircle className="d-inline-block align-text-top ms-1" />
             </div>

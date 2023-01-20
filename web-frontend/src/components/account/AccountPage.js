@@ -67,10 +67,8 @@ function AccountPage() {
             <Container fluid>
                 <div className="my-3 d-flex justify-content-end">
                     <NavLink to="/ucty">
-                    <span>
                         <BsChevronLeft className="d-inline-block align-text-top me-1"/>
                         zpět na přehled
-                    </span>
                     </NavLink>
                 </div>
                 <div className="row gy-5">

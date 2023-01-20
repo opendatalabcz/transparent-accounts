@@ -4,18 +4,23 @@
     font-size: 1.4em;
 }
 
-.navbar svg {
-    margin-right: 0.3rem;
+@media (max-width: 475px) {
+    #brand-container {
+        margin-right: 0 !important;
+    }
+
+    #brand-logo {
+     display: none;
+    }
 }
 
-.navbar-brand {
-    display: flex;
+.navbar svg {
+    margin-right: 0.3rem;
 }
 
 .navbar-brand span {
     font-size: 1.1em;
     line-height: 1.2;
-    align-self: flex-end;
     white-space: pre-line;
 }
 

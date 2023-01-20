@@ -6,12 +6,14 @@ import './Header.css'
 function Header() {
     return (
         <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark" className="py-0 px-3">
-                <LinkContainer to="/" className="py-0 me-5">
+                <LinkContainer to="/" className="py-0 me-5" id="brand-container">
                     <Navbar.Brand>
-                                <BsBarChartFill size={56} />
+                            <div className="d-flex align-items-end">
+                                <BsBarChartFill size={56} id="brand-logo" />
                                 <span>
-                                    ZPRACOVÁNÍ A ANALÝZA{'\n'}TRANSPARENTNÍCH ÚČTŮ
-                                </span>
+                                ZPRACOVÁNÍ A ANALÝZA{'\n'}TRANSPARENTNÍCH ÚČTŮ
+                            </span>
+                            </div>
                     </Navbar.Brand>
                 </LinkContainer>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />

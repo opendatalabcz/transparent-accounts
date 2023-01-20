@@ -19,7 +19,7 @@ function App() {
         <Route path="/banky" element={<BanksPage/>}/>
         <Route path="/o-projektu" element={<AboutPage/>}/>
         <Route path="/api" element={<ApiPage/>}/>
-        <Route element={<PageNotFound/>}/>
+        <Route path="*" element={<PageNotFound/>}/>
       </Routes>
     </>
   );

@@ -9,8 +9,9 @@ import Transactions from './Transactions';
 
 function AccountPage() {
 
-    const [account, setAccount] = useState({})
+    const [account, setAccount] = useState()
     const [transactions, setTransactions] = useState([])
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         fetch("http://localhost:5000/api/accounts/0800/000000-4776908073")
@@ -18,8 +19,12 @@ function AccountPage() {
             .then(data => {
                 setAccount(data)
                 setTransactions(data.transactions)
+                setLoading(false)
             }).catch(error => console.log('Error: ' + error))
     }, [])
+
+    if (isLoading)
+        return <div>Loading...</div>
 
     return (
         <main>

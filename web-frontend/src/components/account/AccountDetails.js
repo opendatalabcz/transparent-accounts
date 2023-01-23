@@ -1,5 +1,7 @@
 import { Container, Anchor } from 'react-bootstrap'
 import { BsBoxArrowUpRight } from 'react-icons/bs'
+import MoneyAmount from '../../features/format/MoneyAmount';
+import { shortenAccNum } from '../../utils/accountNumberUtils'
 import './account.css'
 
 function AccountDetails({ account }) {
@@ -13,7 +15,7 @@ function AccountDetails({ account }) {
                 <dd className="col-8 text-end">{account.name}</dd>
 
                 <dt className="col-4">Číslo účtu</dt>
-                <dd className="col-8 text-end">{account.number}/{account.bank_code}</dd>
+                <dd className="col-8 text-end">{shortenAccNum(account.number)}/{account.bank_code}</dd>
 
                 <dt className="col-4">Popis</dt>
                 <dd className="col-8 text-end">{account.description}</dd>
@@ -22,7 +24,7 @@ function AccountDetails({ account }) {
                 <dd className="col-8 text-end">{account.created}</dd>
 
                 <dt className="col-4">Zůstatek 💰</dt>
-                <dd className="col-8 text-end">{account.balance} {account.currency}</dd>
+                <dd className="col-8 text-end"><MoneyAmount amount={account.balance} currency={account.currency} /></dd>
 
                 <dt className="col-4">Měna</dt>
                 <dd className="col-8 text-end">{account.currency}</dd>

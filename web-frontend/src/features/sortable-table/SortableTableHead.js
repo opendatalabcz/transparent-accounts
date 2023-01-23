@@ -6,23 +6,23 @@ function SortableTableHead({ columns, handleSorting }) {
     const [sortField, setSortField] = useState("");
     const [order, setOrder] = useState("asc");
 
-    const handleSortingChange = (accessor) => {
+    const handleSortingChange = (accessor, comparer) => {
         const sortOrder =
             accessor === sortField && order === "asc" ? "desc" : "asc";
         setSortField(accessor);
         setOrder(sortOrder);
-        handleSorting(accessor, sortOrder);
+        handleSorting(accessor, comparer, sortOrder);
     };
 
     return (
         <thead>
             <tr>
-                {columns.map(({ label, accessor, className }) => {
+                {columns.map(({ label, accessor, comparer, className }) => {
                     return (
                         <th
                             key={accessor}
                             className={"sortable-th " + className}
-                            onClick={() => handleSortingChange(accessor)}>
+                            onClick={() => handleSortingChange(accessor, comparer)}>
                             <div>
                                 {label}
                                 {

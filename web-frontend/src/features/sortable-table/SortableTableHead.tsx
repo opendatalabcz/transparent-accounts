@@ -4,11 +4,11 @@ import './table.css'
 
 function SortableTableHead({ columns, handleSorting }) {
     const [sortField, setSortField] = useState("");
-    const [order, setOrder] = useState("asc");
+    const [order, setOrder] = useState("desc");
 
     const handleSortingChange = (accessor, comparer) => {
         const sortOrder =
-            accessor === sortField && order === "asc" ? "desc" : "asc";
+            accessor === sortField && order === "desc" ? "asc" : "desc";
         setSortField(accessor);
         setOrder(sortOrder);
         handleSorting(accessor, comparer, sortOrder);
@@ -26,9 +26,9 @@ function SortableTableHead({ columns, handleSorting }) {
                             <div>
                                 {label}
                                 {
-                                    sortField === accessor && order === "asc"
+                                    sortField === accessor && order === "desc"
                                         ? <FaSortUp className="d-inline-block align-text-top ms-1" />
-                                        : sortField === accessor && order === "desc"
+                                        : sortField === accessor && order === "asc"
                                             ? <FaSortDown className="d-inline-block align-text-top ms-1" />
                                             : <FaSort className="d-inline-block align-text-top ms-1" />
                                 }

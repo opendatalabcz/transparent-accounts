@@ -1,4 +1,4 @@
-import {Anchor, Button, Nav} from 'react-bootstrap';
+import { Button, Nav } from 'react-bootstrap';
 
 function AccountSwitch() {
     return (

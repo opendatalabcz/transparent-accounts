@@ -14,7 +14,7 @@ function AccountPage() {
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/accounts/0800/000000-4776908073")
+        fetch("http://localhost:5000/api/accounts/0100/000000-0004070217")
             .then(response => response.json())
             .then(data => {
                 setAccount(data)

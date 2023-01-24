@@ -1,4 +1,4 @@
-import { Container, Anchor } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { BsBoxArrowUpRight } from 'react-icons/bs'
 import MoneyAmount from '../../features/format/MoneyAmount';
 import { shortenAccNum } from '../../utils/accountNumberUtils'
@@ -30,10 +30,10 @@ function AccountDetails({ account }) {
                 <dd className="col-8 text-end">{account.currency}</dd>
             </dl>
             <div className="d-flex justify-content-end">
-                <Anchor href="https://www.csas.cz/cs/transparentni-ucty" target="_blank" rel="noreferrer">
+                <a href="https://www.csas.cz/cs/transparentni-ucty" target="_blank" rel="noreferrer">
                     <BsBoxArrowUpRight className="d-inline-block align-text-top me-1"/>
                     účet na stránkách banky
-                </Anchor>
+                </a>
             </div>
         </Container>
     )

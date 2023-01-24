@@ -1,4 +1,4 @@
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap';
 
 function HomePage() {
@@ -10,11 +10,11 @@ function HomePage() {
                 <p className="lead">
                     Stránka, kterou hledáte pravděpodobně neexistuje.
                 </p>
-                <LinkContainer to="/">
+                <Link to="/">
                     <Button>
                         Zpět na úvodní stránku
                     </Button>
-                </LinkContainer>
+                </Link>
             </div>
         </div>
     );

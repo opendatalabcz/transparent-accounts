@@ -7,7 +7,7 @@ import TransactionTable from './TransactionTable';
 function Transactions({ transactions })
 {
     const [filteredTransactions, setFilteredTransactions] = useState(transactions);
-    const [startDate, setStartDate] = useState(dayjs().subtract(1, 'year').format('YYYY-MM-DD'));
+    const [startDate, setStartDate] = useState(dayjs().subtract(1, 'month').format('YYYY-MM-DD'));
     const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
     const [type, setType] = useState('ALL');
     const [category, setCategory] = useState('ALL');

@@ -21,7 +21,7 @@ function TransactionsFilter({ type, setType, startDate, setStartDate, endDate, s
                         <Form.Select
                             value={type}
                             onChange={(event) => setType(event.target.value)}>
-                            <option value="ALL">Všechny transakce</option>
+                            <option value="">Všechny transakce</option>
                             <option value="INCOMING">Příchozí transakce</option>
                             <option value="OUTGOING">Odchozí transakce</option>
                         </Form.Select>
@@ -30,7 +30,7 @@ function TransactionsFilter({ type, setType, startDate, setStartDate, endDate, s
                         <Form.Select
                             value={category}
                             onChange={(event) => setCategory(event.target.value)}>
-                            <option value="ALL">Všechny kategorie</option>
+                            <option value="">Všechny kategorie</option>
                             <option value="MESSAGES">Vzkazy</option>
                             <option value="NO-MESSAGES">Bez vzkazů</option>
                         </Form.Select>

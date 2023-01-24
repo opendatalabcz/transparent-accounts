@@ -12,3 +12,10 @@
     font-size: 0.9em;
 }
 
+.transactions-table th {
+    white-space: nowrap;
+}
+
+.transactions-table td:has(span) {
+    text-align: end;
+}

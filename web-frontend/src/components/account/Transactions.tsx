@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import TransactionsFilter from './TransactionsFilter';
-import TransactionTable from './TransactionTable';
+import TransactionsTable from './TransactionsTable';
 
 function Transactions({ transactions }) {
-  const [startDate, setStartDate] = useState(dayjs().subtract(1, 'month').format('YYYY-MM-DD'));
+  const [startDate, setStartDate] = useState(dayjs().subtract(1, 'year').format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [type, setType] = useState('');
   const [category, setCategory] = useState('');
@@ -30,7 +30,7 @@ function Transactions({ transactions }) {
         />
       </div>
       <Container fluid>
-        <TransactionTable
+        <TransactionsTable
           transactions={transactions}
           date={[startDate, endDate]}
           type={type}

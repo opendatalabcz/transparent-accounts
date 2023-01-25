@@ -7,6 +7,21 @@
     content: ":";
 }
 
+.analysis {
+    font-family: Arial, sans-serif;
+}
+
+.metrics-number {
+    margin-bottom: 0;
+    font-size: 200%;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .table {
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     font-size: 0.9em;

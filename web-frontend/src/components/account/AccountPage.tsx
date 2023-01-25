@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import { Container } from 'react-bootstrap'
 import AccountMain from './AccoutMain';
 import AccountDetails from './AccountDetails';
 import { BsChevronLeft } from 'react-icons/bs';
 import AccountSwitch from './AccountSwitch';
 import Transactions from './Transactions';
+import Analysis from "./Analysis";
 
 function AccountPage() {
 
-    const [account, setAccount] = useState()
-    const [transactions, setTransactions] = useState([])
+    const { bankCode, accNumber } = useParams();
+    const [tab, setTab] = useState('transakce')
+    const [account, setAccount] = useState();
+    const [transactions, setTransactions] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -45,9 +48,9 @@ function AccountPage() {
                 </div>
             </Container>
             <div className="my-5">
-                <AccountSwitch />
+                <AccountSwitch setTab={setTab} />
             </div>
-            <Transactions transactions={transactions} />
+            {tab === 'analyza' ? <Analysis /> : <Transactions transactions={transactions} />}
         </main>
     );
 }

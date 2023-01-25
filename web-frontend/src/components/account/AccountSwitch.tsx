@@ -1,13 +1,13 @@
 import { Button, Nav } from 'react-bootstrap';
 
-function AccountSwitch() {
+function AccountSwitch({ setTab }) {
     return (
         <Nav className="d-flex justify-content-center">
             <Nav.Item>
-                <Button>Transakce 💸</Button>
+                <Button onClick={() => setTab('transakce')}>Transakce 💸</Button>
             </Nav.Item>
             <Nav.Item>
-                <Button>Analýza 📈</Button>
+                <Button onClick={() => setTab('analyza')}>Analýza 📈</Button>
             </Nav.Item>
         </Nav>
     )

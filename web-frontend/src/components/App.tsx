@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage/>}/>
         <Route path="/ucty" element={<AccountsPage/>}/>
-        <Route path="/ucty/:bank/:number" element={<AccountPage/>}/>
+        <Route path="/ucty/:bankCode/:accNumber" element={<AccountPage/>}/>
         <Route path="/banky" element={<BanksPage/>}/>
         <Route path="/o-projektu" element={<AboutPage/>}/>
         <Route path="/api" element={<ApiPage/>}/>

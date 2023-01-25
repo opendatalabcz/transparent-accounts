@@ -1,18 +1,19 @@
-import { useEffect, useMemo} from 'react';
-import { useTable, useSortBy, useFilters, useGlobalFilter } from 'react-table'
-import { Table } from 'react-bootstrap';
+import React from 'react';
+import { useTable, useSortBy, useFilters, useGlobalFilter, useBlockLayout } from 'react-table'
+import { FixedSizeList } from 'react-window'
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa'
 import MoneyAmount from '../../features/format/MoneyAmount';
 
+
 function TransactionTable({ transactions, date, type, category, query }) {
 
-    const data = useMemo(() => transactions, [transactions])
+    const data = React.useMemo(() => transactions, [transactions])
 
-    const columns = useMemo(() => [
+    const columns = React.useMemo(() => [
         {
             Header: 'Datum',
             accessor: 'date',
-            Cell: ({ value }) => <span className="text-nowrap">{value}</span>,
+            // Cell: ({ value }) => <span className="text-nowrap">{value}</span>,
             filter: 'between'
         },
         {
@@ -55,7 +56,7 @@ function TransactionTable({ transactions, date, type, category, query }) {
         }
     ], []);
 
-    const filterTypes = useMemo(
+    const filterTypes = React.useMemo(
         () => ({
             between: (rows, id, filterValue) => {
                 return rows.filter(row => filterValue[0] <= row.values[id] && row.values[id] <= filterValue[1])
@@ -91,28 +92,53 @@ function TransactionTable({ transactions, date, type, category, query }) {
         },
         useFilters,
         useGlobalFilter,
-        useSortBy
+        useSortBy,
+        useBlockLayout
     )
 
-    useEffect(() => {
+    React.useEffect(() => {
         setFilter("date", date);
         setFilter("type", type);
         setFilter("category", category);
         setGlobalFilter(query)
     }, [date, type, category, query]);
 
+    const RenderRow = React.useCallback(
+        ({ index, style }) => {
+            const row = rows[index]
+            prepareRow(row)
+            return (
+                <div
+                    {...row.getRowProps({
+                        style,
+                    })}
+                    className="tr"
+                >
+                    {row.cells.map(cell => {
+                        return (
+                            <div {...cell.getCellProps()} className="td">
+                                {cell.render('Cell')}
+                            </div>
+                        )
+                    })}
+                </div>
+            )
+        },
+        [prepareRow, rows]
+    )
+
     return (
         <div className='table-responsive-lg'>
-            <Table striped hover className='transactions-table table-light' {...getTableProps()}>
-                <thead>
+            <div {...getTableProps()} className='table table-light table-striped table-hover'>
+                <div>
                 {// Loop over the header rows
                     headerGroups.map(headerGroup => (
                         // Apply the header row props
-                        <tr {...headerGroup.getHeaderGroupProps()}>
+                        <div {...headerGroup.getHeaderGroupProps()} className='tr'>
                             {// Loop over the headers in each row
                                 headerGroup.headers.map(column => (
                                     // Apply the header cell props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    <div {...column.getHeaderProps(column.getSortByToggleProps())} className='th'>
                                         {// Render the header
                                             column.render('Header')}
                                         <span>
@@ -123,35 +149,22 @@ function TransactionTable({ transactions, date, type, category, query }) {
                                                 : <FaSort className='d-inline-block align-text-top ms-1' />}
                                         </span>
                                         <div>{column.id === 'type' ? column.render('Filter') : null}</div>
-                                    </th>
+                                    </div>
                                 ))}
-                        </tr>
+                        </div>
                     ))}
-                </thead>
+                </div>
                 {/* Apply the table body props */}
-                <tbody className='table-group-divider' {...getTableBodyProps()}>
-                {// Loop over the table rows
-                    rows.map(row => {
-                        // Prepare the row for display
-                        prepareRow(row)
-                        return (
-                            // Apply the row props
-                            <tr {...row.getRowProps()}>
-                                {// Loop over the rows cells
-                                    row.cells.map(cell => {
-                                        // Apply the cell props
-                                        return (
-                                            <td {...cell.getCellProps()}>
-                                                {// Render the cell contents
-                                                    cell.render('Cell')}
-                                            </td>
-                                        )
-                                    })}
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
+                <div className='table-group-divider' {...getTableBodyProps()}>
+                    <FixedSizeList
+                        height={600}
+                        itemCount={rows.length}
+                        itemSize={40}
+                    >
+                        {RenderRow}
+                    </FixedSizeList>
+                </div>
+            </div>
         </div>
     )
 }

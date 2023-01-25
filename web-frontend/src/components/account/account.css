@@ -1,69 +1,73 @@
-.account-details > dt, dd {
-    border-bottom: 1px solid;
-    margin: 0;
+.account-details > dt,
+dd {
+  border-bottom: 1px solid;
+  margin: 0;
 }
 
 .account-details > dt::after {
-    content: ":";
+  content: ':';
 }
 
 .analysis {
-    font-family: Arial, sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 .metrics-number {
-    margin-bottom: 0;
-    font-size: 200%;
+  margin-bottom: 0;
+  font-size: 200%;
 }
 
 .ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .table {
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    font-size: 0.9em;
-    display: table;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 0.9em;
+  display: table;
 }
 
 .thead {
-    display: table-header-group;
+  display: table-header-group;
 }
 
 .tbody {
-    display: table-row-group;
+  display: table-row-group;
 }
 
 .tr {
-    display: table-row;
+  display: table-row;
 }
 
-.td, .th {
-    display: table-cell;
+.td,
+.th {
+  display: table-cell;
 }
 
 .table .td:has(span) {
-    text-align: end;
+  text-align: end;
 }
 
 .table {
-    display: inline-block;
-    border-spacing: 0;
-    border: 1px solid black;
+  display: inline-block;
+  border-spacing: 0;
+  border: 1px solid black;
 }
 .tr:last-child .td {
-    border-bottom: 0;
+  border-bottom: 0;
 }
 
-.th, .td {
-    margin: 0;
-    padding: 0.5rem;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
+.th,
+.td {
+  margin: 0;
+  padding: 0.5rem;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
 }
 
-.th:last-child, .td:last-child {
-    border-right: 1px solid black;
+.th:last-child,
+.td:last-child {
+  border-right: 1px solid black;
 }

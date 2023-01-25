@@ -1,33 +1,33 @@
 .navbar {
-    font-family: 'Roboto', sans-serif;
-    font-weight: bold;
-    font-size: 1.4em;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 1.4em;
 }
 
 @media (max-width: 475px) {
-    #brand-container {
-        margin-right: 0 !important;
-    }
+  #brand-container {
+    margin-right: 0 !important;
+  }
 
-    #brand-logo {
-     display: none;
-    }
+  #brand-logo {
+    display: none;
+  }
 }
 
 .navbar svg {
-    margin-right: 0.3rem;
+  margin-right: 0.3rem;
 }
 
 .navbar-brand span {
-    font-size: 1.1em;
-    line-height: 1.2;
-    white-space: pre-line;
+  font-size: 1.1em;
+  line-height: 1.2;
+  white-space: pre-line;
 }
 
 .nav-link {
-    color: white;
+  color: white;
 }
 
 .nav-link:hover {
-    color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.55);
 }

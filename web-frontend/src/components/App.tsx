@@ -11,15 +11,15 @@ import PageNotFound from './PageNotFound';
 function App() {
   return (
     <>
-      <Header/>
+      <Header />
       <Routes>
-        <Route path="/" element={<HomePage/>}/>
-        <Route path="/ucty" element={<AccountsPage/>}/>
-        <Route path="/ucty/:bankCode/:accNumber" element={<AccountPage/>}/>
-        <Route path="/banky" element={<BanksPage/>}/>
-        <Route path="/o-projektu" element={<AboutPage/>}/>
-        <Route path="/api" element={<ApiPage/>}/>
-        <Route path="*" element={<PageNotFound/>}/>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/ucty" element={<AccountsPage />} />
+        <Route path="/ucty/:bankCode/:accNumber" element={<AccountPage />} />
+        <Route path="/banky" element={<BanksPage />} />
+        <Route path="/o-projektu" element={<AboutPage />} />
+        <Route path="/api" element={<ApiPage />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );

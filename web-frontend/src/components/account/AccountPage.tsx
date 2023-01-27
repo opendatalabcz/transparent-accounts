@@ -7,14 +7,16 @@ import { BsChevronLeft } from 'react-icons/bs';
 import AccountSwitch from './AccountSwitch';
 import Transactions from './Transactions';
 import Analysis from './Analysis';
+import { Account, Transaction } from '../../types';
 
 function AccountPage() {
-  const { bankCode, accNumber } = useParams();
-  const [tab, setTab] = useState('transakce');
-  const [account, setAccount] = useState();
-  const [transactions, setTransactions] = useState([]);
-  const [isLoading, setLoading] = useState(true);
+  const { bankCode, accNumber } = useParams<Record<string, string | undefined>>();
+  const [tab, setTab] = useState<'transakce' | 'analyza'>('transakce');
+  const [account, setAccount] = useState<Account | null>(null);
+  const [transactions, setTransactions] = useState<Array<Transaction>>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
+  // TODO move to services
   useEffect(() => {
     fetch('http://localhost:5000/api/accounts/0100/000000-0004070217')
       .then((response) => response.json())
@@ -26,7 +28,10 @@ function AccountPage() {
       .catch((error) => console.log('Error: ' + error));
   }, []);
 
+  // TODO
   if (isLoading) return <div>Loading...</div>;
+  // TODO
+  if (account === null) return <div>Account not found</div>
 
   return (
     <main>

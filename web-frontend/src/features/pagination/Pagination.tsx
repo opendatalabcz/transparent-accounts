@@ -1,14 +1,13 @@
-import React from 'react';
 import classnames from 'classnames';
 import { usePagination, DOTS } from './usePagination';
 import './pagination.css';
 
 interface Props {
-  onPageChange: (number) => void,
-  pageCount: number,
-  siblingCount?: number,
-  currentPage: number,
-  className: string
+  onPageChange: (number) => void;
+  pageCount: number;
+  siblingCount?: number;
+  currentPage: number;
+  className: string;
 }
 
 function Pagination({
@@ -17,17 +16,16 @@ function Pagination({
   siblingCount = 1,
   currentPage,
   className
-}: Props): JSX.Element {
-
+}: Props): JSX.Element | null {
   const paginationRange: Array<string | number> = usePagination({
     currentPage,
     pageCount,
-    siblingCount,
+    siblingCount
   });
 
   // If there are less than 2 times in pagination range we shall not render the component
   if (currentPage === 0 || paginationRange.length < 2) {
-    return <></>;
+    return null;
   }
 
   const onNext = (): void => {

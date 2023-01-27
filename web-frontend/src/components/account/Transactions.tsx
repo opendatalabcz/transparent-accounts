@@ -3,13 +3,18 @@ import { Container } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import TransactionsFilter from './TransactionsFilter';
 import TransactionsTable from './TransactionsTable';
+import { Transaction } from '../../types';
 
-function Transactions({ transactions }) {
-  const [startDate, setStartDate] = useState(dayjs().subtract(1, 'year').format('YYYY-MM-DD'));
-  const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
-  const [type, setType] = useState('');
-  const [category, setCategory] = useState('');
-  const [query, setQuery] = useState('');
+interface Props {
+  transactions: Array<Transaction>
+}
+
+function Transactions({ transactions }: Props): JSX.Element {
+  const [startDate, setStartDate] = useState<string>(dayjs().subtract(1, 'year').format('YYYY-MM-DD'));
+  const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
+  const [type, setType] = useState<'' | 'INCOMING' | 'OUTGOING'>('');
+  const [category, setCategory] = useState<'' | 'MESSAGES' | 'NO-MESSAGES'>('');
+  const [query, setQuery] = useState<string>('');
 
   return (
     <div>

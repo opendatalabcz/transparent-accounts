@@ -3,8 +3,13 @@ import { BsBoxArrowUpRight } from 'react-icons/bs';
 import MoneyAmount from '../../features/format/MoneyAmount';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import './account.css';
+import { Account } from '../../types';
 
-function AccountDetails({ account }) {
+interface Props {
+  account: Account
+}
+
+function AccountDetails({ account }: Props): JSX.Element {
   return (
     <Container fluid className="px-0">
       <dl className="account-details row mx-1">

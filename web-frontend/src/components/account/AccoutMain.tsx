@@ -2,8 +2,13 @@ import { Container, Button } from 'react-bootstrap';
 import { CiBank } from 'react-icons/ci';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
+import { Account } from '../../types';
 
-function AccountMain({ account }) {
+interface Props {
+  account: Account
+}
+
+function AccountMain({ account }: Props): JSX.Element {
   return (
     <Container fluid>
       <CiBank size={64} />

@@ -1,14 +1,24 @@
 import { useEffect, useMemo } from 'react';
-import { useTable, useSortBy, useFilters, useGlobalFilter, usePagination } from 'react-table';
+import { useTable, useSortBy, useFilters, useGlobalFilter, usePagination, Column } from 'react-table';
 import { Table } from 'react-bootstrap';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import { transactionColumns } from './TransactionColumns';
 import Pagination from '../../features/pagination/Pagination';
+import { Transaction } from '../../types';
 
-function TransactionTable({ transactions, date, type, category, query }) {
-  const data = useMemo(() => transactions, [transactions]);
-  const columns = useMemo(() => transactionColumns, []);
+interface Props {
+  transactions: Array<Transaction>,
+  date: [string, string],
+  type: string,
+  category: string,
+  query: string
+}
 
+function TransactionTable({ transactions, date, type, category, query }: Props): JSX.Element {
+  const data: Array<Transaction> = useMemo(() => transactions, [transactions]);
+  const columns: Array<Column> = useMemo(() => transactionColumns, []);
+
+  // Definition of custom filters
   const filterTypes = useMemo(
     () => ({
       between: (rows, id, filterValue) => {
@@ -30,6 +40,7 @@ function TransactionTable({ transactions, date, type, category, query }) {
     []
   );
 
+  // Initialize the table
   const {
     getTableProps,
     getTableBodyProps,
@@ -57,6 +68,7 @@ function TransactionTable({ transactions, date, type, category, query }) {
     usePagination
   );
 
+  // Change of filters
   useEffect(() => {
     setFilter('date', date);
     setFilter('type', type);

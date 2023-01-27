@@ -1,6 +1,10 @@
 import { Button, Nav } from 'react-bootstrap';
 
-function AccountSwitch({ setTab }) {
+interface Props {
+  setTab: (tab: 'transakce' | 'analyza') => void
+}
+
+function AccountSwitch({ setTab }: Props): JSX.Element {
   return (
     <Nav className="d-flex justify-content-center">
       <Nav.Item>

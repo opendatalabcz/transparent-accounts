@@ -1,6 +1,7 @@
+import { Column } from 'react-table'
 import MoneyAmount from '../../features/format/MoneyAmount';
 
-export const transactionColumns = [
+export const transactionColumns: Array<Column> = [
   {
     Header: 'Datum',
     accessor: 'date',

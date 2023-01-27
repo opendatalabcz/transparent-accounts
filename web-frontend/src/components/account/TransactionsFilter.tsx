@@ -1,18 +1,31 @@
 import { Container, Form, InputGroup } from 'react-bootstrap';
 import { BsSearch } from 'react-icons/bs';
 
+interface Props {
+  startDate: string,
+  setStartDate: (startDate) => void,
+  endDate: string,
+  setEndDate: (endDate) => void,
+  type: '' | 'INCOMING' | 'OUTGOING',
+  setType: (type) => void,
+  category: '' | 'MESSAGES' | 'NO-MESSAGES',
+  setCategory: (category) => void,
+  query: string
+  setQuery: (query) => void,
+}
+
 function TransactionsFilter({
-  type,
-  setType,
   startDate,
   setStartDate,
   endDate,
   setEndDate,
+  type,
+  setType,
   category,
   setCategory,
   query,
   setQuery
-}) {
+}: Props): JSX.Element {
   return (
     <Container fluid>
       <div className="row gy-2">

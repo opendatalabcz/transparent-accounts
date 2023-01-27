@@ -8,6 +8,7 @@ import AccountSwitch from './AccountSwitch';
 import Transactions from './Transactions';
 import Analysis from './Analysis';
 import { Account, Transaction } from '../../types';
+import { getAccount } from '../../services/accounts';
 
 function AccountPage() {
   const { bankCode, accNumber } = useParams<Record<string, string | undefined>>();
@@ -16,22 +17,20 @@ function AccountPage() {
   const [transactions, setTransactions] = useState<Array<Transaction>>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
 
-  // TODO move to services
   useEffect(() => {
-    fetch('http://localhost:5000/api/accounts/0100/000000-0004070217')
-      .then((response) => response.json())
-      .then((data) => {
-        setAccount(data);
-        setTransactions(data.transactions);
-        setLoading(false);
+    getAccount(bankCode as string, accNumber as string)
+      .then((account: Account) => {
+        setAccount(account);
+        setTransactions(account.transactions as Array<Transaction>);
       })
-      .catch((error) => console.log('Error: ' + error));
-  }, []);
+      .catch((error) => console.log('Error: ' + error))
+      .finally(() => setLoading(false));
+  }, [bankCode, accNumber]);
 
   // TODO
   if (isLoading) return <div>Loading...</div>;
   // TODO
-  if (account === null) return <div>Account not found</div>
+  if (account === null) return <div>Account not found</div>;
 
   return (
     <main>

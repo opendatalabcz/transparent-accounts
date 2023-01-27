@@ -10,6 +10,7 @@ export interface Account {
   last_updated: string,
   last_fetched: string | null,
   archived: boolean
+  transactions?: Array<Transaction>
 }
 
 export interface Transaction {

@@ -1,11 +1,12 @@
 import { Column } from 'react-table'
+import dayjs from 'dayjs';
 import MoneyAmount from '../../features/format/MoneyAmount';
 
 export const transactionColumns: Array<Column> = [
   {
     Header: 'Datum',
     accessor: 'date',
-    Cell: ({ value }) => <span className="text-nowrap">{value}</span>,
+    Cell: ({ value }) => <span className="text-nowrap">{dayjs(value).format('DD.MM.YYYY')}</span>,
     filter: 'between'
   },
   {

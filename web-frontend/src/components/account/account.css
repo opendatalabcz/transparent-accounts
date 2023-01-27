@@ -17,15 +17,7 @@ dd {
   white-space: nowrap;
 }
 
-.transactions-table thead tr th:nth-child(2) {
-  text-align: end;
-}
-
-.transactions-table td {
-  vertical-align: middle;
-}
-
-.transactions-table td:has(span) {
+.transactions-table th:nth-child(2), td:nth-child(2) {
   text-align: end;
 }
 

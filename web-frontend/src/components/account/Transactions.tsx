@@ -28,7 +28,7 @@ function Transactions({ transactions }: Props): JSX.Element {
       <div className="d-flex justify-content-end">
         <Button variant="link" onClick={downloadCSV}>
           <BsCloudDownload className="d-inline-block align-text-top me-1" />
-          export do CSV
+          uložit jako CSV
         </Button>
       </div>
       <div className="mt-2">

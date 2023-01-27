@@ -4,7 +4,7 @@ import { BsQuestionCircle } from 'react-icons/bs';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
 import dayjs from 'dayjs';
-import { canUpdate, update } from '../../services/accounts';
+import { canUpdate, update } from '../../services/accountsAPI';
 
 interface Props {
   account: Account;

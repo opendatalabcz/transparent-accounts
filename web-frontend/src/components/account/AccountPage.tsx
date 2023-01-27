@@ -8,7 +8,7 @@ import AccountSwitch from './AccountSwitch';
 import Transactions from './Transactions';
 import Analysis from './Analysis';
 import { Account, Transaction } from '../../types';
-import { getAccount } from '../../services/accounts';
+import { getAccount, getTransactions } from '../../services/accountsAPI';
 
 function AccountPage() {
   const { bankCode, accNumber } = useParams<Record<string, string | undefined>>();
@@ -21,7 +21,8 @@ function AccountPage() {
     getAccount(bankCode as string, accNumber as string)
       .then((account: Account) => {
         setAccount(account);
-        setTransactions(account.transactions as Array<Transaction>);
+        getTransactions(bankCode as string, accNumber as string)
+          .then((transactions: Array<Transaction>) => setTransactions(transactions))
       })
       .catch((error) => console.log('Error: ' + error))
       .finally(() => setLoading(false));

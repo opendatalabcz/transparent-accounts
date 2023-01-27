@@ -4,7 +4,7 @@ from flask import request
 
 from app import app, celery, bp
 from app.models import Bank, AccountUpdate, UpdateStatus
-from app.queries import find_account, find_accounts, find_update, save_update
+from app.queries import find_account, find_transactions, find_accounts, find_update, save_update
 from app.utils import object_encode, generalize_query
 
 
@@ -34,6 +34,27 @@ def get_account(bank_code: str, acc_num: str):
 
     response = app.response_class(
         response=json.dumps(account, default=object_encode),
+        mimetype='application/json'
+    )
+    return response
+
+
+@bp.get("/accounts/<bank_code>/<acc_num>/transactions")
+def get_transactions(bank_code: str, acc_num: str):
+    try:
+        bank = Bank(bank_code)
+    except ValueError:
+        return  # TODO
+
+    account = find_account(acc_num, bank)
+
+    if account is None:
+        return  # TODO
+
+    transactions = find_transactions(acc_num, bank)
+
+    response = app.response_class(
+        response=json.dumps(transactions, default=object_encode),
         mimetype='application/json'
     )
     return response

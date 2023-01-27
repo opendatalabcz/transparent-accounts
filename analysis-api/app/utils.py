@@ -24,14 +24,14 @@ def object_encode(o) -> dict | str:
                 "created": o.created,
                 "last_updated": o.last_updated,
                 "last_fetched": o.last_fetched,
-                "archived": o.archived,
-                "transactions": o.transactions
+                "archived": o.archived
             }
         case Transaction():
             return {
                 "id": o.id,
                 "date": o.date,
                 "amount": o.amount,
+                "currency": "CZK",  # TODO: get currency from transaction
                 "counter_account": o.counter_account,
                 "type": o.type.name,
                 "type_detail": o.str_type,

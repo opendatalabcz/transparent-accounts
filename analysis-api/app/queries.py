@@ -5,17 +5,25 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 
 from app import engine
-from app.models import Account, Bank, AccountUpdate, UpdateStatus
+from app.models import Account, Transaction, Bank, AccountUpdate, UpdateStatus
 
 
 def find_account(acc_num: str, bank: Bank) -> Optional[Account]:
     """
-    Find Account with Transactions by its number.
+    Find Account by the number and bank.
     """
     with Session(engine) as s:
-        # Select account with transactions, it's important to force joinedload here
-        account = s.get(Account, (acc_num, bank), options=[joinedload(Account.transactions)])
-    return account
+        return s.get(Account, (acc_num, bank))
+
+
+def find_transactions(acc_num: str, bank: Bank) -> list[Transaction]:
+    """
+    Find Transactions by the account number.
+    """
+    with Session(engine) as s:
+        return s.query(Transaction)\
+            .filter(Transaction.account_number == acc_num, Transaction.account_bank == bank)\
+            .order_by(Transaction.date.desc()).all()
 
 
 def find_accounts(query: Optional[str]) -> list[Account]:

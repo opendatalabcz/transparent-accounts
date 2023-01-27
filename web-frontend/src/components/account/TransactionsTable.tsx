@@ -142,12 +142,13 @@ function TransactionTable({ transactions, date, type, category, query }: Props):
           }
         </tbody>
       </Table>
-      <Pagination
-        className="pagination-bar"
-        currentPage={pageIndex + 1}
-        pageCount={pageCount}
-        onPageChange={(page: number): void => gotoPage(page - 1)}
-      />
+      <div className="d-flex justify-content-center">
+        <Pagination
+          currentPage={pageIndex + 1}
+          pageCount={pageCount}
+          onPageChange={(page: number): void => gotoPage(page - 1)}
+        />
+      </div>
     </div>
   );
 }

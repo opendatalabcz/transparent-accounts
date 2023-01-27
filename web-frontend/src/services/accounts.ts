@@ -8,6 +8,14 @@ export const getAccount = async (bank_code: string, account_number: string): Pro
   return await response.json();
 };
 
+export const canUpdate = async (bank_code: string, account_number: string): Promise<boolean> => {
+  const response: Response = await fetch(
+    `${URL}/api/accounts/${bank_code}/${account_number}/updates`
+  );
+  const updates = await response.json();
+  return updates.updatable;
+};
+
 export const update = async (bank_code: string, account_number: string): Promise<string | null> => {
   const response: Response = await fetch(
     `${URL}/api/accounts/${bank_code}/${account_number}/updates`,

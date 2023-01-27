@@ -4,7 +4,7 @@ import { BsQuestionCircle } from 'react-icons/bs';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
 import dayjs from 'dayjs';
-import { update } from '../../services/accounts'
+import { canUpdate, update } from '../../services/accounts'
 
 interface Props {
   account: Account;
@@ -18,6 +18,17 @@ function AccountMain({ account }: Props): JSX.Element {
       .catch(error => console.log(error))
   };
 
+  const isEnabled = (): boolean => {
+    // Account was successfully update today -> not enabled
+    if (dayjs(account.last_fetched).isSame(dayjs(), 'day')) {
+      return false;
+    }
+    // Check if API permits update
+    canUpdate(account.bank_code, account.number)
+      .then(isPossible => isPossible);
+    return false;
+  }
+
   return (
     <Container fluid>
       <CiBank size={64} />
@@ -28,9 +39,9 @@ function AccountMain({ account }: Props): JSX.Element {
           {shortenAccNum(account.number)}/{account.bank_code}
         </div>
       </h1>
-      <Button onClick={sendUpdate}>Aktualizovat</Button>
+      <Button onClick={sendUpdate} disabled={!isEnabled()}>Aktualizovat</Button>
       <div>
-        Naposledy aktualizováno: {dayjs(account.last_updated).format('DD.MM.YYYY')}
+        Naposledy aktualizováno: {dayjs(account.last_fetched).format('DD.MM.YYYY')}
         <span className="ms-1">
           <OverlayTrigger
             placement="bottom"

@@ -35,7 +35,7 @@ function AccountPage() {
   return (
     <main>
       <Container fluid>
-        <div className="my-3 d-flex justify-content-end">
+        <div className="d-flex justify-content-end mt-3">
           <NavLink to="/ucty">
             <BsChevronLeft className="d-inline-block align-text-top me-1" />
             zpět na přehled
@@ -53,7 +53,9 @@ function AccountPage() {
       <div className="my-5">
         <AccountSwitch setTab={setTab} />
       </div>
-      {tab === 'analyza' ? <Analysis /> : <Transactions transactions={transactions} />}
+      <div>
+        {tab === 'analyza' ? <Analysis /> : <Transactions transactions={transactions} />}
+      </div>
     </main>
   );
 }

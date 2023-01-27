@@ -1,24 +1,37 @@
 import { useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import TransactionsFilter from './TransactionsFilter';
 import TransactionsTable from './TransactionsTable';
 import { Transaction } from '../../types';
+import { BsCloudDownload } from 'react-icons/bs';
 
 interface Props {
-  transactions: Array<Transaction>
+  transactions: Array<Transaction>;
 }
 
 function Transactions({ transactions }: Props): JSX.Element {
-  const [startDate, setStartDate] = useState<string>(dayjs().subtract(1, 'year').format('YYYY-MM-DD'));
+  const [startDate, setStartDate] = useState<string>(
+    dayjs().subtract(1, 'year').format('YYYY-MM-DD')
+  );
   const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const [type, setType] = useState<'' | 'INCOMING' | 'OUTGOING'>('');
   const [category, setCategory] = useState<'' | 'MESSAGES' | 'NO-MESSAGES'>('');
   const [query, setQuery] = useState<string>('');
 
+  const downloadCSV = () => {
+    // TODO
+  }
+
   return (
-    <div>
-      <div className="mb-5">
+    <Container fluid>
+      <div className="d-flex justify-content-end">
+        <Button variant="link" onClick={downloadCSV}>
+          <BsCloudDownload className="d-inline-block align-text-top me-1" />
+          export do CSV
+        </Button>
+      </div>
+      <div className="mt-2">
         <TransactionsFilter
           {...{
             startDate,
@@ -34,7 +47,7 @@ function Transactions({ transactions }: Props): JSX.Element {
           }}
         />
       </div>
-      <Container fluid>
+      <div className="mt-4">
         <TransactionsTable
           transactions={transactions}
           date={[startDate, endDate]}
@@ -42,8 +55,8 @@ function Transactions({ transactions }: Props): JSX.Element {
           category={category}
           query={query}
         />
-      </Container>
-    </div>
+      </div>
+    </Container>
   );
 }
 

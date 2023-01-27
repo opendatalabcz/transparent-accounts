@@ -3,6 +3,7 @@ import { useTable, useSortBy, useFilters, useGlobalFilter, usePagination } from 
 import { Table } from 'react-bootstrap';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import { transactionColumns } from './TransactionColumns';
+import Pagination from '../../features/pagination/Pagination';
 
 function TransactionTable({ transactions, date, type, category, query }) {
   const data = useMemo(() => transactions, [transactions]);
@@ -37,15 +38,9 @@ function TransactionTable({ transactions, date, type, category, query }) {
     setFilter,
     setGlobalFilter,
     page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
     pageCount,
     gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize }
+    state: { pageIndex }
   } = useTable(
     {
       columns,
@@ -105,10 +100,10 @@ function TransactionTable({ transactions, date, type, category, query }) {
             ))
           }
         </thead>
-        {/* Apply the table body props */}
+        {/* Apply the pagination body props */}
         <tbody className="table-group-divider" {...getTableBodyProps()}>
           {
-            // Loop over the table rows
+            // Loop over the pagination rows
             page.map((row) => {
               // Prepare the row for display
               prepareRow(row);
@@ -135,49 +130,12 @@ function TransactionTable({ transactions, date, type, category, query }) {
           }
         </tbody>
       </Table>
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
-        <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <span>
-          | Go to page:{' '}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}>
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
+      <Pagination
+        className="pagination-bar"
+        currentPage={pageIndex + 1}
+        pageCount={pageCount}
+        onPageChange={(page: number): void => gotoPage(page - 1)}
+      />
     </div>
   );
 }

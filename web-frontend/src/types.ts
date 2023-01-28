@@ -25,6 +25,6 @@ export interface Transaction {
   constant_symbol: string;
   specific_symbol: string;
   description: string;
-  ico: string | null;
+  identifier: string | null;
   category: string | null;
 }

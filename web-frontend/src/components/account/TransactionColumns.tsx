@@ -48,7 +48,7 @@ export const transactionColumns: Array<Column> = [
   },
   {
     Header: 'IČO',
-    accessor: 'ico'
+    accessor: 'identifier'
   },
   {
     Header: 'Kategorie',

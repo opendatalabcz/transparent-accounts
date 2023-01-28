@@ -1,66 +1,100 @@
+import { useMemo } from 'react';
 import { Container } from 'react-bootstrap';
-import AnalysisCard from './AnalysisCard';
+import AnalysisCard, { AnalysisCardProps } from './AnalysisCard';
+import { analyse } from '../../services/analysis';
+import MoneyAmount from '../../features/format/MoneyAmount';
+import { Transaction, Analysis as AnalysisType } from '../../types';
 
-function Analysis() {
-  const stats = [
-    {
-      name: 'Počet transakcí',
-      value: <span>622</span>
-    },
-    {
-      name: 'Počet příchozích transakcí',
-      value: <span>604</span>
-    },
-    {
-      name: 'Počet odchozích transakcí',
-      value: <span>18</span>
-    },
-    {
-      name: 'Zůstatek',
-      value: <span className="fs-3">21 221,98 CZK</span>
-    },
-    {
-      name: 'Suma příjmů',
-      value: <span className="fs-3">4 002 835,92 CZK</span>
-    },
-    {
-      name: 'Suma výdajů',
-      value: <span className="text-danger fs-3">-10 209 226,52 CZK</span>
-    },
-    {
-      name: 'Průměrná výše příchozí transakce',
-      value: <span className="fs-3">3 224,00 CZK</span>
-    },
-    {
-      name: 'Průměrná výše odchozí transakce',
-      value: <span className="text-danger fs-3">-386 235,50 CZK</span>
-    },
-    {
-      name: 'Medián výše příchozí transakce',
-      value: <span className="fs-3">0,01 CZK</span>
-    },
-    {
-      name: 'Medián výše odchozí transakce',
-      value: <span className="text-danger fs-3">-20 000,00 CZK</span>
-    },
-    {
-      name: 'Úroveň transparentnosti účtu',
-      value: <span>12 %</span>,
-      description: 'Počítá se jako'
-    },
-    {
-      name: 'Uvedená poznámka',
-      value: <span>100 %</span>,
-      description: 'V kolika procentech odchozích transakcí je uvedena jakákoliv poznámka.'
-    }
-  ];
+interface Props {
+  transactions: Array<Transaction>;
+  balance: number | null;
+  currency: string | null;
+}
+
+function Analysis({ transactions, balance, currency }: Props): JSX.Element {
+  // Analyse transactions
+  const analysis: AnalysisType = useMemo(
+    () => analyse(transactions, balance, currency),
+    [transactions, balance, currency]
+  );
+
+  // Listing of shown analysis cards
+  const metrics = useMemo<Array<AnalysisCardProps>>(
+    () => [
+      {
+        name: 'Počet transakcí',
+        value: analysis.transactionsCount,
+        render: (value) => (value !== null ? <span>{value.toLocaleString('cs-CZ')}</span> : null)
+      },
+      {
+        name: 'Počet příchozích transakcí',
+        value: analysis.incomingCount,
+        render: (value) => (value !== null ? <span>{value.toLocaleString('cs-CZ')}</span> : null)
+      },
+      {
+        name: 'Počet odchozích transakcí',
+        value: analysis.outgoingCount,
+        render: (value) => (value !== null ? <span>{value.toLocaleString('cs-CZ')}</span> : null)
+      },
+      {
+        name: 'Zůstatek',
+        value: analysis.balance,
+        render: (value) => <MoneyAmount amount={value} currency={analysis.currency} />
+      },
+      {
+        name: 'Suma příjmů',
+        value: analysis.incomingAmount,
+        render: (value) => <MoneyAmount amount={value} currency={analysis.currency} />
+      },
+      {
+        name: 'Suma výdajů',
+        value: analysis.outgoingAmount,
+        render: (value) => <MoneyAmount amount={value} currency={analysis.currency} />
+      },
+      {
+        name: 'Průměrná výše příchozí transakce',
+        value: analysis.incomingAverage,
+        render: (value) => <MoneyAmount amount={value} currency={analysis.currency} />
+      },
+      {
+        name: 'Průměrná výše odchozí transakce',
+        value: analysis.outgoingAverage,
+        render: (value) => <MoneyAmount amount={value} currency={analysis.currency} />
+      },
+      {
+        name: 'Medián výše příchozí transakce',
+        value: analysis.incomingMedian,
+        render: (value) => <MoneyAmount amount={value} currency={analysis.currency} />
+      },
+      {
+        name: 'Medián výše odchozí transakce',
+        value: analysis.outgoingMedian,
+        render: (value) => <MoneyAmount amount={value} currency={analysis.currency} />
+      },
+      {
+        name: 'Úroveň transparentnosti účtu',
+        value: analysis.transparency,
+        description: 'Počítá se jako',
+        render: (value) => (value != null ? <span>{Math.round(value * 100)} %</span> : null)
+      },
+      {
+        name: 'Uvedená poznámka',
+        value: analysis.noted,
+        description: 'V kolika procentech odchozích transakcí je uvedena jakákoliv poznámka.',
+        render: (value) => (value != null ? <span>{Math.round(value * 100)} %</span> : null)
+      }
+    ],
+    [analysis]
+  );
 
   return (
     <Container className="analysis">
       <div className="row">
-        {stats.map((stat) => (
-          <AnalysisCard key={stat.name} metrics={stat} />
-        ))}
+        {metrics.map(
+          (metric: AnalysisCardProps): JSX.Element => (
+            <AnalysisCard key={metric.name} metrics={metric} />
+          )
+        )}
       </div>
     </Container>
   );

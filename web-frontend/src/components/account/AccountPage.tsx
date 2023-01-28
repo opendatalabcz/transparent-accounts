@@ -21,8 +21,9 @@ function AccountPage() {
     getAccount(bankCode as string, accNumber as string)
       .then((account: Account) => {
         setAccount(account);
-        getTransactions(bankCode as string, accNumber as string)
-          .then((transactions: Array<Transaction>) => setTransactions(transactions))
+        getTransactions(bankCode as string, accNumber as string).then(
+          (transactions: Array<Transaction>) => setTransactions(transactions)
+        );
       })
       .catch((error) => console.log('Error: ' + error))
       .finally(() => setLoading(false));
@@ -55,7 +56,15 @@ function AccountPage() {
         <AccountSwitch setTab={setTab} />
       </div>
       <div>
-        {tab === 'analyza' ? <Analysis /> : <Transactions transactions={transactions} />}
+        {tab === 'analyza' ? (
+          <Analysis
+            transactions={transactions}
+            balance={account.balance}
+            currency={account.currency}
+          />
+        ) : (
+          <Transactions transactions={transactions} />
+        )}
       </div>
     </main>
   );

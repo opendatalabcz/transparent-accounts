@@ -10,7 +10,6 @@ export interface Account {
   last_updated: string,
   last_fetched: string | null,
   archived: boolean
-  transactions?: Array<Transaction>
 }
 
 export interface Transaction {
@@ -27,4 +26,20 @@ export interface Transaction {
   description: string;
   identifier: string | null;
   category: string | null;
+}
+
+export interface Analysis {
+  currency: string | null;
+  transactionsCount: number;
+  incomingCount: number;
+  outgoingCount: number;
+  balance: number | null;
+  incomingAmount: number;
+  outgoingAmount: number;
+  incomingAverage: number | null;
+  outgoingAverage: number | null;
+  incomingMedian: number | null;
+  outgoingMedian: number | null;
+  transparency: number | null;
+  noted: number | null;
 }

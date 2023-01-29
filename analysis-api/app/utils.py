@@ -31,14 +31,16 @@ def object_encode(o) -> dict | str:
                 "id": o.id,
                 "date": o.date,
                 "amount": o.amount,
-                "currency": "CZK",  # TODO: get currency from transaction
+                "currency": o.currency,
                 "counter_account": o.counter_account,
                 "type": o.type.name,
                 "type_detail": o.str_type,
                 "variable_symbol": o.variable_symbol,
                 "constant_symbol": o.constant_symbol,
                 "specific_symbol": o.specific_symbol,
-                "description": o.description
+                "description": o.description,
+                "identifier": o.identifier,
+                "category": o.category
             }
         case _:
             return str(o)

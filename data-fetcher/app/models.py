@@ -44,6 +44,10 @@ class TransactionType(Enum):
         return TransactionType.INCOMING if num > 0 else TransactionType.OUTGOING
 
 
+class TransactionCategory(Enum):
+    MESSAGE = "Vzkaz"
+
+
 class UpdateStatus(Enum):
     PENDING = 1
     SUCCESS = 2
@@ -82,6 +86,7 @@ class Transaction(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     date: Mapped[date]
     amount: Mapped[float]
+    currency: Mapped[Currency]
     counter_account: Mapped[Optional[str]]
     type: Mapped[TransactionType]
     str_type: Mapped[str]
@@ -89,6 +94,8 @@ class Transaction(Base):
     constant_symbol: Mapped[str]
     specific_symbol: Mapped[str]
     description: Mapped[str]
+    identifier: Mapped[Optional[str]] = mapped_column(String(8))
+    category: Mapped[Optional[TransactionCategory]]
     account_number: Mapped[str]
     account_bank: Mapped[Bank]
 

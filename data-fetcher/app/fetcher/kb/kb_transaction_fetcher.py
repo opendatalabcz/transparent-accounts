@@ -6,7 +6,7 @@ import requests
 
 from app.fetcher.transaction_fetcher import TransactionFetcher
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
-from app.models import Account, Transaction, TransactionType
+from app.models import Account, Transaction, TransactionType, Currency
 from app.utils import float_from_cz
 
 
@@ -38,7 +38,7 @@ class KBTransactionFetcher(TransactionFetcher):
         transactions = map(self.transaction_to_class, fetched)
 
         # Filter out transactions that does not belong to the desired interval
-        return list(filter(self.check_date_interval, transactions))
+        return list(transactions)
 
     def get_token_and_set_cookies(self) -> str:
         # First request to get the initial pure token and session cookies
@@ -52,7 +52,8 @@ class KBTransactionFetcher(TransactionFetcher):
     def fetch_balance(self) -> float:
         url = self.API_BALANCE_URL.format(self.acc_num)
         response = requests.get(url).json()
-        return self.parse_money_amount(response['balance'])
+        balance, _ = self.parse_money_amount(response['balance'])
+        return balance
 
     def fetch_transactions(self, pure_token) -> list:
         """
@@ -79,7 +80,7 @@ class KBTransactionFetcher(TransactionFetcher):
 
     def transaction_to_class(self, t: dict) -> Transaction:
         t_date = self.parse_date(t['date'])
-        amount = self.parse_money_amount(t['amount'])
+        amount, currency = self.parse_money_amount(t['amount'])
         t_type = TransactionType.from_float(amount)
         # Split symbols by slashes and remove whitespaces from them
         variable_s, constant_s, specific_s = map(lambda s: s.replace(' ', ''),  t['symbols'].split('/'))
@@ -88,6 +89,7 @@ class KBTransactionFetcher(TransactionFetcher):
         return Transaction(
             date=t_date,
             amount=amount,
+            currency=currency,
             counter_account=counter_account,
             type=t_type,
             str_type=str_type,
@@ -95,20 +97,23 @@ class KBTransactionFetcher(TransactionFetcher):
             constant_symbol=constant_s,
             specific_symbol=specific_s,
             description=description,
+            identifier=self.parse_identifier(description),
+            category=self.determine_category(amount, t_type),
             account_number=self.account.number,
             account_bank=self.account.bank,
         )
 
     @staticmethod
-    def parse_money_amount(string: str) -> float:
+    def parse_money_amount(string: str) -> tuple[float, Currency]:
         """
-        Parses amount of money from the KB API to float.
-        Example of KB API amount of money: '4 186,33 EUR'.
+        Parses amount and currency from the KB API transaction amount.
+        Example of KB API transaction amount: '4 186,33 EUR'.
         """
-        # Parse the amount of money using regex
-        pattern = r'(-?[\d ]+,[\d ]+).*'
-        balance = re.search(pattern, string).group(1)
-        return float_from_cz(balance)
+        # Parse the amount and currency using regex
+        pattern = r'(-?[\d ]+,[\d ]+) ([A-Z]{3})'
+        search = re.search(pattern, string)
+        amount, currency = search.groups()
+        return float_from_cz(amount), Currency.from_str(currency)
 
     @staticmethod
     def parse_date(string: str) -> date:
@@ -148,5 +153,5 @@ class KBTransactionFetcher(TransactionFetcher):
                 str_type = parsed[1]
                 description = parsed[2]
             case _:
-                raise AttributeError(str)
+                raise AttributeError(string)
         return counter_account, str_type, description

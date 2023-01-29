@@ -1,7 +1,9 @@
 from datetime import date, timedelta
 from abc import ABC, abstractmethod
+from typing import Optional
+import re
 
-from app.models import Account, Transaction
+from app.models import Account, Transaction, TransactionType, TransactionCategory
 
 
 class TransactionFetcher(ABC):
@@ -34,3 +36,32 @@ class TransactionFetcher(ABC):
 
     def check_date_interval(self, transaction: Transaction) -> bool:
         return self.get_date_from() <= transaction.date <= self.get_date_to()
+
+    @staticmethod
+    def parse_identifier(string: str) -> Optional[str]:
+        """
+        Parses the personal identification number (IČO) from the string.
+        Identifier is an 8-digit number.
+        :param string:
+        :return: the parsed identifier or None if the identifier was not found
+        """
+        # Pattern is saying that we are looking for an exactly 8-digit sequence
+        # Preceded by start of string, whitespace or colon and followed by end of string, whitespace or comma
+        # Example: "IČO: 12345678" or "IČO:12345678" or "12345678 ..."
+        pattern = r'(?:^|\s|:)([0-9]{8})(?:$|\s|,)'
+        search = re.search(pattern, string)
+        return search.group(1) if search is not None else None
+
+    @staticmethod
+    def determine_category(money_amount: float, transaction_type: TransactionType) -> Optional[TransactionCategory]:
+        """
+        Determines the category of the transaction based on the amount and type.
+        :param money_amount:
+        :param transaction_type:
+        :return: category if determined, None otherwise
+        """
+        # Incoming transaction with a very small amount is considered as a message (probably hateful) for the receiver
+        # Should not be lesser than 0 but just in case
+        if 1 >= money_amount > 0 and transaction_type == TransactionType.INCOMING:
+            return TransactionCategory.MESSAGE
+        return None

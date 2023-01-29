@@ -31,16 +31,21 @@ class CSASTransactionFetcher(TransactionFetcher):
     def transaction_to_class(self, t: dict) -> Transaction:
         amount = t['amount']['value']
         counter_account = t['sender'].get('name') if t['sender'].get('name') != '-' else None
+        t_type = TransactionType.from_float(amount)
+        description = t['sender'].get('description', '')
         return Transaction(
             date=datetime.strptime(t['processingDate'], '%Y-%m-%dT00:00:00').date(),
             amount=amount,
+            currency= t['amount']['currency'],
             counter_account=counter_account,
-            type=TransactionType.from_float(amount),
+            type=t_type,
             str_type=t['typeDescription'],
             variable_symbol=t['sender'].get('variableSymbol', ''),
             constant_symbol=t['sender'].get('constantSymbol', ''),
             specific_symbol=t['sender'].get('specificSymbol', ''),
-            description=t['sender'].get('description', ''),
+            description=description,
+            identifier=self.parse_identifier(description),
+            category=self.determine_category(amount, t_type),
             account_number=self.account.number,
             account_bank=self.account.bank
         )

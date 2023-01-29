@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, date
+from datetime import datetime
 
 import bs4
 import requests
@@ -47,7 +47,7 @@ class FioTransactionFetcher(TransactionFetcher):
         cells = row.find_all('td')
 
         t_date = datetime.strptime(cells[0].get_text(strip=True), '%d.%m.%Y').date()
-        amount, _ = self.parse_money_amount(cells[1].get_text(strip=True))
+        amount, currency = self.parse_money_amount(cells[1].get_text(strip=True))
         t_type = TransactionType.from_float(amount)
         counter_account = cells[3].get_text(strip=True) if t_type == TransactionType.INCOMING else None
         description = cells[4].get_text(strip=True) if t_type == TransactionType.INCOMING else cells[8].get_text(strip=True)
@@ -55,6 +55,7 @@ class FioTransactionFetcher(TransactionFetcher):
         return Transaction(
             date=t_date,
             amount=amount,
+            currency=currency,
             counter_account=counter_account,
             type=t_type,
             str_type=cells[2].get_text(strip=True),
@@ -62,6 +63,8 @@ class FioTransactionFetcher(TransactionFetcher):
             constant_symbol=cells[6].get_text(strip=True),
             specific_symbol=cells[7].get_text(strip=True),
             description=description,
+            identifier=self.parse_identifier(description),
+            category=self.determine_category(amount, t_type),
             account_number=self.account.number,
             account_bank=self.account.bank
         )

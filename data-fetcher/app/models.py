@@ -1,7 +1,9 @@
 from __future__ import annotations
-from enum import Enum
+
 from datetime import date, datetime
+from enum import Enum
 from typing import Any, Optional
+
 from sqlalchemy import Boolean, String, ForeignKeyConstraint, CheckConstraint
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped

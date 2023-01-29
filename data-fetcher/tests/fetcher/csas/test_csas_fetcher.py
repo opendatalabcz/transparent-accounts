@@ -1,8 +1,8 @@
 from datetime import date
 
-from app.models import Account, Currency, TransactionType, Bank
 from app.fetcher.csas.csas_account_fetcher import CSASAccountFetcher
 from app.fetcher.csas.csas_transaction_fetcher import CSASTransactionFetcher
+from app.models import Account, Currency, TransactionType, Bank
 
 
 def test_csas_account_to_class():

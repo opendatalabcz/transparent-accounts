@@ -1,4 +1,4 @@
-import { Container, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { CiBank } from 'react-icons/ci';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { shortenAccNum } from '../../utils/accountNumberUtils';

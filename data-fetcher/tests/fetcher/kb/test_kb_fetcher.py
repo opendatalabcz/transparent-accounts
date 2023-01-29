@@ -1,7 +1,7 @@
 from datetime import date
 
-from app.models import Account, TransactionType
 from app.fetcher.kb import KBTransactionFetcher
+from app.models import Account, TransactionType
 
 
 def test_parse_money_amount():

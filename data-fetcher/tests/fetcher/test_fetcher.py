@@ -3,8 +3,8 @@ from datetime import date
 import pytest
 from flexmock import flexmock
 
-from app.models import Account, Transaction
 from app.fetcher.kb import KBTransactionFetcher
+from app.models import Account, Transaction
 
 
 @pytest.fixture

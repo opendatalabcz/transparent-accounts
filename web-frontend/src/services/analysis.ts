@@ -1,4 +1,4 @@
-import { Transaction, Analysis } from '../types';
+import { Analysis, Transaction } from '../types';
 
 export const analyse = (
   transactions: Array<Transaction>,

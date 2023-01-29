@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import AnalysisCard, { AnalysisCardProps } from './AnalysisCard';
 import { analyse } from '../../services/analysis';
 import MoneyAmount from '../../features/format/MoneyAmount';
-import { Transaction, Analysis as AnalysisType } from '../../types';
+import { Analysis as AnalysisType, Transaction } from '../../types';
 
 interface Props {
   transactions: Array<Transaction>;

@@ -1,10 +1,10 @@
-import os
 import logging
+import os
 
+from celery import Celery
 from flask import Flask, Blueprint
 from flask_cors import CORS
 from sqlalchemy import create_engine
-from celery import Celery
 
 app = Flask(__name__)
 app.secret_key = 'dev'

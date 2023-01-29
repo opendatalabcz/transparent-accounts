@@ -1,4 +1,4 @@
-from app.utils import object_encode, generalize_query
+from app.utils import generalize_query
 
 
 def test_object_encode():

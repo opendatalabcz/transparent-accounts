@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { usePagination, DOTS } from './usePagination';
+import { DOTS, usePagination } from './usePagination';
 import './pagination.css';
 
 interface Props {

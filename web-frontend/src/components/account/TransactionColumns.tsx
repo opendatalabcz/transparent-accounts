@@ -1,4 +1,4 @@
-import { Column } from 'react-table'
+import { Column } from 'react-table';
 import dayjs from 'dayjs';
 import MoneyAmount from '../../features/format/MoneyAmount';
 

@@ -1,15 +1,15 @@
-import os
 import logging
+import os
 from collections import namedtuple
 from datetime import date
 
 from celery import Celery
 
-from app.models import Bank, UpdateStatus
-from app.queries import find_account, save_accounts, save_transactions, find_update, save_update
 from app.fetcher.csas import CSASAccountFetcher, CSASTransactionFetcher
 from app.fetcher.fio import FioAccountFetcher, FioTransactionFetcher
 from app.fetcher.kb import KBAccountFetcher, KBTransactionFetcher
+from app.models import Bank, UpdateStatus
+from app.queries import find_account, save_accounts, save_transactions, find_update, save_update
 
 app = Celery('data-fetcher', broker=os.getenv('CELERY_BROKER_URL'))
 

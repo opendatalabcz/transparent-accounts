@@ -5,10 +5,9 @@ Revises: bd7e30f8050f
 Create Date: 2023-01-16 10:18:28.489072
 
 """
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects.postgresql import ENUM
-
 
 # revision identifiers, used by Alembic.
 revision = '7c39543d5e19'

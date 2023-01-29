@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import {
-  BsBarChartFill,
-  BsCurrencyExchange,
   BsBank2,
-  BsGithub,
+  BsBarChartFill,
   BsChatRightTextFill,
-  BsCodeSquare
+  BsCodeSquare,
+  BsCurrencyExchange,
+  BsGithub
 } from 'react-icons/bs';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
 import './Header.css';
 
 function Header() {

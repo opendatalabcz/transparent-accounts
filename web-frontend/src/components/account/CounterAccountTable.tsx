@@ -1,66 +1,39 @@
 import { Column } from 'react-table';
+import AnalysisTableCard, { renderAppearances } from './AnalysisTableCard';
 import MoneyAmount from '../../features/format/MoneyAmount';
-import AnalysisTableCard from './AnalysisTableCard';
+import { Appearance } from '../../types';
 
-function IdentifierTable(): JSX.Element {
-  const analysisColumns: Array<Column> = [
+interface Props {
+  data: Array<Appearance>
+}
+
+function IdentifierTable({ data }: Props): JSX.Element {
+  const columns: Array<Column> = [
     {
       Header: 'Název protiúčtu',
-      accessor: 'counterAccount'
+      accessor: 'name'
     },
     {
-      Header: 'Výskyty u jiných účtů',
-      accessor: 'appearances'
+      Header: 'Výskyty',
+      accessor: 'appearances',
+      Cell: renderAppearances
     },
     {
       Header: 'Počet transakcí',
-      accessor: 'count'
+      accessor: 'transactionsCount'
     },
     {
       Header: 'Celková částka',
-      accessor: 'amount',
+      accessor: 'totalAmount',
       Cell: ({ value }) => <MoneyAmount amount={value} currency="CZK" />
-    }
-  ];
-
-  const example = [
-    {
-      counterAccount: 'Jan Novák',
-      appearances: 0,
-      count: 2,
-      amount: 1250000
-    },
-    {
-      counterAccount: 'Jakub Janeček',
-      appearances: 1,
-      count: 3,
-      amount: 25434
-    },
-    {
-      counterAccount: 'Jan Černý',
-      appearances: 0,
-      count: 1,
-      amount: 233
-    },
-    {
-      counterAccount: 'Jakub Cabrnoch',
-      appearances: 4,
-      count: 4,
-      amount: 0.04
-    },
-    {
-      counterAccount: 'Natálie Kmochová',
-      appearances: 4,
-      count: 1,
-      amount: 0.04
     }
   ];
 
   return (
     <AnalysisTableCard
       title={'Agregace příchozích transakcí podle protiúčtu'}
-      columns={analysisColumns}
-      data={example}
+      columns={columns}
+      data={data}
     />
   );
 }

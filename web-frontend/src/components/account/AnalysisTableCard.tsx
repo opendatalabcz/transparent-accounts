@@ -1,10 +1,83 @@
-import { Column, usePagination, useSortBy, useTable } from 'react-table';
-import { Card, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import { useMemo } from 'react';
-import Pagination from '../../features/pagination/Pagination';
+import { Column, usePagination, useSortBy, useTable } from 'react-table';
+import { Button, Card, OverlayTrigger, Popover, Table, Tooltip } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
+import Pagination from '../../features/pagination/Pagination';
+import { shortenAccNum } from '../../utils/accountNumberUtils';
+import { Appearance, AccountShort } from '../../types';
+import { BsQuestionCircle } from 'react-icons/bs';
 
-function AnalysisTable({ tableColumns, tableData }): JSX.Element {
+interface renderAppearancesProps {
+  value: Array<AccountShort>;
+}
+
+export const renderAppearances = ({ value }: renderAppearancesProps): JSX.Element => {
+  return (
+    <>
+      {value.length > 0 ? (
+        <OverlayTrigger
+          trigger="click"
+          rootClose
+          placement="right"
+          overlay={
+            <Popover>
+              <Popover.Header as="h3">
+                <span>
+                  Výskyty u jiných transparentních účtů
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={<Tooltip>{/* TODO */ 'Vysvětlení'}</Tooltip>}>
+                    <span>
+                      {' '}
+                      <BsQuestionCircle className="d-inline-block" />
+                    </span>
+                  </OverlayTrigger>
+                </span>
+              </Popover.Header>
+              <Popover.Body>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Název účtu</th>
+                      <th>Číslo účtu</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {value.map((account) => (
+                      <tr key={account.bank_code + account.number}>
+                        <td>{account.name}</td>
+                        <td>
+                          <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={`/ucty/${account.bank_code}/${account.number}`}>
+                            {shortenAccNum(account.number) + '/' + account.bank_code}
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Popover.Body>
+            </Popover>
+          }>
+          <Button variant="link" className="p-0">
+            {value.length}
+          </Button>
+        </OverlayTrigger>
+      ) : (
+        <span className="px-0">0</span>
+      )}
+    </>
+  );
+};
+
+interface AnalysisTableProps {
+  tableColumns: Array<Column>;
+  tableData: Array<Appearance>;
+}
+
+function AnalysisTable({ tableColumns, tableData }: AnalysisTableProps): JSX.Element {
   const columns: Array<Column> = useMemo(() => tableColumns, [tableColumns]);
   const data: Array<any> = useMemo(() => tableData, [tableData]);
 
@@ -23,7 +96,7 @@ function AnalysisTable({ tableColumns, tableData }): JSX.Element {
       columns,
       data,
       initialState: {
-        pageSize: 20
+        pageSize: 10
       }
     },
     useSortBy,
@@ -107,7 +180,13 @@ function AnalysisTable({ tableColumns, tableData }): JSX.Element {
   );
 }
 
-function AnalysisTableCard({ title, columns, data }): JSX.Element {
+interface AnalysisTableCardProps {
+  title: string;
+  columns: Array<Column>;
+  data: Array<Appearance>;
+}
+
+function AnalysisTableCard({ title, columns, data }: AnalysisTableCardProps): JSX.Element {
   return (
     <Card className="h-100">
       <Card.Body>
@@ -116,9 +195,7 @@ function AnalysisTableCard({ title, columns, data }): JSX.Element {
             <span>{title}</span>
           </OverlayTrigger>
         </Card.Title>
-        <Card.Text>
-          <AnalysisTable tableColumns={columns} tableData={data} />
-        </Card.Text>
+        <AnalysisTable tableColumns={columns} tableData={data} />
       </Card.Body>
     </Card>
   );

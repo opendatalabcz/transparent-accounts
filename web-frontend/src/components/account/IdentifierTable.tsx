@@ -1,54 +1,44 @@
 import { Column } from 'react-table';
 import MoneyAmount from '../../features/format/MoneyAmount';
-import AnalysisTableCard from './AnalysisTableCard';
+import AnalysisTableCard, { renderAppearances } from './AnalysisTableCard';
+import { Appearance } from '../../types';
 
-function IdentifierTable(): JSX.Element {
-  const analysisColumns: Array<Column> = [
+interface Props {
+  data: Array<Appearance>
+}
+
+function IdentifierTable({ data }: Props): JSX.Element {
+  const columns: Array<Column> = [
     {
       Header: 'IČO',
-      accessor: 'identifier'
+      accessor: 'name',
+      Cell: ({ value }) => (
+        <a target="_blank" rel="noreferrer" href={`https://rejstrik-firem.kurzy.cz/${value}`}>
+          {value}
+        </a>
+      )
     },
     {
-      Header: 'Výskyty u jiných účtů',
-      accessor: 'appearances'
+      Header: 'Výskyty',
+      accessor: 'appearances',
+      Cell: renderAppearances
     },
     {
       Header: 'Počet transakcí',
-      accessor: 'count'
+      accessor: 'transactionsCount'
     },
     {
       Header: 'Celková částka',
-      accessor: 'amount',
+      accessor: 'totalAmount',
       Cell: ({ value }) => <MoneyAmount amount={value} currency="CZK" />
-    }
-  ];
-
-  const example = [
-    {
-      identifier: '12345678',
-      appearances: 4,
-      count: 1,
-      amount: -65434
-    },
-    {
-      identifier: '87654321',
-      appearances: 0,
-      count: 6,
-      amount: -25434
-    },
-    {
-      identifier: '01234567',
-      appearances: 0,
-      count: 1,
-      amount: -100
     }
   ];
 
   return (
     <AnalysisTableCard
       title={'Agregace odchozích transakcí podle IČO'}
-      columns={analysisColumns}
-      data={example}
+      columns={columns}
+      data={data}
     />
   );
 }

@@ -26,7 +26,7 @@ export const transactionsColumns: Array<Column> = [
     accessor: 'type_detail'
   },
   {
-    Header: 'Název protiúčtu',
+    Header: 'Protiúčet',
     Cell: ({ value }) => <span className="text-nowrap">{value}</span>,
     accessor: 'counter_account'
   },

@@ -38,6 +38,117 @@ export const analyse = (
   analysis.transparency = transparentNoteCount / analysis.outgoingCount;
   analysis.noted = noteCount / analysis.outgoingCount;
 
+  // TODO remove example data and add implementation
+  analysis.identifiers = [
+    {
+      name: '04434081',
+      appearances: [
+        { number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' },
+        { number: '000000-2902252345', bank_code: '2010', name: 'generalpavel' },
+        { number: '000000-0004070217', bank_code: '0100', name: 'ANO 2011' }
+      ],
+      transactionsCount: 7,
+      totalAmount: -3265434
+    },
+    {
+      name: '12345678',
+      appearances: [],
+      transactionsCount: 1,
+      totalAmount: -25000
+    },
+    {
+      name: '12345678',
+      appearances: [],
+      transactionsCount: 1,
+      totalAmount: -25000
+    },
+    {
+      name: '12345678',
+      appearances: [],
+      transactionsCount: 1,
+      totalAmount: -25000
+    }
+  ];
+  analysis.counterAccounts = [
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },{
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    },
+    {
+      name: 'Jan Novák',
+      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
+      transactionsCount: 4,
+      totalAmount: 120000
+    }
+  ];
+
   return analysis;
 };
 

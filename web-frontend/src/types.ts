@@ -12,6 +12,12 @@ export interface Account {
   archived: boolean
 }
 
+export interface AccountShort {
+  number: string,
+  bank_code: string,
+  name: string
+}
+
 export interface Transaction {
   id: number;
   date: string;
@@ -42,4 +48,13 @@ export interface Analysis {
   outgoingMedian: number | null;
   transparency: number | null;
   noted: number | null;
+  identifiers: Array<Appearance>;
+  counterAccounts: Array<Appearance>;
+}
+
+export interface Appearance {
+  name: string;
+  transactionsCount: number;
+  totalAmount: number;
+  appearances: Array<AccountShort>;
 }

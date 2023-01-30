@@ -31,7 +31,7 @@ def object_encode(o) -> dict | str:
                 "id": o.id,
                 "date": o.date,
                 "amount": o.amount,
-                "currency": o.currency,
+                "currency": o.currency.name,
                 "counter_account": o.counter_account,
                 "type": o.type.name,
                 "type_detail": o.str_type,
@@ -40,7 +40,7 @@ def object_encode(o) -> dict | str:
                 "specific_symbol": o.specific_symbol,
                 "description": o.description,
                 "identifier": o.identifier,
-                "category": o.category
+                "category": o.category.name
             }
         case _:
             return str(o)

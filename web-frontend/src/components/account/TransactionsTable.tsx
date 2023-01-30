@@ -78,7 +78,7 @@ function TransactionTable({ transactions, date, type, category, query }: Props):
 
   return (
     <div className="table-responsive-lg">
-      <Table striped hover className="transactions-table table-light" {...getTableProps()}>
+      <Table hover className="transactions-table" {...getTableProps()}>
         <thead>
           {
             // Loop over the header rows

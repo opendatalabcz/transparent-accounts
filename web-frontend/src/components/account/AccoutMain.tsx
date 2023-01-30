@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { CiBank } from 'react-icons/ci';
 import { BsQuestionCircle } from 'react-icons/bs';
@@ -11,20 +12,22 @@ interface Props {
 }
 
 function AccountMain({ account }: Props): JSX.Element {
-  const sendUpdate = () => {
+  const [updatable, setUpdatable] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Account was successfully update today -> not enabled
+    if (dayjs(account.last_fetched).isSame(dayjs(), 'day')) {
+      setUpdatable(false);
+      return;
+    }
+    // Check if API permits update
+    canUpdate(account.bank_code, account.number).then((isPossible) => setUpdatable(isPossible));
+  }, [account])
+
+  const sendUpdate = (): void => {
     update(account.bank_code, account.number)
       .then((location) => console.log(location))
       .catch((error) => console.log(error));
-  };
-
-  const isEnabled = (): boolean => {
-    // Account was successfully update today -> not enabled
-    if (dayjs(account.last_fetched).isSame(dayjs(), 'day')) {
-      return false;
-    }
-    // Check if API permits update
-    canUpdate(account.bank_code, account.number).then((isPossible) => isPossible);
-    return false;
   };
 
   return (
@@ -37,7 +40,7 @@ function AccountMain({ account }: Props): JSX.Element {
           {shortenAccNum(account.number)}/{account.bank_code}
         </div>
       </h1>
-      <Button onClick={sendUpdate} disabled={!isEnabled()}>
+      <Button onClick={sendUpdate} disabled={!updatable}>
         Aktualizovat
       </Button>
       <div>

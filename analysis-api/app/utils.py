@@ -19,7 +19,7 @@ def object_encode(o) -> dict | str:
                 "name": o.name,
                 "owner": o.owner,
                 "balance": o.balance,
-                "currency": o.currency.name,
+                "currency": o.currency.name if o.currency is not None else None,
                 "description": o.description,
                 "created": o.created,
                 "last_updated": o.last_updated,
@@ -31,7 +31,7 @@ def object_encode(o) -> dict | str:
                 "id": o.id,
                 "date": o.date,
                 "amount": o.amount,
-                "currency": o.currency.name,
+                "currency": o.currency.name if o.currency is not None else None,
                 "counter_account": o.counter_account,
                 "type": o.type.name,
                 "type_detail": o.str_type,
@@ -40,7 +40,7 @@ def object_encode(o) -> dict | str:
                 "specific_symbol": o.specific_symbol,
                 "description": o.description,
                 "identifier": o.identifier,
-                "category": o.category.name
+                "category": o.category.value if o.category is not None else None
             }
         case _:
             return str(o)

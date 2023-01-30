@@ -35,9 +35,9 @@ function AnalysisCard({
             <Card.Title className="mb-1">
               {description !== undefined ? (
                 <OverlayTrigger placement="bottom" overlay={<Tooltip>{description}</Tooltip>}>
-                  <div>
+                  <span>
                     <BsQuestionCircle className="d-inline-block align-text-top" />
-                  </div>
+                  </span>
                 </OverlayTrigger>
               ) : (
                 ''

@@ -84,6 +84,21 @@ def fetch_transactions(bank_code: str, acc_num: str):
     return response
 
 
+@bp.get("/accounts/<bank_code>/<acc_num>/updates")
+def get_updates(bank_code: str, acc_num: str):
+    try:
+        bank = Bank(bank_code)
+    except ValueError:
+        return
+
+    # TODO implement real solution
+    response = app.response_class(
+        response=json.dumps({"updates": [], "updatable": True}),
+        mimetype='application/json'
+    )
+    return response
+
+
 @bp.get("/accounts/<bank_code>/<acc_num>/updates/<update_id>")
 def get_update(bank_code: str, acc_num: str, update_id: int):
     try:

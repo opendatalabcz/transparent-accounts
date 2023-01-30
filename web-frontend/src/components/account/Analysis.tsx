@@ -4,6 +4,10 @@ import AnalysisCard, { AnalysisCardProps } from './AnalysisCard';
 import { analyse } from '../../services/analysis';
 import MoneyAmount from '../../features/format/MoneyAmount';
 import { Analysis as AnalysisType, Transaction } from '../../types';
+import IdentifierTable from './IdentifierTable';
+import CounterAccountTable from './CounterAccountTable';
+import ChartBalance from './ChartBalance';
+import ChartTransactions from './ChartTransactions';
 
 interface Props {
   transactions: Array<Transaction>;
@@ -92,9 +96,27 @@ function Analysis({ transactions, balance, currency }: Props): JSX.Element {
       <div className="row">
         {metrics.map(
           (metric: AnalysisCardProps): JSX.Element => (
-            <AnalysisCard key={metric.name} metrics={metric} />
+            <div key={metric.name} className="col-lg-3 col-md-4 col-sm-6 px-1 pb-2">
+              <AnalysisCard metrics={metric} />
+            </div>
           )
         )}
+      </div>
+      <div className="row">
+        <div className="col-lg-6 col-12 px-1 pb-2">
+          <IdentifierTable />
+        </div>
+        <div className="col-lg-6 col-12 px-1 pb-2">
+          <CounterAccountTable />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-lg-6 col-12 px-1 pb-2">
+          <ChartBalance data={[]}/>
+        </div>
+        <div className="col-lg-6 col-12 px-1 pb-2">
+          <ChartTransactions data={[]} />
+        </div>
       </div>
     </Container>
   );

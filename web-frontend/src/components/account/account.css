@@ -13,16 +13,24 @@ dd {
   font-size: 0.9em;
 }
 
-.transactions-table th {
+.transactions-table th, .analysis-table th {
   white-space: nowrap;
 }
 
-.transactions-table th:nth-child(2), td:nth-child(2) {
+.transactions-table th:nth-child(2), .transactions-table td:nth-child(2) {
   text-align: end;
 }
 
 .analysis {
-  font-family: Arial, sans-serif;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+.analysis-table th, .analysis-table td {
+  text-align: end;
+}
+
+.analysis-table th:nth-child(1), .analysis-table td:nth-child(1) {
+  text-align: start;
 }
 
 .metrics-number {

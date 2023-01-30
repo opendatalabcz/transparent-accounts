@@ -37,7 +37,6 @@ export const analyse = (
   analysis.outgoingMedian = getMedian(outgoingTransactions);
   analysis.transparency = transparentNoteCount / analysis.outgoingCount;
   analysis.noted = noteCount / analysis.outgoingCount;
-  debugger
 
   return analysis;
 };

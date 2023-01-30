@@ -48,6 +48,8 @@ class TransactionType(Enum):
 
 class TransactionCategory(Enum):
     MESSAGE = "Vzkaz"
+    ATM = "Výběr z bankomatu"
+    CARD = "Platba kartou"
 
 
 class UpdateStatus(Enum):

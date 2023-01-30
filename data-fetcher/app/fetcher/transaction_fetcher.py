@@ -53,15 +53,15 @@ class TransactionFetcher(ABC):
         return search.group(1) if search is not None else None
 
     @staticmethod
-    def determine_category(money_amount: float, transaction_type: TransactionType) -> Optional[TransactionCategory]:
+    def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
         """
-        Determines the category of the transaction based on the amount and type.
-        :param money_amount:
-        :param transaction_type:
+        Determines the category of the transaction.
+        It is expected that every transaction fetcher has its own implementation of this method
+        and this concrete implementation is called as a fallback when the fetcher does not determine the category.
+        :param transaction: Transaction to determine the category for
         :return: category if determined, None otherwise
         """
         # Incoming transaction with a very small amount is considered as a message (probably hateful) for the receiver
-        # Should not be lesser than 0 but just in case
-        if 1 >= money_amount > 0 and transaction_type == TransactionType.INCOMING:
+        if 1 >= transaction.amount > 0 and transaction.type == TransactionType.INCOMING:
             return TransactionCategory.MESSAGE
         return None

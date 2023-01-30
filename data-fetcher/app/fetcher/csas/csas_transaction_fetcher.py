@@ -1,9 +1,10 @@
+from typing import Optional
 from datetime import datetime
 
 import requests
 
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Transaction, TransactionType
+from app.models import Transaction, TransactionType, TransactionCategory
 
 
 class CSASTransactionFetcher(TransactionFetcher):
@@ -33,7 +34,7 @@ class CSASTransactionFetcher(TransactionFetcher):
         counter_account = t['sender'].get('name') if t['sender'].get('name') != '-' else None
         t_type = TransactionType.from_float(amount)
         description = t['sender'].get('description', '')
-        return Transaction(
+        transaction = Transaction(
             date=datetime.strptime(t['processingDate'], '%Y-%m-%dT00:00:00').date(),
             amount=amount,
             currency= t['amount']['currency'],
@@ -45,7 +46,24 @@ class CSASTransactionFetcher(TransactionFetcher):
             specific_symbol=t['sender'].get('specificSymbol', ''),
             description=description,
             identifier=self.parse_identifier(description),
-            category=self.determine_category(amount, t_type),
             account_number=self.account.number,
             account_bank=self.account.bank
         )
+        transaction.category = self.determine_category(transaction)
+        return transaction
+
+    @staticmethod
+    def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
+        """
+        Determines the category of the transaction.
+        :param transaction: Transaction to determine the category for
+        :return: category if determined, None otherwise
+        """
+        # ATM withdrawals
+        if transaction.type == TransactionType.OUTGOING and 'bankomat' in transaction.str_type:
+            return TransactionCategory.ATM
+        # Card payments
+        if transaction.type == TransactionType.OUTGOING and 'Platba kartou' == transaction.str_type:
+            return TransactionCategory.CARD
+        # Try default category determination
+        return TransactionFetcher.determine_category(transaction)

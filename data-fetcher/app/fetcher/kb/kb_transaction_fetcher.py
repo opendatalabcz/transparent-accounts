@@ -1,12 +1,13 @@
 import hashlib
 import re
+from typing import Optional
 from datetime import datetime, date
 
 import requests
 
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Account, Transaction, TransactionType, Currency
+from app.models import Account, Transaction, TransactionType, TransactionCategory, Currency
 from app.utils import float_from_cz
 
 
@@ -86,7 +87,7 @@ class KBTransactionFetcher(TransactionFetcher):
         variable_s, constant_s, specific_s = map(lambda s: s.replace(' ', ''),  t['symbols'].split('/'))
         counter_account, str_type, description = self.parse_details(t['notes'], t_type)
 
-        return Transaction(
+        transaction = Transaction(
             date=t_date,
             amount=amount,
             currency=currency,
@@ -98,10 +99,11 @@ class KBTransactionFetcher(TransactionFetcher):
             specific_symbol=specific_s,
             description=description,
             identifier=self.parse_identifier(description),
-            category=self.determine_category(amount, t_type),
             account_number=self.account.number,
             account_bank=self.account.bank,
         )
+        transaction.category = self.determine_category(transaction)
+        return transaction
 
     @staticmethod
     def parse_money_amount(string: str) -> tuple[float, Currency]:

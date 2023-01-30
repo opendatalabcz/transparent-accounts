@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 from datetime import datetime
 
 import bs4
@@ -6,7 +7,7 @@ import requests
 
 from app.fetcher.fio.utils import get_fio_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Transaction, TransactionType, Currency
+from app.models import Transaction, TransactionType, TransactionCategory, Currency
 from app.utils import float_from_cz
 
 
@@ -52,7 +53,7 @@ class FioTransactionFetcher(TransactionFetcher):
         counter_account = cells[3].get_text(strip=True) if t_type == TransactionType.INCOMING else None
         description = cells[4].get_text(strip=True) if t_type == TransactionType.INCOMING else cells[8].get_text(strip=True)
 
-        return Transaction(
+        transaction = Transaction(
             date=t_date,
             amount=amount,
             currency=currency,
@@ -64,10 +65,11 @@ class FioTransactionFetcher(TransactionFetcher):
             specific_symbol=cells[7].get_text(strip=True),
             description=description,
             identifier=self.parse_identifier(description),
-            category=self.determine_category(amount, t_type),
             account_number=self.account.number,
             account_bank=self.account.bank
         )
+        transaction.category = self.determine_category(transaction)
+        return transaction
 
     @staticmethod
     def parse_money_amount(string: str) -> tuple[float, Currency]:
@@ -76,3 +78,19 @@ class FioTransactionFetcher(TransactionFetcher):
         balance, currency = re.search(pattern, string).groups()
         # Convert from str to corresponding type
         return float_from_cz(balance), Currency.from_str(currency)
+
+    @staticmethod
+    def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
+        """
+        Determines the category of the transaction.
+        :param transaction: Transaction to determine the category for
+        :return: category if determined, None otherwise
+        """
+        # ATM withdrawals
+        if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.str_type and 'Výběr z bankomatu' in transaction.description:
+            return TransactionCategory.ATM
+        # Card payments
+        if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.str_type:
+            return TransactionCategory.CARD
+        # Try default category determination
+        return TransactionFetcher.determine_category(transaction)

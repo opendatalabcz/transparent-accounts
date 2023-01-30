@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { Column, useFilters, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
 import { Table } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
-import { transactionColumns } from './TransactionColumns';
+import { transactionsColumns } from './TransactionsColumns';
 import Pagination from '../../features/pagination/Pagination';
 import { Transaction } from '../../types';
 
@@ -16,7 +16,7 @@ interface Props {
 
 function TransactionTable({ transactions, date, type, category, query }: Props): JSX.Element {
   const data: Array<Transaction> = useMemo(() => transactions, [transactions]);
-  const columns: Array<Column> = useMemo(() => transactionColumns, []);
+  const columns: Array<Column> = useMemo(() => transactionsColumns, []);
 
   // Definition of custom filters
   const filterTypes = useMemo(

@@ -2,7 +2,7 @@ import { Column } from 'react-table';
 import dayjs from 'dayjs';
 import MoneyAmount from '../../features/format/MoneyAmount';
 
-export const transactionColumns: Array<Column> = [
+export const transactionsColumns: Array<Column> = [
   {
     Header: 'Datum',
     accessor: 'date',

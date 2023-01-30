@@ -8,7 +8,7 @@ interface Props {
   setEndDate: (endDate) => void,
   type: '' | 'INCOMING' | 'OUTGOING',
   setType: (type) => void,
-  category: '' | 'MESSAGES' | 'NO-MESSAGES',
+  category: '' | 'CARD' | 'ATM' | 'MESSAGE' | 'NO-MESSAGE',
   setCategory: (category) => void,
   query: string
   setQuery: (query) => void,
@@ -52,8 +52,10 @@ function TransactionsFilter({
         <div className="col-xl-2 col-lg-6">
           <Form.Select value={category} onChange={(event) => setCategory(event.target.value)}>
             <option value="">Všechny kategorie</option>
-            <option value="MESSAGES">Vzkazy</option>
-            <option value="NO-MESSAGES">Bez vzkazů</option>
+            <option value="CARD">Platby kartou</option>
+            <option value="ATM">Výběry z bankomatu</option>
+            <option value="MESSAGE">Vzkazy</option>
+            <option value="NO-MESSAGE">Bez vzkazů</option>
           </Form.Select>
         </div>
         <div className="col-xl-4 col-lg-6 offset-xl-1">

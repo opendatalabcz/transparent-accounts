@@ -16,12 +16,12 @@ function Transactions({ transactions }: Props): JSX.Element {
   );
   const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const [type, setType] = useState<'' | 'INCOMING' | 'OUTGOING'>('');
-  const [category, setCategory] = useState<'' | 'MESSAGES' | 'NO-MESSAGES'>('');
+  const [category, setCategory] = useState<'' | 'CARD' | 'ATM' | 'MESSAGE' | 'NO-MESSAGE'>('');
   const [query, setQuery] = useState<string>('');
 
   const downloadCSV = () => {
     // TODO
-  }
+  };
 
   return (
     <Container fluid>

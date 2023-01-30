@@ -31,8 +31,10 @@ function TransactionTable({ transactions, date, type, category, query }: Props):
           const rowValue = row.values[id];
           return rowValue !== undefined
             ? filterValue === '' ||
-                (filterValue === 'MESSAGES' && rowValue === 'Vzkaz') ||
-                (filterValue === 'NO-MESSAGES' && rowValue === '')
+                (filterValue === 'CARD' && rowValue === 'Platba kartou') ||
+                (filterValue === 'ATM' && rowValue === 'Výběr z bankomatu') ||
+                (filterValue === 'MESSAGE' && rowValue === 'Vzkaz') ||
+                (filterValue === 'NO-MESSAGE' && rowValue !== 'Vzkaz')
             : true;
         });
       }

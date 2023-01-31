@@ -1,6 +1,8 @@
 import re
 from typing import Optional
 
+import requests
+
 from app.models import Account, Transaction
 
 
@@ -44,6 +46,11 @@ def object_encode(o) -> dict | str:
             }
         case _:
             return str(o)
+
+
+def fetch_identifier_name(identifier: str) -> Optional[str]:
+    requests.get(f"https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_std.cgi?ico={identifier}")
+    return ""  # TODO
 
 
 def generalize_query(string: Optional[str]) -> Optional[str]:

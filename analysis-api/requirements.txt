@@ -3,3 +3,4 @@ sqlalchemy
 psycopg2-binary
 celery
 flask-cors
+requests

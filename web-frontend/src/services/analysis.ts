@@ -1,4 +1,5 @@
 import { Analysis, Transaction } from '../types';
+import dayjs from 'dayjs';
 
 export const analyse = (
   transactions: Array<Transaction>,
@@ -13,8 +14,25 @@ export const analyse = (
   analysis.outgoingAmount = 0;
   let transparentNoteCount: number = 0;
   let noteCount: number = 0;
+  analysis.monthTransactions = [];
 
   transactions.forEach((transaction: Transaction) => {
+    const year = dayjs(transaction.date).year();
+    const month = dayjs(transaction.date).month() + 1;
+    const monthYear = `${year}-${month}`;
+
+    const chartData = analysis.monthTransactions.find((data) => data.monthYear === monthYear);
+    if (chartData) {
+      chartData.incomingCount += transaction.type === 'INCOMING' ? 1 : 0;
+      chartData.outgoingCount += transaction.type === 'OUTGOING' ? 1 : 0;
+    } else {
+      analysis.monthTransactions.push({
+        monthYear: monthYear,
+        incomingCount: transaction.type === 'INCOMING' ? 1 : 0,
+        outgoingCount: transaction.type === 'OUTGOING' ? 1 : 0
+      });
+    }
+
     if (transaction.type === 'INCOMING') {
       incomingTransactions.push(transaction);
       analysis.incomingAmount += transaction.amount;
@@ -37,6 +55,8 @@ export const analyse = (
   analysis.outgoingMedian = getMedian(outgoingTransactions);
   analysis.transparency = transparentNoteCount / analysis.outgoingCount;
   analysis.noted = noteCount / analysis.outgoingCount;
+
+  analysis.monthTransactions = analysis.monthTransactions.reverse();
 
   // TODO remove example data and add implementation
   analysis.identifiers = [
@@ -87,7 +107,8 @@ export const analyse = (
       appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
       transactionsCount: 4,
       totalAmount: 120000
-    },{
+    },
+    {
       name: 'Jan Novák',
       appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
       transactionsCount: 4,

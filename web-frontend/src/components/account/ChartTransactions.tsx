@@ -1,44 +1,39 @@
 import {
-  CategoryScale,
   Chart as ChartJS,
+  CategoryScale,
   LinearScale,
-  LineElement,
-  PointElement,
-  TimeScale,
-  TimeSeriesScale,
-  Tooltip as TooltipJS
+  BarElement,
+  Title,
+  Tooltip as TooltipJS,
+  Legend,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
+  Title,
   TooltipJS,
-  TimeScale,
-  TimeSeriesScale
+  Legend
 );
 
 function ChartTransactions({ data }) {
   const options = {
     responsive: true,
     parsing: {
-      xAxisKey: 'date'
+      xAxisKey: 'monthYear'
     },
     scales: {
       x: {
-        type: 'time' as const,
-        time: {
-          unit: 'month' as const
-        }
-      }
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
     },
-    adapters: {
-      date: { locale: 'cs' }
-    }
   };
 
   const chartData = {
@@ -46,9 +41,7 @@ function ChartTransactions({ data }) {
       {
         label: 'Počet příchozích transakcí',
         data: data,
-        lineTension: 1,
-        borderColor: 'rgb(0, 0, 255)',
-        backgroundColor: 'rgba(0, 0, 255, 0.5)',
+        backgroundColor: 'rgba(0, 0, 255)',
         parsing: {
           yAxisKey: 'incomingCount'
         }
@@ -56,9 +49,7 @@ function ChartTransactions({ data }) {
       {
         label: 'Počet odchozích transakcí',
         data: data,
-        lineTension: 1,
-        borderColor: 'rgb(255, 0, 0)',
-        backgroundColor: 'rgba(255, 0, 0, 0.5)',
+        backgroundColor: 'rgba(255, 0, 0)',
         parsing: {
           yAxisKey: 'outgoingCount'
         }
@@ -75,7 +66,7 @@ function ChartTransactions({ data }) {
           </OverlayTrigger>
         </Card.Title>
         <Card.Text>
-          <Line options={options} data={chartData} />
+          <Bar options={options} data={chartData} />
         </Card.Text>
       </Card.Body>
     </Card>

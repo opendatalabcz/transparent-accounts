@@ -50,6 +50,13 @@ export interface Analysis {
   noted: number | null;
   identifiers: Array<Appearance>;
   counterAccounts: Array<Appearance>;
+  monthTransactions: Array<MonthTransactions>
+}
+
+export interface MonthTransactions {
+  monthYear: string,
+  incomingCount: number,
+  outgoingCount: number,
 }
 
 export interface Appearance {

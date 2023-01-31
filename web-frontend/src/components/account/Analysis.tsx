@@ -115,7 +115,7 @@ function Analysis({ transactions, balance, currency }: Props): JSX.Element {
           <ChartBalance data={[]}/>
         </div>
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <ChartTransactions data={[]} />
+          <ChartTransactions data={analysis.monthTransactions} />
         </div>
       </div>
     </Container>

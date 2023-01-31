@@ -4,7 +4,7 @@ import { CiBank } from 'react-icons/ci';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
-import dayjs from 'dayjs';
+import { format, isSameDay } from 'date-fns';
 import { canUpdate, update } from '../../services/accountsAPI';
 
 interface Props {
@@ -16,13 +16,13 @@ function AccountMain({ account }: Props): JSX.Element {
 
   useEffect(() => {
     // Account was successfully update today -> not enabled
-    if (dayjs(account.last_fetched).isSame(dayjs(), 'day')) {
+    if (account.last_fetched != null && isSameDay(new Date(account.last_fetched), new Date())) {
       setUpdatable(false);
       return;
     }
     // Check if API permits update
     canUpdate(account.bank_code, account.number).then((isPossible) => setUpdatable(isPossible));
-  }, [account])
+  }, [account]);
 
   const sendUpdate = (): void => {
     update(account.bank_code, account.number)
@@ -46,7 +46,7 @@ function AccountMain({ account }: Props): JSX.Element {
       <div>
         Naposledy aktualizováno:{' '}
         {account.last_fetched != null ? (
-          dayjs(account.last_fetched).format('DD.MM.YYYY')
+          format(new Date(account.last_fetched), 'd.MM.yyyy')
         ) : (
           <span className="text-danger">nikdy</span>
         )}

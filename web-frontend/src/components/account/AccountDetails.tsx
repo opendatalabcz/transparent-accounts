@@ -1,6 +1,6 @@
 import { Container } from 'react-bootstrap';
+import { format } from 'date-fns';
 import { BsBoxArrowUpRight } from 'react-icons/bs';
-import dayjs from 'dayjs';
 import MoneyAmount from '../../features/format/MoneyAmount';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
@@ -30,7 +30,7 @@ function AccountDetails({ account }: Props): JSX.Element {
 
         <dt className="col-4">Datum založení</dt>
         <dd className="col-8 text-end">
-          {account.created != null ? dayjs(account.created).format('DD.MM.YYYY') : ''}
+          {account.created != null ? format(new Date(account.created), 'd.MM.yyyy') : ''}
         </dd>
 
         <dt className="col-4">Zůstatek 💰</dt>

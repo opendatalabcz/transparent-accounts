@@ -39,7 +39,7 @@ class KBTransactionFetcher(TransactionFetcher):
         transactions = map(self.transaction_to_class, fetched)
 
         # Filter out transactions that does not belong to the desired interval
-        return list(transactions)
+        return list(filter(self.check_date_interval, transactions))
 
     def get_token_and_set_cookies(self) -> str:
         # First request to get the initial pure token and session cookies

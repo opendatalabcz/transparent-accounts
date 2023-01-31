@@ -22,7 +22,11 @@ function AccountDetails({ account }: Props): JSX.Element {
 
         <dt className="col-4">Číslo účtu</dt>
         <dd className="col-8 text-end">
-          {shortenAccNum(account.number)}/{account.bank_code}
+          <a href="https://www.csas.cz/cs/transparentni-ucty" target="_blank" rel="noreferrer">
+            {/* TODO real link */}
+            <BsBoxArrowUpRight className="d-inline-block align-text-top me-1" />
+            {shortenAccNum(account.number)}/{account.bank_code}
+          </a>
         </dd>
 
         <dt className="col-4">Popis</dt>
@@ -41,12 +45,6 @@ function AccountDetails({ account }: Props): JSX.Element {
         <dt className="col-4">Měna</dt>
         <dd className="col-8 text-end">{account.currency}</dd>
       </dl>
-      <div className="d-flex justify-content-end">
-        <a href="https://www.csas.cz/cs/transparentni-ucty" target="_blank" rel="noreferrer">
-          <BsBoxArrowUpRight className="d-inline-block align-text-top me-1" />
-          účet na stránkách banky
-        </a>
-      </div>
     </Container>
   );
 }

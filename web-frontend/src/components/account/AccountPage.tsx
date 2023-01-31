@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import AccountMain from './AccoutMain';
 import AccountDetails from './AccountDetails';
-import { BsChevronLeft } from 'react-icons/bs';
 import AccountSwitch from './AccountSwitch';
 import Transactions from './Transactions';
 import Analysis from './Analysis';
@@ -36,23 +35,17 @@ function AccountPage() {
 
   return (
     <main>
-      <Container fluid>
-        <div className="d-flex justify-content-end mt-3">
-          <NavLink to="/ucty">
-            <BsChevronLeft className="d-inline-block align-text-top me-1" />
-            zpět na přehled
-          </NavLink>
-        </div>
+      <Container fluid className="mt-5">
         <div className="row gy-5">
           <div className="col-xl-7 col-lg">
             <AccountMain account={account} />
           </div>
-          <div className="col-xl-5 col-lg d-flex align-items-end">
+          <div className="col-xl-5 col-lg">
             <AccountDetails account={account} />
           </div>
         </div>
       </Container>
-      <div className="my-5">
+      <div className="my-3">
         <AccountSwitch setTab={setTab} />
       </div>
       <div>

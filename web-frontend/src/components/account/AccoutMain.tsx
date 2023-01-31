@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { CiBank } from 'react-icons/ci';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
@@ -32,7 +31,6 @@ function AccountMain({ account }: Props): JSX.Element {
 
   return (
     <Container fluid>
-      <CiBank size={64} />
       <h1 className="display-6">
         <div>{account.owner}</div>
         <div>{account.name}</div>

@@ -1,7 +1,12 @@
 .navbar {
   font-family: 'Roboto', sans-serif;
-  font-weight: bold;
   font-size: 1.4em;
+  font-weight: bold;
+}
+
+.inside-nav {
+  font-family: 'Lato', sans-serif;
+  font-weight: normal;
 }
 
 @media (max-width: 475px) {

@@ -1,12 +1,8 @@
 import { Link } from 'react-router-dom';
-import {
-  BsBank2,
-  BsBarChartFill,
-  BsChatRightTextFill,
-  BsCodeSquare,
-  BsCurrencyExchange,
-  BsGithub
-} from 'react-icons/bs';
+import { BsBarChartFill, BsGithub } from 'react-icons/bs';
+import { GiCapitol } from 'react-icons/gi';
+import { FaCoins, FaGraduationCap } from 'react-icons/fa';
+import { AiOutlineSetting } from 'react-icons/ai';
 import { Nav, Navbar } from 'react-bootstrap';
 import './Header.css';
 
@@ -23,21 +19,21 @@ function Header() {
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className="me-auto">
+        <Nav className="me-auto inside-nav">
           <Nav.Link as={Link} to="/ucty" className="me-xl-5">
-            <BsCurrencyExchange className="d-inline-block align-text-top" />
-            ÚČTY
+            <FaCoins className="align-text-top" />
+            Účty
           </Nav.Link>
           <Nav.Link as={Link} to="/banky" className="me-xl-5">
-            <BsBank2 className="d-inline-block align-text-top" />
-            BANKY
+            <GiCapitol className="align-text-top" />
+            Banky
           </Nav.Link>
           <Nav.Link as={Link} to="/o-projektu" className="me-xl-5">
-            <BsChatRightTextFill className="d-inline-block align-text-top" />
-            O&nbsp;PROJEKTU
+            <FaGraduationCap className="align-text-top" />
+            O&nbsp;projektu
           </Nav.Link>
           <Nav.Link as={Link} to="/api">
-            <BsCodeSquare className="d-inline-block align-text-top" />
+            <AiOutlineSetting className="align-text-top" />
             API
           </Nav.Link>
         </Nav>
@@ -46,7 +42,7 @@ function Header() {
             href="https://github.com/opendatalabcz/transparent-accounts/"
             target="_blank"
             rel="noreferrer">
-            <BsGithub className="d-inline-block align-text-top" />
+            <BsGithub className="align-text-top" />
             GitHub
           </Nav.Link>
         </Nav>

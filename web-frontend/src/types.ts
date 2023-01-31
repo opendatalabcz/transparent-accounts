@@ -1,21 +1,21 @@
 export interface Account {
-  number: string,
-  bank_code: string,
-  name: string | null,
-  owner: string,
-  balance: number | null,
-  currency: string | null,
-  description: string | null,
-  created: string | null,
-  last_updated: string,
-  last_fetched: string | null,
-  archived: boolean
+  number: string;
+  bank_code: string;
+  name: string | null;
+  owner: string;
+  balance: number | null;
+  currency: string | null;
+  description: string | null;
+  created: string | null;
+  last_updated: string;
+  last_fetched: string | null;
+  archived: boolean;
 }
 
 export interface AccountShort {
-  number: string,
-  bank_code: string,
-  name: string
+  number: string;
+  bank_code: string;
+  name: string;
 }
 
 export interface Transaction {
@@ -50,13 +50,14 @@ export interface Analysis {
   noted: number | null;
   identifiers: Array<Appearance>;
   counterAccounts: Array<Appearance>;
-  monthTransactions: Array<MonthTransactions>
+  dateAggregation: Array<DateCounts>;
 }
 
-export interface MonthTransactions {
-  monthYear: string,
-  incomingCount: number,
-  outgoingCount: number,
+export interface DateCounts {
+  date: string;
+  balance?: number;
+  incomingCount: number;
+  outgoingCount: number;
 }
 
 export interface Appearance {

@@ -5,28 +5,56 @@ import {
   LineElement,
   PointElement,
   TimeScale,
-  TimeSeriesScale,
   Tooltip as TooltipJS
 } from 'chart.js';
-import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
+import { cs } from 'date-fns/locale';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { DateCounts } from '../../types';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, TooltipJS, TimeScale, TimeSeriesScale);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, TooltipJS, TimeScale);
 
+interface Props {
+  data: Array<DateCounts>;
+  currency: string | null;
+}
 
-function ChartBalance({ data }) {
+function ChartBalance({ data, currency }: Props): JSX.Element {
   const options = {
     responsive: true,
     parsing: {
-      xAxisKey: 'date',
+      xAxisKey: 'date'
+    },
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          tooltipFormat: 'P'
+        },
+        adapters: {
+          date: {
+            locale: cs
+          }
+        }
+      }
+    },
+    elements: {
+      point: {
+        radius: 0
+      }
+    },
+    interaction: {
+      mode: 'nearest',
+      axis: 'x',
+      intersect: false
     }
   };
 
   const chartData = {
     datasets: [
       {
-        label: 'Zůstatek',
+        label: `Zůstatek v ${currency}`,
         data: data,
         lineTension: 1,
         borderColor: 'rgb(0, 0, 255)',
@@ -47,6 +75,7 @@ function ChartBalance({ data }) {
           </OverlayTrigger>
         </Card.Title>
         <Card.Text>
+          {/* @ts-ignore */}
           <Line options={options} data={chartData} />
         </Card.Text>
       </Card.Body>

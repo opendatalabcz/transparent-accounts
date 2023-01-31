@@ -1,38 +1,29 @@
 import { Analysis, Transaction } from '../types';
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
 
 export const analyse = (
   transactions: Array<Transaction>,
   balance: number | null,
   currency: string | null
 ): Analysis => {
+  // Create an empty Analysis instance
   const analysis: Analysis = {} as Analysis;
+  // Set known values
+  analysis.balance = balance;
   analysis.currency = currency;
-  const incomingTransactions: Array<Transaction> = [];
-  const outgoingTransactions: Array<Transaction> = [];
+  analysis.transactionsCount = transactions.length;
+  // Set initial values
   analysis.incomingAmount = 0;
   analysis.outgoingAmount = 0;
+  analysis.dateAggregation = [];
+
+  // Create auxiliary variables
+  const incomingTransactions: Array<Transaction> = [];
+  const outgoingTransactions: Array<Transaction> = [];
   let transparentNoteCount: number = 0;
   let noteCount: number = 0;
-  analysis.monthTransactions = [];
-
+  // Calculate first set of values
   transactions.forEach((transaction: Transaction) => {
-    const year = dayjs(transaction.date).year();
-    const month = dayjs(transaction.date).month() + 1;
-    const monthYear = `${year}-${month}`;
-
-    const chartData = analysis.monthTransactions.find((data) => data.monthYear === monthYear);
-    if (chartData) {
-      chartData.incomingCount += transaction.type === 'INCOMING' ? 1 : 0;
-      chartData.outgoingCount += transaction.type === 'OUTGOING' ? 1 : 0;
-    } else {
-      analysis.monthTransactions.push({
-        monthYear: monthYear,
-        incomingCount: transaction.type === 'INCOMING' ? 1 : 0,
-        outgoingCount: transaction.type === 'OUTGOING' ? 1 : 0
-      });
-    }
-
     if (transaction.type === 'INCOMING') {
       incomingTransactions.push(transaction);
       analysis.incomingAmount += transaction.amount;
@@ -44,11 +35,9 @@ export const analyse = (
       noteCount = transaction.description !== '' ? noteCount + 1 : noteCount;
     }
   });
-
-  analysis.transactionsCount = transactions.length;
+  // Set calculated values
   analysis.incomingCount = incomingTransactions.length;
   analysis.outgoingCount = outgoingTransactions.length;
-  analysis.balance = balance;
   analysis.incomingAverage = analysis.incomingAmount / analysis.incomingCount;
   analysis.outgoingAverage = analysis.outgoingAmount / analysis.outgoingCount;
   analysis.incomingMedian = getMedian(incomingTransactions);
@@ -56,7 +45,35 @@ export const analyse = (
   analysis.transparency = transparentNoteCount / analysis.outgoingCount;
   analysis.noted = noteCount / analysis.outgoingCount;
 
-  analysis.monthTransactions = analysis.monthTransactions.reverse();
+  // Create auxiliary variables
+  let currentBalance: number = balance || 0;
+  let lastDate: string = format(new Date(), 'yyyy-MM-d');
+  analysis.dateAggregation.push({
+    date: lastDate,
+    balance: currentBalance,
+    incomingCount: 0,
+    outgoingCount: 0
+  });
+  // Calculate second set of values
+  transactions.forEach((transaction: Transaction) => {
+    if (lastDate !== transaction.date) {
+      lastDate = transaction.date;
+      analysis.dateAggregation.push({
+        date: lastDate,
+        balance: 0,
+        incomingCount: 0,
+        outgoingCount: 0
+      });
+    }
+    currentBalance -= transaction.amount;
+    analysis.dateAggregation[analysis.dateAggregation.length - 1].balance = currentBalance;
+    analysis.dateAggregation[analysis.dateAggregation.length - 1].incomingCount +=
+      transaction.type === 'INCOMING' ? 1 : 0;
+    analysis.dateAggregation[analysis.dateAggregation.length - 1].outgoingCount +=
+      transaction.type === 'OUTGOING' ? 1 : 0;
+  });
+  // Reverse the array
+  analysis.dateAggregation.reverse();
 
   // TODO remove example data and add implementation
   analysis.identifiers = [

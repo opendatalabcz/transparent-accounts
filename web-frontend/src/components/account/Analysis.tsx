@@ -104,18 +104,18 @@ function Analysis({ transactions, balance, currency }: Props): JSX.Element {
       </div>
       <div className="row">
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <IdentifierTable data={analysis.identifiers}/>
+          <IdentifierTable data={analysis.identifiers} />
         </div>
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <CounterAccountTable data={analysis.counterAccounts}/>
+          <CounterAccountTable data={analysis.counterAccounts} />
         </div>
       </div>
       <div className="row">
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <ChartBalance data={[]}/>
+          <ChartBalance data={analysis.dateAggregation} currency={currency} />
         </div>
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <ChartTransactions data={analysis.monthTransactions} />
+          <ChartTransactions data={analysis.dateAggregation} />
         </div>
       </div>
     </Container>

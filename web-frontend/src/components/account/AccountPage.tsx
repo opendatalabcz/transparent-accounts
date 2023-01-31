@@ -46,7 +46,7 @@ function AccountPage() {
         </div>
       </Container>
       <div className="my-3">
-        <AccountSwitch setTab={setTab} />
+        <AccountSwitch tab={tab} setTab={setTab} />
       </div>
       <div>
         {tab === 'analyza' ? (

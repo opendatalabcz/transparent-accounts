@@ -1,19 +1,26 @@
-import { Button, Nav } from 'react-bootstrap';
-
 interface Props {
-  setTab: (tab: 'transakce' | 'analyza') => void
+  tab: 'transakce' | 'analyza';
+  setTab: (tab: 'transakce' | 'analyza') => void;
 }
 
-function AccountSwitch({ setTab }: Props): JSX.Element {
+function AccountSwitch({ tab, setTab }: Props): JSX.Element {
   return (
-    <Nav className="d-flex justify-content-center">
-      <Nav.Item>
-        <Button onClick={() => setTab('transakce')}>Transakce 💸</Button>
-      </Nav.Item>
-      <Nav.Item>
-        <Button onClick={() => setTab('analyza')}>Analýza 📈</Button>
-      </Nav.Item>
-    </Nav>
+    <div className="d-flex justify-content-center">
+      <button
+        className={
+          'tab-button tab-button-left px-3 py-2 ' + (tab === 'transakce' ? 'tab-button-active' : '')
+        }
+        onClick={() => setTab('transakce')}>
+        Transakce 💸
+      </button>
+      <button
+        className={
+          'tab-button tab-button-right px-3 py-2 ' + (tab === 'analyza' ? 'tab-button-active' : '')
+        }
+        onClick={() => setTab('analyza')}>
+        Analýza 📈
+      </button>
+    </div>
   );
 }
 

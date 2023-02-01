@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Button, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { format, subYears } from 'date-fns';
 import TransactionsFilter from './TransactionsFilter';
 import TransactionsTable from './TransactionsTable';
 import { Transaction } from '../../types';
-import { BsCloudDownload } from 'react-icons/bs';
 
 interface Props {
   transactions: Array<Transaction>;
@@ -23,12 +22,6 @@ function Transactions({ transactions }: Props): JSX.Element {
 
   return (
     <Container fluid>
-      <div className="d-flex justify-content-end">
-        <Button variant="link" onClick={downloadCSV}>
-          <BsCloudDownload className="d-inline-block align-text-top me-1" />
-          uložit jako CSV
-        </Button>
-      </div>
       <div className="mt-2">
         <TransactionsFilter
           {...{
@@ -41,7 +34,8 @@ function Transactions({ transactions }: Props): JSX.Element {
             category,
             setCategory,
             query,
-            setQuery
+            setQuery,
+            downloadCSV
           }}
         />
       </div>

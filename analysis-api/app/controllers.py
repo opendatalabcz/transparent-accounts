@@ -25,7 +25,11 @@ def get_identifier(identifier: str):
 def get_accounts():
     query = request.args.get('query')
     query = generalize_query(query)
-    accounts = find_accounts(query)
+    limit = request.args.get('limit')
+    limit = int(limit) if limit and limit.isdigit() else None
+    order_by = 'last_fetched' if request.args.get('order_by') == 'last_fetched' else None
+
+    accounts = find_accounts(query, limit, order_by)
     response = app.response_class(
         response=json.dumps(accounts, default=object_encode),
         mimetype='application/json'

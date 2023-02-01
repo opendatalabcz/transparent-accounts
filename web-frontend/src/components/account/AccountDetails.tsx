@@ -34,7 +34,7 @@ function AccountDetails({ account }: Props): JSX.Element {
 
         <dt className="col-4">Datum založení</dt>
         <dd className="col-8 text-end">
-          {account.created != null ? format(new Date(account.created), 'd.MM.yyyy') : ''}
+          {account.created != null ? format(new Date(account.created), 'dd.MM.yyyy') : ''}
         </dd>
 
         <dt className="col-4">Zůstatek 💰</dt>

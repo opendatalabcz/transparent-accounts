@@ -7,7 +7,7 @@ export const transactionsColumns: Array<Column> = [
     Header: 'Datum',
     accessor: 'date',
     Cell: ({ value }) => (
-      <span className="text-nowrap">{format(new Date(value), 'd.MM.yyyy')}</span>
+      <span className="text-nowrap">{format(new Date(value), 'dd.MM.yyyy')}</span>
     ),
     filter: 'between'
   },

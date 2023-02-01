@@ -44,7 +44,7 @@ function AccountMain({ account }: Props): JSX.Element {
       <div>
         Naposledy aktualizováno:{' '}
         {account.last_fetched != null ? (
-          format(new Date(account.last_fetched), 'd.MM.yyyy')
+          format(new Date(account.last_fetched), 'dd.MM.yyyy')
         ) : (
           <span className="text-danger">nikdy</span>
         )}

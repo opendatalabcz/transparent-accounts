@@ -20,8 +20,9 @@ export const analyse = (
   // Create auxiliary variables
   const incomingTransactions: Array<Transaction> = [];
   const outgoingTransactions: Array<Transaction> = [];
-  let transparentNoteCount: number = 0;
-  let noteCount: number = 0;
+  let describableTransactionCount: number = 0;
+  let transparentDescriptionCount: number = 0;
+  let descriptionCount: number = 0;
   // Calculate first set of values
   transactions.forEach((transaction: Transaction) => {
     if (transaction.type === 'INCOMING') {
@@ -29,10 +30,20 @@ export const analyse = (
       analysis.incomingAmount += transaction.amount;
     } else if (transaction.type === 'OUTGOING') {
       outgoingTransactions.push(transaction);
+      // Owner could have described the transaction
+      if (
+        transaction.category !== 'Platba kartou' &&
+        transaction.category !== 'Výběr z bankomatu' &&
+        transaction.category !== 'Poplatek'
+      ) {
+        describableTransactionCount++;
+        transparentDescriptionCount =
+          transaction.identifier !== null
+            ? transparentDescriptionCount + 1
+            : transparentDescriptionCount;
+        descriptionCount = transaction.description !== '' ? descriptionCount + 1 : descriptionCount;
+      }
       analysis.outgoingAmount += transaction.amount;
-      transparentNoteCount =
-        transaction.identifier !== null ? transparentNoteCount + 1 : transparentNoteCount;
-      noteCount = transaction.description !== '' ? noteCount + 1 : noteCount;
     }
   });
   // Set calculated values
@@ -42,8 +53,8 @@ export const analyse = (
   analysis.outgoingAverage = analysis.outgoingAmount / analysis.outgoingCount;
   analysis.incomingMedian = getMedian(incomingTransactions);
   analysis.outgoingMedian = getMedian(outgoingTransactions);
-  analysis.transparency = transparentNoteCount / analysis.outgoingCount;
-  analysis.noted = noteCount / analysis.outgoingCount;
+  analysis.transparency = transparentDescriptionCount / describableTransactionCount;
+  analysis.withDescription = descriptionCount / describableTransactionCount;
 
   // Create auxiliary variables
   let currentBalance: number = balance || 0;

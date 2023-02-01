@@ -83,7 +83,7 @@ function Analysis({ transactions, balance, currency }: Props): JSX.Element {
       },
       {
         name: 'Uvedená poznámka',
-        value: analysis.noted,
+        value: analysis.withDescription,
         description: 'V kolika procentech odchozích transakcí je uvedena jakákoliv poznámka.',
         render: (value) => (value != null ? <span>{Math.round(value * 100)} %</span> : null)
       }

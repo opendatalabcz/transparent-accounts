@@ -47,7 +47,7 @@ export interface Analysis {
   incomingMedian: number | null;
   outgoingMedian: number | null;
   transparency: number | null;
-  noted: number | null;
+  withDescription: number | null;
   identifiers: Array<Appearance>;
   counterAccounts: Array<Appearance>;
   dateAggregation: Array<DateCounts>;

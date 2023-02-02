@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import SearchBar from '../common/SearchBar';
 import { Account } from '../../types';
 import { getAccounts } from '../../services/accountsAPI';
-import AccountsTable from './AccountsTable';
+import AccountsTable from '../../features/accounts-table/AccountsTable';
 
 function AccountsPage(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();

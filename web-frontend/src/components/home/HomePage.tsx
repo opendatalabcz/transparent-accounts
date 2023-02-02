@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import { getAccounts } from '../../services/accountsAPI';
 import { Account } from '../../types';
 import { useEffect, useState } from 'react';
-import AccountsTable from '../accounts/AccountsTable';
+import AccountsTable from '../../features/accounts-table/AccountsTable';
 import { useNavigate } from 'react-router-dom';
 
 const LIMIT: number = 10;

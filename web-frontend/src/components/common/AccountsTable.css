@@ -1,0 +1,20 @@
+.accounts-table th {
+  white-space: nowrap;
+}
+
+.accounts-table tbody tr {
+  cursor: pointer;
+}
+
+.accounts-table th:nth-child(3),
+.accounts-table td:nth-child(3),
+.accounts-table th:nth-child(4),
+.accounts-table td:nth-child(4) {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.accounts-table th:nth-child(5),
+.accounts-table td:nth-child(5) {
+  text-align: center;
+}

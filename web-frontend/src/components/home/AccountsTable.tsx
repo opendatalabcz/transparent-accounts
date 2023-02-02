@@ -1,25 +1,17 @@
 import { Account } from '../../types';
 import { Table } from 'react-bootstrap';
 import { formatAccNum } from '../../utils/accountNumberUtils';
-import MoneyAmount from '../format/MoneyAmount';
+import MoneyAmount from '../../features/format/MoneyAmount';
 import { format } from 'date-fns';
-import './AccountsTable.css';
-import { useNavigate } from 'react-router-dom';
+import '../common/AccountsTable.css';
+import { useAccountNavigate } from '../../hooks/useAccountNavigate';
 
 interface Props {
   accounts: Array<Account>;
 }
 
 function AccountsTable({ accounts }: Props): JSX.Element | null {
-  const navigate = useNavigate();
-  const selectAccount = (accountNumber: string, bankCode: string): void => {
-    navigate(`/ucty/${bankCode}/${accountNumber}`);
-  };
-
-  // Empty source data - do not render anything
-  if (accounts.length === 0) {
-    return null;
-  }
+  const accountNavigate = useAccountNavigate();
 
   return (
     <div className="table-responsive">
@@ -27,6 +19,7 @@ function AccountsTable({ accounts }: Props): JSX.Element | null {
         <thead>
           <tr>
             <th>Majitel účtu</th>
+            <th>Název účtu</th>
             <th>Číslo účtu</th>
             <th>Zůstatek</th>
             <th>Aktualizováno</th>
@@ -36,8 +29,9 @@ function AccountsTable({ accounts }: Props): JSX.Element | null {
           {accounts.map((account: Account) => (
             <tr
               key={formatAccNum(account.number, account.bank_code)}
-              onClick={() => selectAccount(account.number, account.bank_code)}>
+              onClick={() => accountNavigate(account.number, account.bank_code)}>
               <td>{account.owner}</td>
+              <td>{account.name}</td>
               <td>{formatAccNum(account.number, account.bank_code)}</td>
               <td>
                 <MoneyAmount amount={account.balance} currency={account.currency} />

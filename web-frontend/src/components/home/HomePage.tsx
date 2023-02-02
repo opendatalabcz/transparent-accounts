@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import { getAccounts } from '../../services/accountsAPI';
 import { Account } from '../../types';
 import { useEffect, useState } from 'react';
-import AccountsTable from '../../features/accounts-table/AccountsTable';
+import AccountsTable from './AccountsTable';
 import { useNavigate } from 'react-router-dom';
 
 const LIMIT: number = 10;
@@ -20,16 +20,21 @@ function HomePage() {
   const search = () => {
     // Remove unnecessary whitespaces
     const cleanQuery = query.trim();
-    // Do not search for empty query
-    if (cleanQuery === '') return;
     // Delegate search to AccountsPage
     navigate(`/ucty?query=${cleanQuery}`);
   };
 
   return (
     <Container>
-      <SearchBar query={query} setQuery={setQuery} search={search} />
-      <AccountsTable accounts={accounts} />
+      <div className="row gy-5 mt-4">
+        <div className="col-12">
+          <SearchBar query={query} setQuery={setQuery} search={search} />
+        </div>
+        <div className="col-12">
+          <h2 className="display-6 text-center">Naposledy aktualizované účty</h2>
+          <AccountsTable accounts={accounts} />
+        </div>
+      </div>
     </Container>
   );
 }

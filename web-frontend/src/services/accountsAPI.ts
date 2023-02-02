@@ -8,6 +8,22 @@ export const getAccount = async (bank_code: string, account_number: string): Pro
   return await response.json();
 };
 
+export const getAccounts = async ({
+  query,
+  limit
+}: {
+  query?: string;
+  limit?: number;
+}): Promise<Array<Account>> => {
+  // Resolve query params
+  let params: string = 'order_by=last_fetched';
+  if (query) params += `&query=${query}`;
+  if (limit) params += `&limit=${limit}`;
+
+  const response: Response = await fetch(`${URL}/api/accounts?${params}`);
+  return await response.json();
+};
+
 export const getTransactions = async (
   bank_code: string,
   account_number: string

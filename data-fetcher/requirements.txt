@@ -1,6 +1,7 @@
-sqlalchemy # 2.0.0b4
+sqlalchemy
 psycopg2-binary
 alembic
 celery
 requests
 bs4
+urllib3

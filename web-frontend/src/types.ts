@@ -30,7 +30,8 @@ export interface Transaction {
   constant_symbol: string;
   specific_symbol: string;
   description: string;
-  identifier: string | null;
+  ca_identifier: string | null;
+  ca_name: string | null;
   category: string | null;
 }
 

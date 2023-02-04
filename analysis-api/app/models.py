@@ -103,7 +103,8 @@ class Transaction(Base):
     constant_symbol: Mapped[str]
     specific_symbol: Mapped[str]
     description: Mapped[str]
-    identifier: Mapped[Optional[str]] = mapped_column(String(8))
+    ca_identifier: Mapped[Optional[str]] = mapped_column(String(8))
+    ca_name: Mapped[Optional[str]]
     category: Mapped[Optional[TransactionCategory]]
     account_number: Mapped[str]
     account_bank: Mapped[Bank]

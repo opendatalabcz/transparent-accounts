@@ -78,7 +78,8 @@ def object_encode(o) -> dict | str:
                 "constant_symbol": o.constant_symbol,
                 "specific_symbol": o.specific_symbol,
                 "description": o.description,
-                "identifier": o.identifier,
+                "ca_identifier": o.ca_identifier,
+                "ca_name": o.ca_name,
                 "category": o.category.value if o.category is not None else None
             }
         case _:

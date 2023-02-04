@@ -50,7 +50,7 @@ export const transactionsColumns: Array<Column> = [
   },
   {
     Header: 'IČO',
-    accessor: 'identifier'
+    accessor: 'ca_name'
   },
   {
     Header: 'Kategorie',

@@ -2,6 +2,11 @@ import re
 from abc import ABC, abstractmethod
 from datetime import date, timedelta
 from typing import Optional
+from xml.etree import ElementTree
+
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from app.models import Account, Transaction, TransactionType, TransactionCategory
 
@@ -51,6 +56,27 @@ class TransactionFetcher(ABC):
         pattern = r'(?:^|\s|:)([0-9]{8})(?:$|\s|,)'
         search = re.search(pattern, string)
         return search.group(1) if search is not None else None
+
+    @staticmethod
+    def fetch_identifier_name(identifier: str) -> Optional[str]:
+        """
+        Fetches the name of the company with the given identifier from the ARES database.
+        :param identifier: identifier of the company (IČO)
+        :return: name of the company or None if not found
+        """
+        # Retry the request 3 times with exponential backoff
+        s = requests.Session()
+        retry = Retry(connect=3, backoff_factor=0.5)
+        adapter = HTTPAdapter(max_retries=retry)
+        s.mount('https://', adapter)
+        # Fetch the XML response from the ARES database
+        response = s.get(f"https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_std.cgi?ico={identifier}")
+        tree = ElementTree.fromstring(response.content)
+        # Namespace of the ARES XML schema
+        ns = {'are': 'http://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_answer/v_1.0.1'}
+        # Use XML path's './/' to search for the element in the whole tree
+        element = tree.find('.//are:Obchodni_firma', ns)
+        return element.text if element is not None else None
 
     @staticmethod
     def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:

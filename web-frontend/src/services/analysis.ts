@@ -38,7 +38,7 @@ export const analyse = (
       ) {
         describableTransactionCount++;
         transparentDescriptionCount =
-          transaction.identifier !== null
+          transaction.ca_name !== null
             ? transparentDescriptionCount + 1
             : transparentDescriptionCount;
         descriptionCount = transaction.description !== '' ? descriptionCount + 1 : descriptionCount;

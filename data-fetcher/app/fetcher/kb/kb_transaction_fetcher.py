@@ -86,6 +86,9 @@ class KBTransactionFetcher(TransactionFetcher):
         # Split symbols by slashes and remove whitespaces from them
         variable_s, constant_s, specific_s = map(lambda s: s.replace(' ', ''),  t['symbols'].split('/'))
         counter_account, str_type, description = self.parse_details(t['notes'], t_type)
+        # Parse the counter account identifier and name
+        ca_identifier = self.parse_identifier(description)
+        ca_name = self.fetch_identifier_name(ca_identifier) if ca_identifier else None
 
         transaction = Transaction(
             date=t_date,
@@ -98,7 +101,8 @@ class KBTransactionFetcher(TransactionFetcher):
             constant_symbol=constant_s,
             specific_symbol=specific_s,
             description=description,
-            identifier=self.parse_identifier(description),
+            ca_identifier=ca_identifier,
+            ca_name=ca_name,
             account_number=self.account.number,
             account_bank=self.account.bank,
         )

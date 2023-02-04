@@ -4,7 +4,6 @@ from datetime import datetime
 from flask import request
 
 from app import app, celery, bp
-from app.fetchers import fetch_identifier
 from app.models import Bank, AccountUpdate, UpdateStatus
 from app.queries import find_account, find_transactions, find_accounts, find_update, find_updates, save_update
 from app.responses import ok_response, not_found_response
@@ -92,7 +91,7 @@ def get_updates(bank_code: str, acc_num: str):
     updates = find_updates(acc_num, bank)
     updatable = is_updatable(updates)
 
-    return ok_response(json.dumps({"updates": updates, "updatable": updatable}))
+    return ok_response(json.dumps({"updates": updates, "updatable": updatable}, default=str))
 
 
 @bp.get("/accounts/<bank_code>/<acc_num>/updates/<update_id>")
@@ -108,13 +107,6 @@ def get_update(bank_code: str, acc_num: str, update_id: int):
         return not_found_response('Update not found')
 
     return ok_response(json.dumps(update, default=str))
-
-
-@bp.get("/identifiers/<identifier>")
-def get_identifier(identifier: str):
-    name = fetch_identifier(identifier)
-
-    return ok_response(json.dumps({"identifier": identifier, "name": name}))
 
 
 #  TODO temporary, remove in production

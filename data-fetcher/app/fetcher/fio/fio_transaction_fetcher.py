@@ -52,6 +52,9 @@ class FioTransactionFetcher(TransactionFetcher):
         t_type = TransactionType.from_float(amount)
         counter_account = cells[3].get_text(strip=True) if t_type == TransactionType.INCOMING else None
         description = cells[4].get_text(strip=True) if t_type == TransactionType.INCOMING else cells[8].get_text(strip=True)
+        # Parse the counter account identifier and name
+        ca_identifier = self.parse_identifier(description)
+        ca_name = self.fetch_identifier_name(ca_identifier) if ca_identifier else None
 
         transaction = Transaction(
             date=t_date,
@@ -64,7 +67,8 @@ class FioTransactionFetcher(TransactionFetcher):
             constant_symbol=cells[6].get_text(strip=True),
             specific_symbol=cells[7].get_text(strip=True),
             description=description,
-            identifier=self.parse_identifier(description),
+            ca_identifier=ca_identifier,
+            ca_name=ca_name,
             account_number=self.account.number,
             account_bank=self.account.bank
         )

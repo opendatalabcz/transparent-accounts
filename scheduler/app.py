@@ -9,17 +9,17 @@ class Config:
     timezone = os.getenv('TZ')
     beat_schedule = {
         'fetch-csac-accounts-every-day': {
-            'task': 'app.tasks.fetch-accounts',
+            'task': 'app.tasks.fetch_accounts',
             'schedule': crontab(hour=3, minute=0),
             'args': ['0800']
         },
         'fetch-fio-accounts-every-day': {
-            'task': 'app.tasks.fetch-accounts',
+            'task': 'app.tasks.fetch_accounts',
             'schedule': crontab(hour=3, minute=0),
             'args': ['2010']
         },
         'fetch-kb-accounts-every-day': {
-            'task': 'app.tasks.fetch-accounts',
+            'task': 'app.tasks.fetch_accounts',
             'schedule': crontab(hour=3, minute=0),
             'args': ['0100']
         }

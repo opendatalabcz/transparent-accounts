@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import select, or_, Sequence
+from sqlalchemy import select, or_, Sequence, desc
 from sqlalchemy.orm import Session
 
 from app import engine
@@ -10,7 +10,7 @@ from app.models import Account, Transaction, Bank, AccountUpdate, UpdateStatus
 
 def find_account(acc_num: str, bank: Bank) -> Optional[Account]:
     """
-    Find Account by the number and bank.
+    Find Account by the number and the bank.
     :param acc_num: Account number
     :param bank: Bank
     :return: Account or None
@@ -33,19 +33,19 @@ def find_accounts(query: Optional[str], limit: Optional[int], order_by: Optional
     # Query not specified - return all accounts
     if query is None:
         with Session(engine) as s:
-            return s.execute(select(Account).limit(limit).order_by(order_by)).scalars().all()
+            return s.execute(select(Account).limit(limit).order_by(desc(order_by))).scalars().all()
 
     # Query specified - construct the match query
     search = f"%{query}%"
     or_criteria = or_(Account.number.ilike(search), Account.name.ilike(search), Account.owner.ilike(search))
 
     with Session(engine) as s:
-        return s.execute(select(Account).filter(or_criteria).limit(limit).order_by(order_by)).scalars().all()
+        return s.execute(select(Account).filter(or_criteria).limit(limit).order_by(desc(order_by))).scalars().all()
 
 
 def find_transactions(acc_num: str, bank: Bank) -> Sequence['Transaction']:
     """
-    Find Transactions by the account number.
+    Find Transactions by the account number sorted in descending order by the date.
     :param acc_num: Account number
     :param bank: Bank
     :return: Sequence of Transactions
@@ -63,19 +63,15 @@ def find_update(update_id: int) -> Optional[AccountUpdate]:
     :return: AccountUpdate or None
     """
     with Session(engine) as s:
-        request = s.get(AccountUpdate, update_id)
-    return request
+        return s.get(AccountUpdate, update_id)
 
 
-def save_update(account_update: AccountUpdate, status: UpdateStatus) -> None:
+def save_update(account_update: AccountUpdate) -> None:
     """
-    Updates the AccountUpdate status.
+    Save the AccountUpdate with the given status.
     :param account_update: AccountUpdate
-    :param status: New status
     """
     with Session(engine) as s:
-        account_update.status = status
-        account_update.started = datetime.now()
         s.add(account_update)
         s.commit()
         s.refresh(account_update)

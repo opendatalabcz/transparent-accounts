@@ -1,8 +1,6 @@
 import re
 from typing import Optional
 
-import requests
-
 from app.models import Account, Transaction
 
 
@@ -52,8 +50,9 @@ def generalize_query(string: Optional[str]) -> Optional[str]:
     """
     Strips whitespace and tries to find a bank code in the query and removes it.
     The aim is to generalize the query so that it can be used in a search.
+    :param string: query string
+    :return: generalized query string
     """
-    # Empty query
     if string is None:
         return None
 

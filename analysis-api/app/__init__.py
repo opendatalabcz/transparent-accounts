@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 
 app = Flask(__name__)
 app.secret_key = 'dev'
-CORS(app)
+CORS(app)  # TODO remove in production
 
 bp = Blueprint('api', __name__)
 
@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(mod
 
 celery = Celery('analysis-api', broker=os.getenv('CELERY_BROKER_URL'))
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@db:5432/postgres'  # TODO
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@db:5432/postgres'  # TODO move to config
 engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
 
 from app import controllers

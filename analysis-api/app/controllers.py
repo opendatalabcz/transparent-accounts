@@ -5,15 +5,13 @@ from flask import request
 from app import app, celery, bp
 from app.models import Bank, AccountUpdate, UpdateStatus
 from app.queries import find_account, find_transactions, find_accounts, find_update, save_update
-from app.utils import object_encode, fetch_identifier_name, generalize_query
+from app.fetchers import fetch_identifier
+from app.utils import object_encode, generalize_query
 
 
 @bp.get("/identifiers/<identifier>")
 def get_identifier(identifier: str):
-    name = fetch_identifier_name(identifier)
-    if name is None:
-        return  # TODO
-
+    name = fetch_identifier(identifier)
     response = app.response_class(
         response=json.dumps({"identifier": identifier, "name": name}),
         mimetype='application/json'

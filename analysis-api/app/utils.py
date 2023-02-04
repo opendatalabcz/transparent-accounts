@@ -48,11 +48,6 @@ def object_encode(o) -> dict | str:
             return str(o)
 
 
-def fetch_identifier_name(identifier: str) -> Optional[str]:
-    requests.get(f"https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_std.cgi?ico={identifier}")
-    return ""  # TODO
-
-
 def generalize_query(string: Optional[str]) -> Optional[str]:
     """
     Strips whitespace and tries to find a bank code in the query and removes it.

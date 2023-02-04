@@ -5,10 +5,10 @@ from flask import request
 
 from app import app, celery, bp
 from app.models import Bank, AccountUpdate, UpdateStatus
-from app.queries import find_account, find_transactions, find_accounts, find_update, save_update
+from app.queries import find_account, find_transactions, find_accounts, find_update, find_updates, save_update
 from app.fetchers import fetch_identifier
 from app.responses import ok_response, not_found_response
-from app.utils import object_encode, generalize_query
+from app.utils import is_updatable, generalize_query, object_encode
 
 
 @bp.get("/accounts")
@@ -86,9 +86,13 @@ def get_updates(bank_code: str, acc_num: str):
     except ValueError:
         return not_found_response('Bank not supported')
 
-    # TODO implement real solution
+    if find_account(acc_num, bank) is None:
+        return not_found_response('Account not found')
 
-    return ok_response(json.dumps({"updates": [], "updatable": True}))
+    updates = find_updates(acc_num, bank)
+    updatable = is_updatable(updates)
+
+    return ok_response(json.dumps({"updates": updates, "updatable": updatable}))
 
 
 @bp.get("/accounts/<bank_code>/<acc_num>/updates/<update_id>")

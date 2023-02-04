@@ -66,6 +66,19 @@ def find_update(update_id: int) -> Optional[AccountUpdate]:
         return s.get(AccountUpdate, update_id)
 
 
+def find_updates(acc_num: str, bank: Bank) -> Sequence['AccountUpdate']:
+    """
+    Find AccountUpdates by the account number and bank sorted in descending order by the started date.
+    :param acc_num: Account number
+    :param bank: Bank
+    :return: Sequence of AccountUpdates
+    """
+    with Session(engine) as s:
+        return s.execute(select(AccountUpdate).
+                         filter(AccountUpdate.account_number == acc_num, AccountUpdate.account_bank == bank).
+                         order_by(AccountUpdate.started.desc())).scalars().all()
+
+
 def save_update(account_update: AccountUpdate) -> None:
     """
     Save the AccountUpdate with the given status.

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select, or_, Sequence, desc
+from sqlalchemy import select, or_, Sequence, desc, nulls_last
 from sqlalchemy.orm import Session
 
 from app import engine
@@ -32,14 +32,14 @@ def find_accounts(query: Optional[str], limit: Optional[int], order_by: Optional
     # Query not specified - return all accounts
     if query is None:
         with Session(engine) as s:
-            return s.execute(select(Account).limit(limit).order_by(desc(order_by))).scalars().all()
+            return s.execute(select(Account).limit(limit).order_by(nulls_last(desc(order_by)))).scalars().all()
 
     # Query specified - construct the match query
     search = f"%{query}%"
     or_criteria = or_(Account.number.ilike(search), Account.name.ilike(search), Account.owner.ilike(search))
 
     with Session(engine) as s:
-        return s.execute(select(Account).filter(or_criteria).limit(limit).order_by(desc(order_by))).scalars().all()
+        return s.execute(select(Account).filter(or_criteria).limit(limit).order_by(nulls_last(desc(order_by)))).scalars().all()
 
 
 def find_transactions(acc_num: str, bank: Bank) -> Sequence['Transaction']:

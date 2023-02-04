@@ -13,8 +13,11 @@ from sqlalchemy.orm import relationship
 
 class Bank(Enum):
     CSAS = '0800'
+    CSOB = '0300'
     FIO = '2010'
     KB = '0100'
+    MONETA = '0600'
+    RB = '5500'
 
 
 class Currency(Enum):

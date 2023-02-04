@@ -1,6 +1,6 @@
 import re
-from typing import Optional
 from datetime import datetime, timedelta
+from typing import Optional
 
 from app.models import Account, Transaction, AccountUpdate, UpdateStatus
 

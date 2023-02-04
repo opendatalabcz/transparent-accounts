@@ -1,11 +1,10 @@
-from datetime import datetime
 from typing import Optional
 
 from sqlalchemy import select, or_, Sequence, desc
 from sqlalchemy.orm import Session
 
 from app import engine
-from app.models import Account, Transaction, Bank, AccountUpdate, UpdateStatus
+from app.models import Account, Transaction, Bank, AccountUpdate
 
 
 def find_account(acc_num: str, bank: Bank) -> Optional[Account]:

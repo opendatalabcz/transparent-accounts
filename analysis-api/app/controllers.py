@@ -4,9 +4,9 @@ from datetime import datetime
 from flask import request
 
 from app import app, celery, bp
+from app.fetchers import fetch_identifier
 from app.models import Bank, AccountUpdate, UpdateStatus
 from app.queries import find_account, find_transactions, find_accounts, find_update, find_updates, save_update
-from app.fetchers import fetch_identifier
 from app.responses import ok_response, not_found_response
 from app.utils import is_updatable, generalize_query, object_encode
 

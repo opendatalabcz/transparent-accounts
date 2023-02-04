@@ -1,6 +1,6 @@
 import re
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 import bs4
 import requests

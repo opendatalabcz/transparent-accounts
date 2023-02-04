@@ -1,13 +1,12 @@
 import hashlib
 import re
-from typing import Optional
 from datetime import datetime, date
 
 import requests
 
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Account, Transaction, TransactionType, TransactionCategory, Currency
+from app.models import Account, Transaction, TransactionType, Currency
 from app.utils import float_from_cz
 
 

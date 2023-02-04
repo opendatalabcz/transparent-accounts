@@ -89,6 +89,12 @@ class FioTransactionFetcher(TransactionFetcher):
         # ATM withdrawals
         if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.str_type and 'Výběr z bankomatu' in transaction.description:
             return TransactionCategory.ATM
+        # Fee
+        if transaction.type == TransactionType.OUTGOING and 'Poplatek' in transaction.str_type:
+            return TransactionCategory.FEE
+        # Tax
+        if transaction.type == TransactionType.OUTGOING and 'daně' in transaction.str_type:
+            return TransactionCategory.TAX
         # Card payments
         if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.str_type:
             return TransactionCategory.CARD

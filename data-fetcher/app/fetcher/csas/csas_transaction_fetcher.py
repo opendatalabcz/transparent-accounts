@@ -62,6 +62,12 @@ class CSASTransactionFetcher(TransactionFetcher):
         # ATM withdrawals
         if transaction.type == TransactionType.OUTGOING and 'bankomat' in transaction.str_type:
             return TransactionCategory.ATM
+        # Fee
+        if transaction.type == TransactionType.OUTGOING and (transaction.str_type == 'Cena za vedení účtu' or transaction.str_type == 'Poskytnutí debetní karty'):
+            return TransactionCategory.FEE
+        # Tax
+        if transaction.type == TransactionType.OUTGOING and 'daň' in transaction.str_type:
+            return TransactionCategory.TAX
         # Card payments
         if transaction.type == TransactionType.OUTGOING and 'Platba kartou' == transaction.str_type:
             return TransactionCategory.CARD

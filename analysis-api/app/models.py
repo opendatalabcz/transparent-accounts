@@ -52,6 +52,8 @@ class TransactionType(Enum):
 class TransactionCategory(Enum):
     MESSAGE = "Vzkaz"
     ATM = "Výběr z bankomatu"
+    FEE = "Poplatek"
+    TAX = "Odvod daně"
     CARD = "Platba kartou"
 
 

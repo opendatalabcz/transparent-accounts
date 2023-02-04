@@ -55,7 +55,7 @@ def upgrade() -> None:
     sa.Column('specific_symbol', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('identifier', sa.String(length=8), nullable=True),
-    sa.Column('category', sa.Enum('MESSAGE', 'ATM', 'CARD', name='transactioncategory'), nullable=True),
+    sa.Column('category', sa.Enum('MESSAGE', 'ATM', 'FEE', 'TAX', 'CARD', name='transactioncategory'), nullable=True),
     sa.Column('account_number', sa.String(), nullable=False),
     sa.Column('account_bank', sa.Enum('CSAS', 'CSOB', 'FIO', 'KB', 'MONETA', 'RB', name='bank'), nullable=False),
     sa.ForeignKeyConstraint(['account_number', 'account_bank'], ['account.number', 'account.bank'], ),

@@ -1,12 +1,13 @@
 import hashlib
 import re
 from datetime import datetime, date
+from typing import Optional
 
 import requests
 
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Account, Transaction, TransactionType, Currency
+from app.models import Account, Transaction, TransactionType, Currency, TransactionCategory
 from app.utils import float_from_cz
 
 
@@ -156,3 +157,16 @@ class KBTransactionFetcher(TransactionFetcher):
             case _:
                 raise AttributeError(string)
         return counter_account, str_type, description
+
+    @staticmethod
+    def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
+        """
+        Determines the category of the transaction.
+        :param transaction: Transaction to determine the category for
+        :return: category if determined, None otherwise
+        """
+        # Fee
+        if transaction.type == TransactionType.OUTGOING and transaction.str_type == 'Poplatek':
+            return TransactionCategory.FEE
+        # Try default category determination
+        return TransactionFetcher.determine_category(transaction)

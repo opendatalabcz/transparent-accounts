@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select, or_, Sequence, desc, nulls_last
+from sqlalchemy import select, exists, and_, or_, Sequence, desc, nulls_last
 from sqlalchemy.orm import Session
 
 from app import engine
@@ -87,3 +87,35 @@ def save_update(account_update: AccountUpdate) -> None:
         s.add(account_update)
         s.commit()
         s.refresh(account_update)
+
+
+def find_accounts_by_identifier_occurrence(identifier: str) -> Sequence['Account']:
+    """
+    Find accounts by the occurrence of the identifier in their transactions.
+    :param identifier: counter account identifier (IČO)
+    :return: Sequence of Accounts
+    """
+    # Construct the exists criteria - the account has at least one transaction with the given identifier
+    exists_criteria = exists().where(
+        and_(Transaction.account_number == Account.number, Transaction.account_bank == Account.bank,
+             Transaction.ca_identifier == identifier))
+    # Construct the select statement
+    select_statement = select(Account).where(exists_criteria)
+    with Session(engine) as s:
+        return s.execute(select_statement).scalars().all()
+
+
+def find_accounts_by_counter_account_occurrence(counter_account: str) -> Sequence['Account']:
+    """
+    Find accounts by the occurrence of the counter account in their transactions.
+    :param counter_account: counter account
+    :return: Sequence of Accounts
+    """
+    # Construct the exists criteria - the account has at least one transaction with the given counter account
+    exists_criteria = exists().where(
+        and_(Transaction.account_number == Account.number, Transaction.account_bank == Account.bank,
+             Transaction.counter_account == counter_account))
+    # Construct the select statement
+    select_statement = select(Account).where(exists_criteria)
+    with Session(engine) as s:
+        return s.execute(select_statement).scalars().all()

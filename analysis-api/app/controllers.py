@@ -6,7 +6,8 @@ from flask import request
 from app import app, celery, bp
 from app.models import Bank, AccountUpdate, UpdateStatus
 from app.queries import find_account, find_transactions, find_accounts, find_update, find_updates, save_update
-from app.responses import ok_response, not_found_response
+from app.queries import find_accounts_by_identifier_occurrence, find_accounts_by_counter_account_occurrence
+from app.responses import ok_response, not_found_response, bad_request_response
 from app.utils import is_updatable, generalize_query, object_encode
 
 
@@ -107,6 +108,23 @@ def get_update(bank_code: str, acc_num: str, update_id: int):
         return not_found_response('Update not found')
 
     return ok_response(json.dumps(update, default=str))
+
+
+@bp.get("/occurrences")
+def get_occurrences():
+    identifier = request.args.get('identifier')
+    counter_account = request.args.get('counter_account')
+
+    # Exactly one of identifier or counter_account parameter must be specified
+    if (identifier is None and counter_account is None) or (identifier is not None and counter_account is not None):
+        return bad_request_response('Exactly one of the identifier or counter_account parameters must be specified')
+
+    if identifier is not None:
+        occurrences = find_accounts_by_identifier_occurrence(identifier)
+    elif counter_account is not None:
+        occurrences = find_accounts_by_counter_account_occurrence(counter_account)
+
+    return ok_response(json.dumps(occurrences, default=object_encode))
 
 
 #  TODO temporary, remove in production

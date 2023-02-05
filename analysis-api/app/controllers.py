@@ -17,7 +17,7 @@ def get_accounts():
     query = generalize_query(query)
     limit = request.args.get('limit')
     limit = int(limit) if limit and limit.isdigit() else None
-    order_by = 'last_fetched' if request.args.get('order_by') == 'last_fetched' else None
+    order_by = 'last_fetched' if request.args.get('order_by') == 'last_fetched' else 'number'
 
     accounts = find_accounts(query, limit, order_by)
 

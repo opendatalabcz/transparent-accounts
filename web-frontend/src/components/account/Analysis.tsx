@@ -3,23 +3,22 @@ import { Container } from 'react-bootstrap';
 import AnalysisCard, { AnalysisCardProps } from './AnalysisCard';
 import { analyse } from '../../services/analysis';
 import MoneyAmount from '../../features/format/MoneyAmount';
-import { Analysis as AnalysisType, Transaction } from '../../types';
+import { Account, Analysis as AnalysisType, Transaction } from '../../types';
 import IdentifierTable from './IdentifierTable';
 import CounterAccountTable from './CounterAccountTable';
 import ChartBalance from './ChartBalance';
 import ChartTransactions from './ChartTransactions';
 
 interface Props {
+  account: Account;
   transactions: Array<Transaction>;
-  balance: number | null;
-  currency: string | null;
 }
 
-function Analysis({ transactions, balance, currency }: Props): JSX.Element {
+function Analysis({ account, transactions }: Props): JSX.Element {
   // Analyse transactions
   const analysis: AnalysisType = useMemo(
-    () => analyse(transactions, balance, currency),
-    [transactions, balance, currency]
+    () => analyse(transactions, account.balance, account.currency),
+    [account, transactions]
   );
 
   // Listing of shown analysis cards
@@ -104,15 +103,15 @@ function Analysis({ transactions, balance, currency }: Props): JSX.Element {
       </div>
       <div className="row">
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <IdentifierTable data={analysis.identifiers} />
+          <IdentifierTable account={account} data={analysis.identifiers} />
         </div>
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <CounterAccountTable data={analysis.counterAccounts} />
+          <CounterAccountTable account={account} data={analysis.counterAccounts} />
         </div>
       </div>
       <div className="row">
         <div className="col-lg-6 col-12 px-1 pb-2">
-          <ChartBalance data={analysis.dateAggregation} currency={currency} />
+          <ChartBalance data={analysis.dateAggregation} currency={account.currency} />
         </div>
         <div className="col-lg-6 col-12 px-1 pb-2">
           <ChartTransactions data={analysis.dateAggregation} />

@@ -1,13 +1,15 @@
 import { Column } from 'react-table';
 import MoneyAmount from '../../features/format/MoneyAmount';
-import AnalysisTableCard, { renderAppearances } from './AnalysisTableCard';
-import { Appearance } from '../../types';
+import AnalysisTableCard from './AnalysisTableCard';
+import { Account, TransactionsAggregation } from '../../types';
+import { IdentifierOccurrences } from './Occurrences';
 
 interface Props {
-  data: Array<Appearance>;
+  account: Account;
+  data: Array<TransactionsAggregation>;
 }
 
-function IdentifierTable({ data }: Props): JSX.Element {
+function IdentifierTable({ account, data }: Props): JSX.Element {
   const columns: Array<Column> = [
     {
       Header: 'IČO',
@@ -28,12 +30,17 @@ function IdentifierTable({ data }: Props): JSX.Element {
     {
       Header: 'Celková částka',
       accessor: 'totalAmount',
-      Cell: ({ value }) => <MoneyAmount amount={value} currency="CZK" />
+      Cell: ({ row }) => (
+        <MoneyAmount amount={row.original.totalAmount} currency={row.original.currency} />
+      )
     },
     {
       Header: 'Jinde',
-      accessor: 'appearances',
-      Cell: renderAppearances
+      id: 'occurrences',
+      canSort: false,
+      Cell: ({ row }) => (
+        <IdentifierOccurrences account={account} identifier={row.original.identifier} />
+      )
     }
   ];
 

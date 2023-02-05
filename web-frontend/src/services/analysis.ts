@@ -1,4 +1,4 @@
-import { Analysis, Appearance, Transaction } from '../types';
+import { Analysis, TransactionsAggregation, Transaction } from '../types';
 import { format } from 'date-fns';
 
 // TODO REFACTOR AND DOCUMENT!
@@ -91,9 +91,13 @@ export const analyse = (
 
   // Calculate third set of values
   transactions.forEach((transaction: Transaction) => {
-    if (transaction.ca_identifier !== null && transaction.ca_name !== null) {
-      const identifier: Appearance | undefined = analysis.identifiers.find(
-        (a: Appearance) => a.name === transaction.ca_name
+    if (
+      transaction.type === 'OUTGOING' &&
+      transaction.ca_identifier !== null &&
+      transaction.ca_name !== null
+    ) {
+      const identifier: TransactionsAggregation | undefined = analysis.identifiers.find(
+        (a: TransactionsAggregation) => a.name === transaction.ca_name
       );
       if (identifier) {
         identifier.transactionsCount++;
@@ -104,13 +108,13 @@ export const analyse = (
           identifier: transaction.ca_identifier,
           transactionsCount: 1,
           totalAmount: transaction.amount,
-          appearances: []
+          currency: transaction.currency
         });
       }
     }
-    if (transaction.counter_account !== null) {
-      const counter_account: Appearance | undefined = analysis.counterAccounts.find(
-        (a: Appearance) => a.name === transaction.counter_account
+    if (transaction.type === 'INCOMING' && transaction.counter_account !== null) {
+      const counter_account: TransactionsAggregation | undefined = analysis.counterAccounts.find(
+        (a: TransactionsAggregation) => a.name === transaction.counter_account
       );
       if (counter_account) {
         counter_account.transactionsCount++;
@@ -120,17 +124,19 @@ export const analyse = (
           name: transaction.counter_account,
           transactionsCount: 1,
           totalAmount: transaction.amount,
-          appearances: []
+          currency: transaction.currency
         });
       }
     }
   });
   // Sort by total amount
   analysis.identifiers.sort(
-    (a: Appearance, b: Appearance): number => a.totalAmount - b.totalAmount
+    (a: TransactionsAggregation, b: TransactionsAggregation): number =>
+      a.totalAmount - b.totalAmount
   );
   analysis.counterAccounts.sort(
-    (a: Appearance, b: Appearance): number => b.totalAmount - a.totalAmount
+    (a: TransactionsAggregation, b: TransactionsAggregation): number =>
+      b.totalAmount - a.totalAmount
   );
 
   return analysis;

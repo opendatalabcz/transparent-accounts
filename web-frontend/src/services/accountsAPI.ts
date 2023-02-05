@@ -52,3 +52,17 @@ export const update = async (bank_code: string, account_number: string): Promise
   // TODO: due to CORS policy, the response does not contain the Location header
   return response.headers.get('Location');
 };
+
+export const getOccurrencesByIdentifier = async (identifier: string): Promise<Array<Account>> => {
+  const response: Response = await fetch(`${URL}/api/occurrences?identifier=${identifier}`);
+  return await response.json();
+};
+
+export const getOccurrencesByCounterAccount = async (
+  counterAccount: string
+): Promise<Array<Account>> => {
+  const response: Response = await fetch(
+    `${URL}/api/occurrences?counter_account=${counterAccount}`
+  );
+  return await response.json();
+};

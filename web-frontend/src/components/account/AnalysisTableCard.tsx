@@ -1,80 +1,13 @@
 import { useMemo } from 'react';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
-import { Button, Card, OverlayTrigger, Popover, Table, Tooltip } from 'react-bootstrap';
+import { Card, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import Pagination from '../../features/pagination/Pagination';
-import { shortenAccNum } from '../../utils/accountNumberUtils';
-import { Appearance, AccountShort } from '../../types';
-import { BsQuestionCircle } from 'react-icons/bs';
-
-interface renderAppearancesProps {
-  value: Array<AccountShort>;
-}
-
-export const renderAppearances = ({ value }: renderAppearancesProps): JSX.Element => {
-  return (
-    <>
-      {value.length > 0 ? (
-        <OverlayTrigger
-          trigger="click"
-          rootClose
-          placement="right"
-          overlay={
-            <Popover>
-              <Popover.Header as="h3">
-                <span>
-                  Výskyty u jiných transparentních účtů
-                  <OverlayTrigger
-                    placement="bottom"
-                    overlay={<Tooltip>{/* TODO */ 'Vysvětlení'}</Tooltip>}>
-                    <span>
-                      {' '}
-                      <BsQuestionCircle className="d-inline-block" />
-                    </span>
-                  </OverlayTrigger>
-                </span>
-              </Popover.Header>
-              <Popover.Body>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Název účtu</th>
-                      <th>Číslo účtu</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {value.map((account) => (
-                      <tr key={account.bank_code + account.number}>
-                        <td>{account.name}</td>
-                        <td>
-                          <a
-                            target="_blank"
-                            rel="noreferrer"
-                            href={`/ucty/${account.bank_code}/${account.number}`}>
-                            {shortenAccNum(account.number) + '/' + account.bank_code}
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </Popover.Body>
-            </Popover>
-          }>
-          <Button variant="link" className="p-0">
-            {value.length}
-          </Button>
-        </OverlayTrigger>
-      ) : (
-        <span className="px-0">0</span>
-      )}
-    </>
-  );
-};
+import { TransactionsAggregation } from '../../types';
 
 interface AnalysisTableProps {
   tableColumns: Array<Column>;
-  tableData: Array<Appearance>;
+  tableData: Array<TransactionsAggregation>;
 }
 
 function AnalysisTable({ tableColumns, tableData }: AnalysisTableProps): JSX.Element {
@@ -183,7 +116,7 @@ function AnalysisTable({ tableColumns, tableData }: AnalysisTableProps): JSX.Ele
 interface AnalysisTableCardProps {
   title: string;
   columns: Array<Column>;
-  data: Array<Appearance>;
+  data: Array<TransactionsAggregation>;
 }
 
 function AnalysisTableCard({ title, columns, data }: AnalysisTableCardProps): JSX.Element {

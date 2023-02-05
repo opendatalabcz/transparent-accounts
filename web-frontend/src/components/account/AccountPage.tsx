@@ -51,9 +51,8 @@ function AccountPage() {
       <div>
         {tab === 'analyza' ? (
           <Analysis
+            account={account}
             transactions={transactions}
-            balance={account.balance}
-            currency={account.currency}
           />
         ) : (
           <Transactions transactions={transactions} />

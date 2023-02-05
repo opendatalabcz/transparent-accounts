@@ -4,7 +4,7 @@ import AnalysisTableCard, { renderAppearances } from './AnalysisTableCard';
 import { Appearance } from '../../types';
 
 interface Props {
-  data: Array<Appearance>
+  data: Array<Appearance>;
 }
 
 function IdentifierTable({ data }: Props): JSX.Element {
@@ -12,25 +12,28 @@ function IdentifierTable({ data }: Props): JSX.Element {
     {
       Header: 'IČO',
       accessor: 'name',
-      Cell: ({ value }) => (
-        <a target="_blank" rel="noreferrer" href={`https://rejstrik-firem.kurzy.cz/${value}`}>
-          {value}
+      Cell: ({ row }) => (
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={`https://rejstrik-firem.kurzy.cz/${row.original.identifier}`}>
+          {row.original.name}
         </a>
       )
     },
     {
-      Header: 'Výskyty',
-      accessor: 'appearances',
-      Cell: renderAppearances
-    },
-    {
-      Header: 'Počet transakcí',
+      Header: 'Transakcí',
       accessor: 'transactionsCount'
     },
     {
       Header: 'Celková částka',
       accessor: 'totalAmount',
       Cell: ({ value }) => <MoneyAmount amount={value} currency="CZK" />
+    },
+    {
+      Header: 'Jinde',
+      accessor: 'appearances',
+      Cell: renderAppearances
     }
   ];
 

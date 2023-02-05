@@ -1,6 +1,7 @@
-import { Analysis, Transaction } from '../types';
+import { Analysis, Appearance, Transaction } from '../types';
 import { format } from 'date-fns';
 
+// TODO REFACTOR AND DOCUMENT!
 export const analyse = (
   transactions: Array<Transaction>,
   balance: number | null,
@@ -16,6 +17,8 @@ export const analyse = (
   analysis.incomingAmount = 0;
   analysis.outgoingAmount = 0;
   analysis.dateAggregation = [];
+  analysis.identifiers = [];
+  analysis.counterAccounts = [];
 
   // Create auxiliary variables
   const incomingTransactions: Array<Transaction> = [];
@@ -86,117 +89,49 @@ export const analyse = (
   // Reverse the array
   analysis.dateAggregation.reverse();
 
-  // TODO remove example data and add implementation
-  analysis.identifiers = [
-    {
-      name: '04434081',
-      appearances: [
-        { number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' },
-        { number: '000000-2902252345', bank_code: '2010', name: 'generalpavel' },
-        { number: '000000-0004070217', bank_code: '0100', name: 'ANO 2011' }
-      ],
-      transactionsCount: 7,
-      totalAmount: -3265434
-    },
-    {
-      name: '12345678',
-      appearances: [],
-      transactionsCount: 1,
-      totalAmount: -25000
-    },
-    {
-      name: '12345678',
-      appearances: [],
-      transactionsCount: 1,
-      totalAmount: -25000
-    },
-    {
-      name: '12345678',
-      appearances: [],
-      transactionsCount: 1,
-      totalAmount: -25000
+  // Calculate third set of values
+  transactions.forEach((transaction: Transaction) => {
+    if (transaction.ca_identifier !== null && transaction.ca_name !== null) {
+      const identifier: Appearance | undefined = analysis.identifiers.find(
+        (a: Appearance) => a.name === transaction.ca_name
+      );
+      if (identifier) {
+        identifier.transactionsCount++;
+        identifier.totalAmount += transaction.amount;
+      } else {
+        analysis.identifiers.push({
+          name: transaction.ca_name,
+          identifier: transaction.ca_identifier,
+          transactionsCount: 1,
+          totalAmount: transaction.amount,
+          appearances: []
+        });
+      }
     }
-  ];
-  analysis.counterAccounts = [
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
-    },
-    {
-      name: 'Jan Novák',
-      appearances: [{ number: '000000-4776908073', bank_code: '0800', name: 'Danuše Nerudová' }],
-      transactionsCount: 4,
-      totalAmount: 120000
+    if (transaction.counter_account !== null) {
+      const counter_account: Appearance | undefined = analysis.counterAccounts.find(
+        (a: Appearance) => a.name === transaction.counter_account
+      );
+      if (counter_account) {
+        counter_account.transactionsCount++;
+        counter_account.totalAmount += transaction.amount;
+      } else {
+        analysis.counterAccounts.push({
+          name: transaction.counter_account,
+          transactionsCount: 1,
+          totalAmount: transaction.amount,
+          appearances: []
+        });
+      }
     }
-  ];
+  });
+  // Sort by total amount
+  analysis.identifiers.sort(
+    (a: Appearance, b: Appearance): number => a.totalAmount - b.totalAmount
+  );
+  analysis.counterAccounts.sort(
+    (a: Appearance, b: Appearance): number => b.totalAmount - a.totalAmount
+  );
 
   return analysis;
 };

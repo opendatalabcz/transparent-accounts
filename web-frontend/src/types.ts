@@ -63,6 +63,7 @@ export interface DateCounts {
 
 export interface Appearance {
   name: string;
+  identifier?: string;
   transactionsCount: number;
   totalAmount: number;
   appearances: Array<AccountShort>;

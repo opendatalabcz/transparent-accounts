@@ -14,18 +14,18 @@ function IdentifierTable({ data }: Props): JSX.Element {
       accessor: 'name'
     },
     {
-      Header: 'Výskyty',
-      accessor: 'appearances',
-      Cell: renderAppearances
-    },
-    {
-      Header: 'Počet transakcí',
+      Header: 'Transakcí',
       accessor: 'transactionsCount'
     },
     {
       Header: 'Celková částka',
       accessor: 'totalAmount',
       Cell: ({ value }) => <MoneyAmount amount={value} currency="CZK" />
+    },
+    {
+      Header: 'Jinde',
+      accessor: 'appearances',
+      Cell: renderAppearances
     }
   ];
 

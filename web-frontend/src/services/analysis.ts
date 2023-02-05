@@ -37,7 +37,8 @@ export const analyse = (
       if (
         transaction.category !== 'Platba kartou' &&
         transaction.category !== 'Výběr z bankomatu' &&
-        transaction.category !== 'Poplatek'
+        transaction.category !== 'Poplatek' &&
+        transaction.category !== 'Odvod daně'
       ) {
         describableTransactionCount++;
         transparentDescriptionCount =

@@ -55,15 +55,17 @@ function AnalysisTable({ tableColumns, tableData }: AnalysisTableProps): JSX.Ele
                         column.render('Header')
                       }
                       <span>
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <FaSortDown className="d-inline-block align-text-top ms-1" />
+                        {column.canSort ? (
+                          column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <FaSortDown className="d-inline-block align-text-top ms-1" />
+                            ) : (
+                              <FaSortUp className="d-inline-block align-text-top ms-1" />
+                            )
                           ) : (
-                            <FaSortUp className="d-inline-block align-text-top ms-1" />
+                            <FaSort className="d-inline-block align-text-top ms-1" />
                           )
-                        ) : (
-                          <FaSort className="d-inline-block align-text-top ms-1" />
-                        )}
+                        ) : null}
                       </span>
                     </th>
                   ))

@@ -96,14 +96,14 @@ class Transaction(Base):
     date: Mapped[date]
     amount: Mapped[float]
     currency: Mapped[Currency]
-    counter_account: Mapped[Optional[str]]
+    counter_account: Mapped[Optional[str]] = mapped_column(index=True)
     type: Mapped[TransactionType]
     str_type: Mapped[str]
     variable_symbol: Mapped[str]
     constant_symbol: Mapped[str]
     specific_symbol: Mapped[str]
     description: Mapped[str]
-    ca_identifier: Mapped[Optional[str]] = mapped_column(String(8))
+    ca_identifier: Mapped[Optional[str]] = mapped_column(String(8), index=True)
     ca_name: Mapped[Optional[str]]
     category: Mapped[Optional[TransactionCategory]]
     account_number: Mapped[str]

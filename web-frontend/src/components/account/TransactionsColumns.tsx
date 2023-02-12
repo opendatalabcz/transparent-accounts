@@ -24,13 +24,13 @@ export const transactionsColumns: Array<Column> = [
   },
   {
     Header: 'Typ',
-    Cell: ({ value }) => <span className="text-nowrap">{value}</span>,
-    accessor: 'type_detail'
+    accessor: 'type_detail',
+    Cell: ({ value }) => <span className="text-nowrap">{value}</span>
   },
   {
     Header: 'Protiúčet',
-    Cell: ({ value }) => <span className="text-nowrap">{value}</span>,
-    accessor: 'counter_account'
+    accessor: 'counter_account',
+    Cell: ({ value }) => <span className="text-nowrap">{value}</span>
   },
   {
     Header: 'VS',
@@ -50,7 +50,15 @@ export const transactionsColumns: Array<Column> = [
   },
   {
     Header: 'IČO',
-    accessor: 'ca_name'
+    accessor: 'ca_name',
+    Cell: ({ row }) => (
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href={`https://rejstrik-firem.kurzy.cz/${row.original.ca_identifier}`}>
+        {row.original.ca_name}
+      </a>
+    )
   },
   {
     Header: 'Kategorie',

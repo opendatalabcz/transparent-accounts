@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 
 from app.fetcher.account_fetcher import AccountFetcher
-from app.models import Account, Bank, Currency
+from app.models import Account, Bank
 
 
 class CSASAccountFetcher(AccountFetcher):
@@ -31,5 +31,5 @@ class CSASAccountFetcher(AccountFetcher):
                        name=acc.get('name'),
                        owner=acc.get('name'),
                        balance=acc.get('balance'),
-                       currency=Currency.from_str(acc['currency']),
+                       currency=acc['currency'],
                        created=datetime.strptime(acc.get('transparencyFrom'), '%Y-%m-%dT00:00:00').date())

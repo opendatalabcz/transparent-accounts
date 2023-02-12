@@ -7,7 +7,7 @@ import requests
 
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Account, Transaction, TransactionType, Currency, TransactionCategory
+from app.models import Account, Transaction, TransactionType, TransactionCategory
 from app.utils import float_from_cz
 
 
@@ -110,7 +110,7 @@ class KBTransactionFetcher(TransactionFetcher):
         return transaction
 
     @staticmethod
-    def parse_money_amount(string: str) -> tuple[float, Currency]:
+    def parse_money_amount(string: str) -> tuple[float, str]:
         """
         Parses amount and currency from the KB API transaction amount.
         Example of KB API transaction amount: '4 186,33 EUR'.
@@ -119,7 +119,7 @@ class KBTransactionFetcher(TransactionFetcher):
         pattern = r'(-?[\d ]+,[\d ]+) ([A-Z]{3})'
         search = re.search(pattern, string)
         amount, currency = search.groups()
-        return float_from_cz(amount), Currency.from_str(currency)
+        return float_from_cz(amount), currency
 
     @staticmethod
     def parse_date(string: str) -> date:

@@ -20,26 +20,6 @@ class Bank(Enum):
     RB = '5500'
 
 
-class Currency(Enum):
-    CZK = 1
-    EUR = 2
-    USD = 3
-    GBP = 4
-
-    @staticmethod
-    def from_str(string: str) -> Currency:
-        match string.upper():
-            case 'CZK':
-                return Currency.CZK
-            case 'EUR':
-                return Currency.EUR
-            case 'USD':
-                return Currency.USD
-            case 'GBP':
-                return Currency.GBP
-        raise NotImplementedError(f"Unsupported currency: {string}")
-
-
 class TransactionType(Enum):
     INCOMING = 1,
     OUTGOING = 2
@@ -76,7 +56,7 @@ class Account(Base):
     name: Mapped[Optional[str]]
     owner: Mapped[Optional[str]]
     balance: Mapped[Optional[float]]
-    currency: Mapped[Optional[Currency]]
+    currency: Mapped[str] = mapped_column(String(20))
     description: Mapped[Optional[str]]
     created: Mapped[Optional[date]]
     last_updated: Mapped[datetime]
@@ -95,7 +75,7 @@ class Transaction(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     date: Mapped[date]
     amount: Mapped[float]
-    currency: Mapped[Currency]
+    currency: Mapped[str] = mapped_column(String(20))
     counter_account: Mapped[Optional[str]] = mapped_column(index=True)
     type: Mapped[TransactionType]
     str_type: Mapped[str]

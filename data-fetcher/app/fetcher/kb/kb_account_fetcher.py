@@ -4,7 +4,7 @@ import bs4
 import requests
 
 from app.fetcher.account_fetcher import AccountFetcher
-from app.models import Account, Bank, Currency
+from app.models import Account, Bank
 from app.utils import get_fully_qualified_acc_num
 
 
@@ -64,4 +64,4 @@ class KBAccountFetcher(AccountFetcher):
                        bank=Bank.KB,
                        name=name,
                        owner=owner,
-                       currency=Currency.from_str(currency))
+                       currency=currency)

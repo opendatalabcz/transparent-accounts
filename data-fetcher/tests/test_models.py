@@ -1,15 +1,6 @@
 import pytest
 
-from app.models import Currency, TransactionType
-
-
-def test_currency():
-    assert Currency.from_str('CZK') == Currency.CZK
-    assert Currency.from_str('eur') == Currency.EUR
-    assert Currency.from_str('Usd') == Currency.USD
-    assert Currency.from_str('gBp') == Currency.GBP
-    with pytest.raises(NotImplementedError):
-        Currency.from_str('CAD')
+from app.models import TransactionType
 
 
 def test_transaction_type():

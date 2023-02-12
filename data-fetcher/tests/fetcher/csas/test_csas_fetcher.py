@@ -2,7 +2,7 @@ from datetime import date
 
 from app.fetcher.csas.csas_account_fetcher import CSASAccountFetcher
 from app.fetcher.csas.csas_transaction_fetcher import CSASTransactionFetcher
-from app.models import Account, Currency, TransactionType, Bank
+from app.models import Account, TransactionType, Bank
 
 
 def test_csas_account_to_class():
@@ -26,7 +26,7 @@ def test_csas_account_to_class():
     assert acc.name == 'Testovací účet'
     assert acc.owner == 'Testovací účet'
     assert acc.balance == 1200.85
-    assert acc.currency == Currency.CZK
+    assert acc.currency == 'CZK'
     assert acc.description is None
     assert acc.created == date(2015, 4, 10)
     assert acc.last_updated is None

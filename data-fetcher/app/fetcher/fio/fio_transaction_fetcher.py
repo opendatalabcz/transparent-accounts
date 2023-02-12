@@ -7,7 +7,7 @@ import requests
 
 from app.fetcher.fio.utils import get_fio_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Transaction, TransactionType, TransactionCategory, Currency
+from app.models import Transaction, TransactionType, TransactionCategory
 from app.utils import float_from_cz
 
 
@@ -32,7 +32,7 @@ class FioTransactionFetcher(TransactionFetcher):
         # and still returns some transactions
         return list(filter(self.check_date_interval, transactions))
 
-    def scrape_account_info(self, soup: bs4.BeautifulSoup) -> tuple[str, float, Currency]:
+    def scrape_account_info(self, soup: bs4.BeautifulSoup) -> tuple[str, float, str]:
         # Parse name
         name = soup.select_one('.col-md-6 div:nth-child(3)').contents[2].get_text(strip=True)
         # Parse balance and currency
@@ -76,12 +76,12 @@ class FioTransactionFetcher(TransactionFetcher):
         return transaction
 
     @staticmethod
-    def parse_money_amount(string: str) -> tuple[float, Currency]:
+    def parse_money_amount(string: str) -> tuple[float, str]:
         # Parse balance and currency using regex
         pattern = r'(-?[\d\s]+,[\d\s]+) ([A-Z]{3})'
         balance, currency = re.search(pattern, string).groups()
         # Convert from str to corresponding type
-        return float_from_cz(balance), Currency.from_str(currency)
+        return float_from_cz(balance), currency
 
     @staticmethod
     def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:

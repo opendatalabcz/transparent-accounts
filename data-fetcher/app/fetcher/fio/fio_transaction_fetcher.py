@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import bs4
@@ -16,20 +16,15 @@ class FioTransactionFetcher(TransactionFetcher):
     URL = 'https://ib.fio.cz/ib/transparent?a={}&f={}&t={}'
 
     def fetch(self) -> list:
-        # Get the html page
+        # Parse account info
         acc_num = get_fio_formatted_acc_num(self.account.number)
-        # Get date interval
-        date_from = self.get_date_from().strftime('%d.%m.%Y')
-        date_to = self.get_date_to().strftime('%d.%m.%Y')
-        response_text = requests.get(self.URL.format(acc_num, date_from, date_to)).text
+        response_text = requests.get(self.URL.format(acc_num, datetime.now().strftime('%d.%m.%Y'), datetime.now().strftime('%d.%m.%Y'))).text
         soup = bs4.BeautifulSoup(response_text, 'html.parser')
         # Set account info
         self.account.name, self.account.balance, self.account.currency = self.scrape_account_info(soup)
-
-        transactions = self.scrape_transactions(soup)
+        # Parse transactions
+        transactions = self.scrape_transactions()
         # Filter out transactions that does not belong to the desired interval
-        # In the case where the date_from is greater than the date_to, Fio does not cooperate
-        # and still returns some transactions
         return list(filter(self.check_date_interval, transactions))
 
     def scrape_account_info(self, soup: bs4.BeautifulSoup) -> tuple[str, float, str]:
@@ -40,9 +35,44 @@ class FioTransactionFetcher(TransactionFetcher):
         balance, currency = self.parse_money_amount(raw_balance)
         return name, balance, currency
 
-    def scrape_transactions(self, soup: bs4.BeautifulSoup) -> list[Transaction]:
-        rows = soup.find_all('tbody')[1].find_all('tr')
-        return [self.scrape_transaction(row) for row in rows]
+    def scrape_transactions(self) -> list[Transaction]:
+        """
+        Scrapes all the transactions from the account.
+        Fio shows only 2000 transactions at once, so we have to scrape them in intervals.
+        Default interval is 1 year, but if there are more than 2000 transactions in the interval,
+        we halve the interval and try again.
+        """
+        acc_num = get_fio_formatted_acc_num(self.account.number)
+        date_from = self.get_date_from()
+        date_to = self.get_date_to()
+        transactions = []
+
+        # Set default scraping interval to 1 year
+        interval = timedelta(365)
+        while True:
+            date_to_current = date_from + interval
+            response_text = requests.get(
+                self.URL.format(acc_num, date_from.strftime('%d.%m.%Y'), date_to_current.strftime('%d.%m.%Y'))).text
+            soup = bs4.BeautifulSoup(response_text, 'html.parser')
+            alert = soup.find('div', class_='alert alert-yellow')
+            # If there is more than 2000 transactions in the interval, Fio does not show them all and shows an alert
+            # In this case, we halve the interval and try again
+            if alert is not None:
+                interval = interval / 2
+                continue
+            # Check if there is transaction table to scrape
+            no_transactions = soup.find(text='Nejsou dostupné žádné pohyby.')
+            if no_transactions is None:
+                # We obtain all the transactions in the interval and add them to the list
+                rows = soup.find_all('tbody')[1].find_all('tr')
+                transactions = transactions + [self.scrape_transaction(row) for row in rows]
+            # End of the interval reached
+            if date_to_current >= date_to:
+                return transactions
+            # Update the date_from to the last date we have scraped + 1 day
+            date_from = date_to_current + timedelta(1)
+            # Reset interval to 1 year
+            interval = timedelta(365)
 
     def scrape_transaction(self, row: bs4.element.Tag) -> Transaction:
         cells = row.find_all('td')

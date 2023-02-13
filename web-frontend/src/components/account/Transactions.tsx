@@ -10,7 +10,7 @@ interface Props {
 }
 
 function Transactions({ transactions }: Props): JSX.Element {
-  const [startDate, setStartDate] = useState<string>(format(subYears(new Date(), 1), 'yyyy-MM-dd'));
+  const [startDate, setStartDate] = useState<string>(format(subYears(new Date(), 5), 'yyyy-MM-dd'));
   const [endDate, setEndDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [type, setType] = useState<'' | 'INCOMING' | 'OUTGOING'>('');
   const [category, setCategory] = useState<'' | 'CARD' | 'ATM' | 'MESSAGE' | 'NO-MESSAGE'>('');

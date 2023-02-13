@@ -12,7 +12,7 @@ interface Props {
 function IdentifierTable({ account, data }: Props): JSX.Element {
   const columns: Array<Column> = [
     {
-      Header: 'Název protiúčtu',
+      Header: 'Protiúčet',
       accessor: 'name'
     },
     {

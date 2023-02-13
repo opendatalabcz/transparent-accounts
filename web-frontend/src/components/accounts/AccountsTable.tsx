@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import { Table } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
@@ -7,36 +8,54 @@ import { Account } from '../../types';
 import MoneyAmount from '../../features/format/MoneyAmount';
 import { formatAccNum } from '../../utils/accountNumberUtils';
 import { format } from 'date-fns';
-import { useAccountNavigate } from '../../hooks/useAccountNavigate';
 
-const tableColumns: Array<Column> = [
+export const accountsColumns: Array<Column> = [
   {
     Header: 'Majitel účtu',
-    accessor: 'owner'
+    accessor: 'owner',
+    Cell: ({ row }) => (
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`}>
+        {row.original.owner}
+      </Link>
+    )
   },
   {
     Header: 'Název účtu',
-    accessor: 'name'
+    accessor: 'name',
+    Cell: ({ row }) => (
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`}>
+        {row.original.name}
+      </Link>
+    )
   },
   {
     Header: 'Číslo účtu',
     accessor: 'number',
-    Cell: ({ row }) => formatAccNum(row.original.number, row.original.bank_code)
-  },
-  {
-    accessor: 'bank_code'
+    Cell: ({ row }) => (
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`}>
+        {formatAccNum(row.original.number, row.original.bank_code)}
+      </Link>
+    )
   },
   {
     Header: 'Zůstatek',
     accessor: 'balance',
     Cell: ({ row }) => (
-      <MoneyAmount amount={row.original.balance} currency={row.original.currency} />
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`}>
+        <MoneyAmount amount={row.original.balance} currency={row.original.currency} />
+      </Link>
     )
   },
   {
     Header: 'Aktualizováno',
     accessor: 'last_fetched',
-    Cell: ({ value }) => (value != null ? format(new Date(value), 'dd.MM.yyyy') : '')
+    Cell: ({ row }) => (
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`}>
+        {row.original.last_fetched != null
+          ? format(new Date(row.original.last_fetched), 'dd.MM.yyyy')
+          : ''}
+      </Link>
+    )
   }
 ];
 
@@ -45,8 +64,7 @@ interface Props {
 }
 
 function AccountsTable({ accounts }: Props): JSX.Element {
-  const accountNavigate = useAccountNavigate();
-  const columns: Array<Column> = useMemo(() => tableColumns, [tableColumns]);
+  const columns: Array<Column> = useMemo(() => accountsColumns, []);
   const data: Array<Account> = useMemo(() => accounts, [accounts]);
 
   // Initialize the table
@@ -64,7 +82,6 @@ function AccountsTable({ accounts }: Props): JSX.Element {
       columns,
       data,
       initialState: {
-        hiddenColumns: ['bank_code'],
         pageSize: 20
       }
     },
@@ -117,9 +134,7 @@ function AccountsTable({ accounts }: Props): JSX.Element {
               prepareRow(row);
               return (
                 // Apply the row props
-                <tr
-                  {...row.getRowProps()}
-                  onClick={() => accountNavigate(row.original.number, row.original.bank_code)}>
+                <tr {...row.getRowProps()}>
                   {
                     // Loop over the rows cells
                     row.cells.map((cell) => {

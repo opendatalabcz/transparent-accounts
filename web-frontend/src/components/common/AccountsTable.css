@@ -1,9 +1,11 @@
-.accounts-table th {
-  white-space: nowrap;
+.accounts-table a {
+  display: block;
+  text-decoration: none;
+  color: black;
 }
 
-.accounts-table tbody tr {
-  cursor: pointer;
+.accounts-table th {
+  white-space: nowrap;
 }
 
 .accounts-table th:nth-child(3),

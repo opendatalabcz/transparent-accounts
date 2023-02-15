@@ -41,10 +41,6 @@ export const transactionsColumns: Array<Column> = [
     accessor: 'constant_symbol'
   },
   {
-    Header: 'SS',
-    accessor: 'specific_symbol'
-  },
-  {
     Header: 'Poznámka',
     accessor: 'description'
   },

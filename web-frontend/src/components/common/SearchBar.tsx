@@ -18,6 +18,11 @@ function SearchBar({ query, setQuery, search }: Props): JSX.Element {
             value={query}
             className="col-9"
             onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                search();
+              }
+            }}
           />
           <Button variant="outline-dark" className="col-3" onClick={search}>
             Vyhledat

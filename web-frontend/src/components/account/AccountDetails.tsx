@@ -37,7 +37,7 @@ function AccountDetails({ account }: Props): JSX.Element {
           {account.created != null ? format(new Date(account.created), 'dd.MM.yyyy') : ''}
         </dd>
 
-        <dt className="col-4">Zůstatek 💰</dt>
+        <dt className="col-4">Zůstatek</dt>
         <dd className="col-8 text-end">
           <MoneyAmount amount={account.balance} currency={account.currency} />
         </dd>

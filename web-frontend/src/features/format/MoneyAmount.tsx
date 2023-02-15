@@ -11,7 +11,9 @@ function MoneyAmount({ amount, currency }: Props): JSX.Element | null {
       className={
         'money-amount text-nowrap fw-bold ' + (amount != null && amount < 0 ? 'text-danger' : '')
       }>
-      {amount != null ? amount.toLocaleString('cs-CZ', { minimumFractionDigits: 2 }) : ''}{' '}
+      {amount != null
+        ? amount.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        : ''}{' '}
       {currency}
     </span>
   );

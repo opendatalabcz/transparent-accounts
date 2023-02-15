@@ -39,7 +39,7 @@ function Transactions({ transactions }: Props): JSX.Element {
           }}
         />
       </div>
-      <div className="mt-4">
+      <Container fluid className="mt-4">
         <TransactionsTable
           transactions={transactions}
           date={[startDate, endDate]}
@@ -47,7 +47,7 @@ function Transactions({ transactions }: Props): JSX.Element {
           category={category}
           query={query}
         />
-      </div>
+      </Container>
     </Container>
   );
 }

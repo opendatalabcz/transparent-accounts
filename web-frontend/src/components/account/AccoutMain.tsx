@@ -41,7 +41,7 @@ function AccountMain({ account }: Props): JSX.Element {
       <Button onClick={sendUpdate} disabled={!updatable}>
         Aktualizovat
       </Button>
-      <div>
+      <div className="fst-italic">
         Naposledy aktualizováno:{' '}
         {account.last_fetched != null ? (
           format(new Date(account.last_fetched), 'dd.MM.yyyy')

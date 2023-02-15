@@ -56,7 +56,7 @@ class Account(Base):
     name: Mapped[Optional[str]]
     owner: Mapped[Optional[str]]
     balance: Mapped[Optional[float]]
-    currency: Mapped[str]
+    currency: Mapped[str] = mapped_column(String(20))
     description: Mapped[Optional[str]]
     created: Mapped[Optional[date]]
     last_updated: Mapped[datetime]
@@ -75,7 +75,7 @@ class Transaction(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     date: Mapped[date]
     amount: Mapped[float]
-    currency: Mapped[str]
+    currency: Mapped[str] = mapped_column(String(20))
     counter_account: Mapped[Optional[str]] = mapped_column(index=True)
     type: Mapped[TransactionType]
     str_type: Mapped[str]

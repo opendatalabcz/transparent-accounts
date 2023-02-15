@@ -41,7 +41,7 @@ class CSASTransactionFetcher(TransactionFetcher):
         transaction = Transaction(
             date=datetime.strptime(t['processingDate'], '%Y-%m-%dT00:00:00').date(),
             amount=amount,
-            currency=t['amount']['currency'],
+            currency=t['amount'].get('currency', self.account.currency),  # API may not return the currency
             counter_account=counter_account,
             type=t_type,
             str_type=t['typeDescription'],

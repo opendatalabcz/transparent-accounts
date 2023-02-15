@@ -4,8 +4,7 @@ import {
   getOccurrencesByCounterAccount,
   getOccurrencesByIdentifier
 } from '../../services/accountsAPI';
-import { Button, OverlayTrigger, Popover, Table, Tooltip } from 'react-bootstrap';
-import { BsQuestionCircle } from 'react-icons/bs';
+import { Button, OverlayTrigger, Popover, Table } from 'react-bootstrap';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 
 interface OccurrencesProps {
@@ -19,21 +18,11 @@ function Occurrences({ occurrences }: OccurrencesProps): JSX.Element {
         <OverlayTrigger
           trigger="click"
           rootClose
-          placement="right"
+          placement="left"
           overlay={
             <Popover>
               <Popover.Header as="h3">
-                <span>
-                  Výskyty u jiných transparentních účtů
-                  <OverlayTrigger
-                    placement="bottom"
-                    overlay={<Tooltip>{/* TODO */ 'Vysvětlení'}</Tooltip>}>
-                    <span>
-                      {' '}
-                      <BsQuestionCircle className="d-inline-block" />
-                    </span>
-                  </OverlayTrigger>
-                </span>
+                <span>Výskyty u jiných transparentních účtů</span>
               </Popover.Header>
               <Popover.Body>
                 <Table>

@@ -4,6 +4,7 @@ import { Card, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import Pagination from '../../features/pagination/Pagination';
 import { TransactionsAggregation } from '../../types';
+import { BsQuestionCircle } from 'react-icons/bs';
 
 interface AnalysisTableProps {
   tableColumns: Array<Column>;
@@ -49,7 +50,8 @@ function AnalysisTable({ tableColumns, tableData }: AnalysisTableProps): JSX.Ele
                   // Loop over the headers in each row
                   headerGroup.headers.map((column) => (
                     // Apply the header cell props
-                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps({ title: undefined }))}>
                       {
                         // Render the header
                         column.render('Header')
@@ -117,19 +119,38 @@ function AnalysisTable({ tableColumns, tableData }: AnalysisTableProps): JSX.Ele
 
 interface AnalysisTableCardProps {
   title: string;
+  description: string;
   columns: Array<Column>;
   data: Array<TransactionsAggregation>;
 }
 
-function AnalysisTableCard({ title, columns, data }: AnalysisTableCardProps): JSX.Element {
+function AnalysisTableCard({
+  title,
+  description,
+  columns,
+  data
+}: AnalysisTableCardProps): JSX.Element {
   return (
     <Card className="h-100">
       <Card.Body>
-        <Card.Title className="h6 ellipsis mb-1">
-          <OverlayTrigger placement="bottom" overlay={<Tooltip>{title}</Tooltip>}>
-            <span>{title}</span>
-          </OverlayTrigger>
-        </Card.Title>
+        <div className="row">
+          <div className="pr-0 col-9 col-xl-10">
+            <Card.Title className="h6 ellipsis mb-1">
+              <OverlayTrigger placement="bottom" overlay={<Tooltip>{title}</Tooltip>}>
+                <span>{title}</span>
+              </OverlayTrigger>
+            </Card.Title>
+          </div>
+          <div className="col-3 col-xl-2 pl-0 text-end">
+            <Card.Title className="mb-1">
+              <OverlayTrigger placement="bottom" overlay={<Tooltip>{description}</Tooltip>}>
+                <span>
+                  <BsQuestionCircle className="d-inline-block align-text-top" />
+                </span>
+              </OverlayTrigger>
+            </Card.Title>
+          </div>
+        </div>
         <AnalysisTable tableColumns={columns} tableData={data} />
       </Card.Body>
     </Card>

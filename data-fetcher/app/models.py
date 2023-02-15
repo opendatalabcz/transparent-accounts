@@ -60,7 +60,7 @@ class Account(Base):
     description: Mapped[Optional[str]]
     created: Mapped[Optional[date]]
     last_updated: Mapped[datetime]
-    last_fetched: Mapped[Optional[date]]
+    last_fetched: Mapped[Optional[datetime]]
     archived: Mapped[Any] = mapped_column(Boolean, default=False)
     inserted: Mapped[datetime] = mapped_column(default=datetime.now())
     transactions: Mapped[list["Transaction"]] = relationship()

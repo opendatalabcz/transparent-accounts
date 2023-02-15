@@ -1,7 +1,7 @@
 import logging
 import os
 from collections import namedtuple
-from datetime import date
+from datetime import datetime
 
 from celery import Celery
 
@@ -63,7 +63,7 @@ def fetch_transactions(update_id: int):
 
     try:
         transactions = fetcher.fetch()
-        account.last_fetched = date.today()
+        account.last_fetched = datetime.now()
         save_transactions(account, transactions)
     except Exception:
         logging.exception(f"Fetching of {account.number}/{account.bank.value} transactions was interrupted.")

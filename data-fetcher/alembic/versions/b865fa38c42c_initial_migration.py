@@ -27,7 +27,7 @@ def upgrade() -> None:
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('created', sa.Date(), nullable=True),
     sa.Column('last_updated', sa.DateTime(), nullable=False),
-    sa.Column('last_fetched', sa.Date(), nullable=True),
+    sa.Column('last_fetched', sa.DateTime(), nullable=True),
     sa.Column('archived', sa.Boolean(), nullable=False),
     sa.Column('inserted', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('number', 'bank')

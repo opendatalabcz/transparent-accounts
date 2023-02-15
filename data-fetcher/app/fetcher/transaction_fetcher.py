@@ -29,7 +29,7 @@ class TransactionFetcher(ABC):
         """
         if self.account.last_fetched is None:
             return date(2000, 1, 1)
-        return self.account.last_fetched
+        return self.account.last_fetched.date()
 
     @staticmethod
     def get_date_to() -> date:

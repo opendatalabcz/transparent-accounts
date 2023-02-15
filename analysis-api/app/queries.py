@@ -1,10 +1,20 @@
 from typing import Optional
 
-from sqlalchemy import select, exists, and_, or_, Sequence, desc, nulls_last
+from sqlalchemy import select, exists, and_, or_, Sequence, ScalarResult, desc, nulls_last, func
 from sqlalchemy.orm import Session
 
 from app import engine
 from app.models import Account, Transaction, Bank, AccountUpdate
+
+
+def find_accounts_count(bank: Bank) -> ScalarResult['int']:
+    """
+    Find the number of Accounts by the Bank.
+    :param bank: Bank
+    :return: number of Accounts
+    """
+    with Session(engine) as s:
+        return s.scalars(select(func.count()).select_from(Account).filter_by(bank=bank)).one()
 
 
 def find_account(acc_num: str, bank: Bank) -> Optional[Account]:

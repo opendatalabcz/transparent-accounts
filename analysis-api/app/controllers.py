@@ -5,10 +5,63 @@ from flask import request
 
 from app import app, celery, bp
 from app.models import Bank, AccountUpdate, UpdateStatus
-from app.queries import find_account, find_transactions, find_accounts, find_update, find_updates, save_update
-from app.queries import find_accounts_by_identifier_occurrence, find_accounts_by_counter_account_occurrence
+from app.queries import find_accounts_count, find_account, find_transactions, find_accounts, find_update, find_updates
+from app.queries import save_update, find_accounts_by_identifier_occurrence, find_accounts_by_counter_account_occurrence
 from app.responses import ok_response, not_found_response, bad_request_response
 from app.utils import is_updatable, generalize_query, object_encode
+
+
+@bp.get("/banks")
+def get_banks():
+    # TODO: move to config
+    banks = [
+        {
+            'shortcut': Bank.CSAS.name,
+            'name': 'Česká spořitelna',
+            'url': 'https://www.csas.cz/',
+            'code': Bank.CSAS.value,
+            'accounts_count': find_accounts_count(Bank.CSAS)
+        },
+        {
+            'shortcut': Bank.CSOB.name,
+            'name': 'Československá obchodní banka',
+            'url': 'https://www.csob.cz/',
+            'code': Bank.CSOB.value,
+            'accounts_count': find_accounts_count(Bank.CSOB)
+        },
+        {
+            'shortcut': Bank.FIO.name,
+            'name': 'Fio banka',
+            'url': 'https://www.fio.cz/',
+            'code': Bank.FIO.value,
+            'accounts_count': find_accounts_count(Bank.FIO)
+        },
+        {
+            'shortcut': Bank.KB.name,
+            'name': 'Komerční banka',
+            'url': 'https://www.kb.cz/',
+            'code': Bank.KB.value,
+            'accounts_count': find_accounts_count(Bank.KB)
+        },
+        {
+            'shortcut': Bank.MONETA.name,
+            'name': 'Moneta Money Bank',
+            'url': 'https://www.moneta.cz/',
+            'code': Bank.MONETA.value,
+            'accounts_count': find_accounts_count(Bank.MONETA)
+        },
+        {
+            'shortcut': Bank.RB.name,
+            'name': 'Raiffeisenbank',
+            'url': 'https://www.rb.cz/',
+            'code': Bank.RB.value,
+            'accounts_count': find_accounts_count(Bank.RB)
+        }
+    ]
+
+    # Filter out not supported banks (no accounts)
+    banks = list(filter(lambda bank: bank['accounts_count'] > 0, banks))
+    return ok_response(json.dumps(banks))
 
 
 @bp.get("/accounts")

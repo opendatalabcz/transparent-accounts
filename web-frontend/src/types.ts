@@ -62,3 +62,11 @@ export interface TransactionsAggregation {
   totalAmount: number;
   currency: string;
 }
+
+export interface Bank {
+  shortcut: string;
+  name: string;
+  code: string;
+  url: string;
+  accounts_count: number;
+}

@@ -37,15 +37,6 @@ dd {
   text-align: start;
 }
 
-.metrics-number {
-  margin-bottom: 0;
-  font-size: 200%;
-}
-
-.metrics-number .money-amount {
-  font-size: 75% !important;
-}
-
 .ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;

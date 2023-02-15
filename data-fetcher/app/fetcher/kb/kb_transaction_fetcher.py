@@ -151,6 +151,9 @@ class KBTransactionFetcher(TransactionFetcher):
                 if t_type == TransactionType.INCOMING:
                     counter_account = parsed[0]
                     str_type = parsed[1]
+                    # Special case - if the type is 'Vklad' then values are swapped
+                    if str_type == 'Vklad':
+                        counter_account, str_type = str_type, counter_account
                 else:
                     str_type = parsed[0]
                     description = parsed[1]

@@ -4,6 +4,10 @@
   color: black;
 }
 
+.accounts-table .a-style {
+  text-decoration: underline;
+}
+
 .accounts-table th {
   white-space: nowrap;
 }

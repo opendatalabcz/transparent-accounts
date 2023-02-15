@@ -14,7 +14,7 @@ export const accountsColumns: Array<Column> = [
     Header: 'Majitel účtu',
     accessor: 'owner',
     Cell: ({ row }) => (
-      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`} className="a-style">
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`} className="link">
         {row.original.owner}
       </Link>
     )
@@ -23,7 +23,7 @@ export const accountsColumns: Array<Column> = [
     Header: 'Název účtu',
     accessor: 'name',
     Cell: ({ row }) => (
-      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`} className="a-style">
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`}>
         {row.original.name}
       </Link>
     )
@@ -32,7 +32,7 @@ export const accountsColumns: Array<Column> = [
     Header: 'Číslo účtu',
     accessor: 'number',
     Cell: ({ row }) => (
-      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`} className="a-style">
+      <Link to={`/ucty/${row.original.bank_code}/${row.original.number}`}>
         {formatAccNum(row.original.number, row.original.bank_code)}
       </Link>
     )

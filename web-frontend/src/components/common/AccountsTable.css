@@ -4,7 +4,8 @@
   color: black;
 }
 
-.accounts-table .a-style {
+.accounts-table .link {
+  font-weight: bold;
   text-decoration: underline;
 }
 

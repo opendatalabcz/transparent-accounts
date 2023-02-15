@@ -5,14 +5,14 @@ from app.models import Account, TransactionType
 
 
 def test_parse_money_amount():
-    assert KBTransactionFetcher.parse_money_amount('100,00 CZK') == 100
-    assert KBTransactionFetcher.parse_money_amount('-6,00 CZK') == -6
-    assert KBTransactionFetcher.parse_money_amount('4 186,33 EUR') == 4186.33
-    assert KBTransactionFetcher.parse_money_amount('-1 100,00 EUR') == -1100
-    assert KBTransactionFetcher.parse_money_amount('-2,47 EUR') == -2.47
-    assert KBTransactionFetcher.parse_money_amount('0,01 CZK') == 0.01
-    assert KBTransactionFetcher.parse_money_amount('1 567 601,25 CZK') == 1567601.25
-    assert KBTransactionFetcher.parse_money_amount('-1 567 601,25 CZK') == -1567601.25
+    assert KBTransactionFetcher.parse_money_amount('100,00 CZK') == (100, 'CZK')
+    assert KBTransactionFetcher.parse_money_amount('-6,00 CZK') == (-6, 'CZK')
+    assert KBTransactionFetcher.parse_money_amount('4 186,33 EUR') == (4186.33, 'EUR')
+    assert KBTransactionFetcher.parse_money_amount('-1 100,00 EUR') == (-1100, 'EUR')
+    assert KBTransactionFetcher.parse_money_amount('-2,47 EUR') == (-2.47, 'EUR')
+    assert KBTransactionFetcher.parse_money_amount('0,01 CZK') == (0.01, 'CZK')
+    assert KBTransactionFetcher.parse_money_amount('1 567 601,25 CZK') == (1567601.25, 'CZK')
+    assert KBTransactionFetcher.parse_money_amount('-1 567 601,25 CZK') == (-1567601.25, 'CZK')
 
 
 def test_parse_date():

@@ -2,7 +2,7 @@ import { Container } from 'react-bootstrap';
 import { format } from 'date-fns';
 import { BsBoxArrowUpRight } from 'react-icons/bs';
 import MoneyAmount from '../../features/format/MoneyAmount';
-import { shortenAccNum } from '../../utils/accountNumberUtils';
+import { getAccountLink, shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
 import './account.css';
 
@@ -22,8 +22,7 @@ function AccountDetails({ account }: Props): JSX.Element {
 
         <dt className="col-4">Číslo účtu</dt>
         <dd className="col-8 text-end">
-          <a href="https://www.csas.cz/cs/transparentni-ucty" target="_blank" rel="noreferrer">
-            {/* TODO real link */}
+          <a href={getAccountLink(account.number, account.bank_code)} target="_blank" rel="noreferrer">
             <BsBoxArrowUpRight className="d-inline-block align-text-top me-1" />
             {shortenAccNum(account.number)}/{account.bank_code}
           </a>

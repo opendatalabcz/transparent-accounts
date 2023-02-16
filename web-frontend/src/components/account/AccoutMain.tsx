@@ -49,7 +49,14 @@ function AccountMain({ account }: Props): JSX.Element {
           <span className="text-danger">nikdy</span>
         )}
         <span className="ms-1">
-          <OverlayTrigger placement="bottom" overlay={<Tooltip>{/* TODO */ 'Vysvětlení'}</Tooltip>}>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={
+              <Tooltip>
+                Účet je možné aktualizovat nejvýše jednou denně a vždy jsou analyzovány všechny
+                transakce do předchozího dne.
+              </Tooltip>
+            }>
             <span className="text-center">
               <BsQuestionCircle className="d-inline-block align-text-top" />
             </span>

@@ -15,6 +15,7 @@ import { Bar } from 'react-chartjs-2';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { DateCounts } from '../../types';
 import { cs } from 'date-fns/locale';
+import { BsQuestionCircle } from 'react-icons/bs';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, TooltipJS, Legend, TimeSeriesScale);
 
@@ -23,7 +24,6 @@ interface Props {
 }
 
 function ChartTransactions({ data }: Props): JSX.Element {
-
   // Group dates by week
   const grouped: Array<DateCounts> = useMemo(() => {
     let lastWeek: number = 0;
@@ -97,15 +97,30 @@ function ChartTransactions({ data }: Props): JSX.Element {
   return (
     <Card className="h-100">
       <Card.Body>
-        <Card.Title className="h6 ellipsis mb-1">
-          <OverlayTrigger placement="bottom" overlay={<Tooltip>Počet transakcí v čase</Tooltip>}>
-            <span>Počet transakcí v čase</span>
-          </OverlayTrigger>
-        </Card.Title>
-        <Card.Text>
-          {/* @ts-ignore */}
-          <Bar options={options} data={chartData} />
-        </Card.Text>
+        <div className="row">
+          <div className="pr-0 col-9 col-xl-10">
+            <Card.Title className="h6 ellipsis mb-1">
+              <OverlayTrigger
+                placement="bottom"
+                overlay={<Tooltip>Počet transakcí v čase</Tooltip>}>
+                <span>Počet transakcí v čase</span>
+              </OverlayTrigger>
+            </Card.Title>
+          </div>
+          <div className="col-3 col-xl-2 pl-0 text-end">
+            <Card.Title className="mb-1">
+              <OverlayTrigger
+                placement="bottom"
+                overlay={<Tooltip>Počet příchozích a odchozích transakcí podle týdnů.</Tooltip>}>
+                <span>
+                  <BsQuestionCircle className="d-inline-block align-text-top" />
+                </span>
+              </OverlayTrigger>
+            </Card.Title>
+          </div>
+        </div>
+        {/* @ts-ignore */}
+        <Bar options={options} data={chartData} />
       </Card.Body>
     </Card>
   );

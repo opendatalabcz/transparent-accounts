@@ -1,5 +1,12 @@
 import { useEffect, useMemo } from 'react';
-import { Column, useFilters, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
+import {
+  Column,
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { Table } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import { transactionsColumns } from './TransactionsColumns';
@@ -7,11 +14,11 @@ import Pagination from '../../features/pagination/Pagination';
 import { Transaction } from '../../types';
 
 interface Props {
-  transactions: Array<Transaction>,
-  date: [string, string],
-  type: string,
-  category: string,
-  query: string
+  transactions: Array<Transaction>;
+  date: [string, string];
+  type: string;
+  category: string;
+  query: string;
 }
 
 function TransactionTable({ transactions, date, type, category, query }: Props): JSX.Element {
@@ -91,7 +98,8 @@ function TransactionTable({ transactions, date, type, category, query }: Props):
                   // Loop over the headers in each row
                   headerGroup.headers.map((column) => (
                     // Apply the header cell props
-                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps({ title: undefined }))}>
                       {
                         // Render the header
                         column.render('Header')

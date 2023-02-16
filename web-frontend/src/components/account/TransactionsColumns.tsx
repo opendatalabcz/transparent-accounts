@@ -1,6 +1,7 @@
 import { Column } from 'react-table';
 import { format } from 'date-fns';
 import MoneyAmount from '../../features/format/MoneyAmount';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 export const transactionsColumns: Array<Column> = [
   {
@@ -33,11 +34,23 @@ export const transactionsColumns: Array<Column> = [
     Cell: ({ value }) => <span className="text-nowrap">{value}</span>
   },
   {
-    Header: 'VS',
+    Header: () => {
+      return (
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Variabilní symbol</Tooltip>}>
+          <span>VS</span>
+        </OverlayTrigger>
+      );
+    },
     accessor: 'variable_symbol'
   },
   {
-    Header: 'KS',
+    Header: () => {
+      return (
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Konstantní symbol</Tooltip>}>
+          <span>KS</span>
+        </OverlayTrigger>
+      );
+    },
     accessor: 'constant_symbol'
   },
   {
@@ -45,7 +58,13 @@ export const transactionsColumns: Array<Column> = [
     accessor: 'description'
   },
   {
-    Header: 'IČO',
+    Header: () => {
+      return (
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Název společnosti získaný z IČO</Tooltip>}>
+          <span>Společnost</span>
+        </OverlayTrigger>
+      );
+    },
     accessor: 'ca_name',
     Cell: ({ row }) => (
       <a

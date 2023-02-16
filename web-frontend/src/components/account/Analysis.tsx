@@ -77,7 +77,7 @@ function Analysis({ account, transactions }: Props): JSX.Element {
       {
         name: 'Úroveň transparentnosti účtu',
         value: analysis.transparency,
-        description: 'Počítá se jako',
+        description: 'V kolika procentech odchozích transakcí je uvedeno IČO.',
         render: (value) => (value != null ? <span>{Math.round(value * 100)} %</span> : null)
       },
       {

@@ -8,9 +8,11 @@ import { canUpdate, update } from '../../services/accountsAPI';
 
 interface Props {
   account: Account;
+  tab: 'transakce' | 'analyza';
+  setTab: (tab: 'transakce' | 'analyza') => void;
 }
 
-function AccountMain({ account }: Props): JSX.Element {
+function AccountMain({ account, tab, setTab }: Props): JSX.Element {
   const [updatable, setUpdatable] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,9 +40,41 @@ function AccountMain({ account }: Props): JSX.Element {
           {shortenAccNum(account.number)}/{account.bank_code}
         </div>
       </h1>
-      <Button onClick={sendUpdate} disabled={!updatable}>
-        Aktualizovat
-      </Button>
+      <div className="d-flex">
+        <div>
+          <Button
+            className="tab-button-full"
+            onClick={() => setTab('analyza')}
+            active={tab === 'analyza'}>
+            Analyzovat 📈
+          </Button>
+          <Button
+            className="tab-button-short"
+            onClick={() => setTab('analyza')}
+            active={tab === 'analyza'}>
+            📈
+          </Button>
+        </div>
+        <div className="ms-2">
+          <Button
+            className=" tab-button-full"
+            onClick={() => setTab('transakce')}
+            active={tab === 'transakce'}>
+            Výpis 💸
+          </Button>
+          <Button
+            className="tab-button-short"
+            onClick={() => setTab('transakce')}
+            active={tab === 'transakce'}>
+            💸
+          </Button>
+        </div>
+        <div className="ms-2 separator">
+          <Button onClick={sendUpdate} disabled={!updatable}>
+            Aktualizovat
+          </Button>
+        </div>
+      </div>
       <div className="fst-italic">
         Naposledy aktualizováno:{' '}
         {account.last_fetched != null ? (

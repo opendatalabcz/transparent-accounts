@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import AccountMain from './AccoutMain';
 import AccountDetails from './AccountDetails';
-import AccountSwitch from './AccountSwitch';
 import Transactions from './Transactions';
 import Analysis from './Analysis';
 import { Account, Transaction } from '../../types';
@@ -38,17 +37,14 @@ function AccountPage() {
       <Container fluid className="mt-5">
         <div className="row gy-5">
           <div className="col-xl-7 col-lg">
-            <AccountMain account={account} />
+            <AccountMain account={account} tab={tab} setTab={setTab} />
           </div>
           <div className="col-xl-5 col-lg">
             <AccountDetails account={account} />
           </div>
         </div>
       </Container>
-      <div className="my-3">
-        <AccountSwitch tab={tab} setTab={setTab} />
-      </div>
-      <div>
+      <div className="mt-5">
         {tab === 'transakce' ? (
           <Transactions transactions={transactions} />
         ) : (

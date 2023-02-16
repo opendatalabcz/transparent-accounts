@@ -1,3 +1,21 @@
+.tab-button-short {
+  display: none;
+}
+
+@media (max-width: 475px) {
+  .tab-button-full {
+    display: none;
+  }
+  .tab-button-short {
+    display: inline-block;
+  }
+}
+
+.separator {
+    border-left: 2px solid;
+    padding-left: .5rem;
+}
+
 .account-details > dt,
 dd {
   border-bottom: 1px solid;

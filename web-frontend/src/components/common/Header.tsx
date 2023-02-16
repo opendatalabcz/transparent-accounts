@@ -13,7 +13,7 @@ function Header() {
         <Nav.Link as={Link} to="/" className="py-0 me-5" id="brand-container">
           <div className="d-flex align-items-end">
             <BsBarChartFill size={56} id="brand-logo" />
-            <span>ZPRACOVÁNÍ A ANALÝZA{'\n'}TRANSPARENTNÍCH ÚČTŮ</span>
+            <span>Zpracování a analýza{'\n'}transparentních účtů</span>
           </div>
         </Nav.Link>
       </Navbar.Brand>

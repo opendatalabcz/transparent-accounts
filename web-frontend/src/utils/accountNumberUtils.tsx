@@ -23,7 +23,7 @@ export const getAccountLink = (acc: string, bankCode: string): string => {
 
 const getFioFormattedAccNum = (acc: string): string => {
   // Remove the prefix
-  let [_, number] = acc.split('-');
+  let [, number] = acc.split('-');
   // Remove leading zeros in the number
   return number.replace(/^0+/, '');
 };

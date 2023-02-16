@@ -11,7 +11,7 @@ import { getAccount, getTransactions } from '../../services/accountsAPI';
 
 function AccountPage() {
   const { bankCode, accNumber } = useParams<Record<string, string | undefined>>();
-  const [tab, setTab] = useState<'transakce' | 'analyza'>('transakce');
+  const [tab, setTab] = useState<'transakce' | 'analyza'>('analyza');
   const [account, setAccount] = useState<Account | null>(null);
   const [transactions, setTransactions] = useState<Array<Transaction>>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -49,13 +49,10 @@ function AccountPage() {
         <AccountSwitch tab={tab} setTab={setTab} />
       </div>
       <div>
-        {tab === 'analyza' ? (
-          <Analysis
-            account={account}
-            transactions={transactions}
-          />
-        ) : (
+        {tab === 'transakce' ? (
           <Transactions transactions={transactions} />
+        ) : (
+          <Analysis account={account} transactions={transactions} />
         )}
       </div>
     </main>

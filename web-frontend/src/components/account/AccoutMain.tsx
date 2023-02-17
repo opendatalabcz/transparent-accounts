@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, Container, OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
+import { BiErrorCircle } from 'react-icons/bi';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
-import { format, isSameDay } from 'date-fns';
-import { canUpdate, update } from '../../services/accountsAPI';
+import { format } from 'date-fns';
+import { getUpdateStatus, update } from '../../services/accountsAPI';
 
 interface Props {
   account: Account;
@@ -14,21 +15,26 @@ interface Props {
 
 function AccountMain({ account, tab, setTab }: Props): JSX.Element {
   const [updatable, setUpdatable] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
-    // Account was successfully update today -> not enabled
-    if (account.last_fetched != null && isSameDay(new Date(account.last_fetched), new Date())) {
-      setUpdatable(false);
-      return;
-    }
-    // Check if API permits update
-    canUpdate(account.bank_code, account.number).then((isPossible) => setUpdatable(isPossible));
+    getUpdateStatus(account.bank_code, account.number)
+      .then((status) => {
+        setUpdatable(status.updatable);
+        setIsUpdating(status.status === 'PENDING');
+        setIsError(status.status === 'FAILED');
+      })
+      .catch(() => {
+        setIsError(true);
+      });
   }, [account]);
 
   const sendUpdate = (): void => {
-    update(account.bank_code, account.number)
-      .then((location) => console.log(location))
-      .catch((error) => console.log(error));
+    setUpdatable(false);
+    setIsUpdating(true);
+    setIsError(false);
+    update(account.bank_code, account.number);
   };
 
   return (
@@ -69,11 +75,27 @@ function AccountMain({ account, tab, setTab }: Props): JSX.Element {
             💸
           </Button>
         </div>
-        <div className="ms-2 separator">
+        <div className="separator ms-2">
           <Button onClick={sendUpdate} disabled={!updatable}>
             Aktualizovat
+            {isUpdating && (
+              <Spinner as="span" animation="border" size="sm" role="status" className="ms-1" />
+            )}
           </Button>
         </div>
+        {isError && (
+          <div className="ms-2 text-danger">
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip>Při aktualizaci došlo k chybě. Zkuste to prosím znovu později.</Tooltip>
+              }>
+              <span className="update-error-icon">
+                <BiErrorCircle />
+              </span>
+            </OverlayTrigger>
+          </div>
+        )}
       </div>
       <div className="fst-italic">
         Naposledy aktualizováno:{' '}

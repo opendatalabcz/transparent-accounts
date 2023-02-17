@@ -34,7 +34,7 @@ def is_updatable(updates: list[AccountUpdate]) -> bool:
     if len(updates) == 0:
         return True
 
-    last_update = updates[-1]
+    last_update = updates[0]
     # Last update is not from today
     if last_update.started.date() != datetime.now().date():
         return True

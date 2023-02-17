@@ -16,6 +16,10 @@
     padding-left: .5rem;
 }
 
+.update-error-icon {
+  font-size: 1.5em;
+}
+
 .account-details > dt,
 dd {
   border-bottom: 1px solid;

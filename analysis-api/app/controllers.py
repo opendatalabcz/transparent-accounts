@@ -143,9 +143,8 @@ def get_updates(bank_code: str, acc_num: str):
         return not_found_response('Account not found')
 
     updates = find_updates(acc_num, bank)
-    updatable = is_updatable(updates)
 
-    return ok_response(json.dumps({"updates": updates, "updatable": updatable}, default=str))
+    return ok_response(json.dumps(updates, default=str))
 
 
 @bp.get("/accounts/<bank_code>/<acc_num>/updates/<update_id>")
@@ -161,6 +160,23 @@ def get_update(bank_code: str, acc_num: str, update_id: int):
         return not_found_response('Update not found')
 
     return ok_response(json.dumps(update, default=str))
+
+
+@bp.get("/accounts/<bank_code>/<acc_num>/status")
+def get_status(bank_code: str, acc_num: str):
+    try:
+        bank = Bank(bank_code)
+    except ValueError:
+        return not_found_response('Bank not supported')
+
+    if find_account(acc_num, bank) is None:
+        return not_found_response('Account not found')
+
+    updates = find_updates(acc_num, bank)
+    last_update_status = updates[0].status.name if len(updates) > 0 else None
+    updatable = is_updatable(updates)
+
+    return ok_response(json.dumps({"status": last_update_status, "updatable": updatable}, default=str))
 
 
 @bp.get("/occurrences")

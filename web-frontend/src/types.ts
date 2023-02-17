@@ -29,6 +29,11 @@ export interface Transaction {
   category: string | null;
 }
 
+export interface UpdateStatus {
+  status: 'PENDING' | 'SUCCESS' | 'FAILED';
+  updatable: boolean;
+}
+
 export interface Analysis {
   currency: string | null;
   transactionsCount: number;

@@ -5,6 +5,8 @@ import { Account } from '../../types';
 import { useEffect, useState } from 'react';
 import AccountsTable from './AccountsTable';
 import { useNavigate } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const LIMIT: number = 10;
 
@@ -12,9 +14,13 @@ function HomePage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState<string>('');
   const [accounts, setAccounts] = useState<Array<Account>>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getAccounts({ limit: LIMIT }).then((accounts: Array<Account>) => setAccounts(accounts));
+    getAccounts({ limit: LIMIT }).then((accounts: Array<Account>) => {
+      setAccounts(accounts);
+      setLoading(false);
+    });
   }, []);
 
   const search = () => {
@@ -32,7 +38,7 @@ function HomePage() {
         </div>
         <div className="col-12">
           <h2 className="display-6 text-center">Naposledy aktualizované účty</h2>
-          <AccountsTable accounts={accounts} />
+          {isLoading ? <Skeleton count={15} /> : <AccountsTable accounts={accounts} />}
         </div>
       </div>
     </Container>

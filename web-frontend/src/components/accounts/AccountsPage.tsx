@@ -5,14 +5,20 @@ import SearchBar from '../common/SearchBar';
 import { Account } from '../../types';
 import { getAccounts } from '../../services/accountsAPI';
 import AccountsTable from './AccountsTable';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function AccountsPage(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState<string>(searchParams.get('query') || '');
   const [accounts, setAccounts] = useState<Array<Account>>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getAccounts({ query }).then((accounts: Array<Account>) => setAccounts(accounts));
+    getAccounts({ query }).then((accounts: Array<Account>) => {
+      setAccounts(accounts);
+      setLoading(false);
+    });
   }, []);
 
   const search = async () => {
@@ -30,7 +36,7 @@ function AccountsPage(): JSX.Element {
           <SearchBar query={query} setQuery={setQuery} search={search} />
         </div>
         <div className="col-12">
-          <AccountsTable accounts={accounts} />
+          {isLoading ? <Skeleton count={15} /> : <AccountsTable accounts={accounts} />}
         </div>
       </div>
     </Container>

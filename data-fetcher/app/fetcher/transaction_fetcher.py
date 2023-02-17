@@ -22,30 +22,33 @@ class TransactionFetcher(ABC):
 
     def get_date_from(self) -> date:
         """
-        Returns the date from which the transactions should be fetched.
+        Return the date from which the transactions should be fetched.
         The date is either the date of the last fetch
-        or 2000-01-01 if the account's transactions have never been fetched before.
+        or 2015-01-01 if the account's transactions have never been fetched before.
         :return: the date from which the transactions should be fetched
         """
         if self.account.last_fetched is None:
-            return date(2000, 1, 1)
+            return date(2015, 1, 1)
         return self.account.last_fetched.date()
 
     @staticmethod
     def get_date_to() -> date:
         """
-        Returns the date to which the transactions should be fetched. The date is always yesterday.
+        Return the date to which the transactions should be fetched. The date is ALWAYS yesterday.
         :return: the date to which the transactions should be fetched
         """
         return date.today() - timedelta(1)
 
     def check_date_interval(self, transaction: Transaction) -> bool:
+        """
+        Check if the transaction's date is within the fetching date_from and date_to interval.
+        """
         return self.get_date_from() <= transaction.date <= self.get_date_to()
 
     @staticmethod
     def parse_identifier(string: str) -> Optional[str]:
         """
-        Parses the personal identification number (IČO) from the string.
+        Parse the personal identification number (IČO) from the string.
         Identifier is an 8-digit number.
         :param string:
         :return: the parsed identifier or None if the identifier was not found
@@ -60,7 +63,7 @@ class TransactionFetcher(ABC):
     @staticmethod
     def fetch_identifier_name(identifier: str) -> Optional[str]:
         """
-        Fetches the name of the company with the given identifier from the ARES database.
+        Fetch the name of the company with the given identifier from the ARES database.
         :param identifier: identifier of the company (IČO)
         :return: name of the company or None if not found
         """
@@ -81,7 +84,7 @@ class TransactionFetcher(ABC):
     @staticmethod
     def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
         """
-        Determines the category of the transaction.
+        Determine the category of the transaction.
         It is expected that every transaction fetcher has its own implementation of this method
         and this concrete implementation is called as a fallback when the fetcher does not determine the category.
         :param transaction: Transaction to determine the category for

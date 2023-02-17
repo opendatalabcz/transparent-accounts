@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s')
 
+# TODO: move to config
 # DB_USER = os.getenv('DB_USER')
 # DB_PASSWORD = os.getenv('DB_PASSWORD')
 # DB_HOST = os.getenv('DB_HOST')

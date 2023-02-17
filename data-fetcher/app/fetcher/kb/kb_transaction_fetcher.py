@@ -58,8 +58,8 @@ class KBTransactionFetcher(TransactionFetcher):
 
     def fetch_transactions(self, pure_token) -> list:
         """
-        Returns a list of transactions in a dictionary format.
-        Fetches KB API as long as there are records or until it encounters transactions older than we are interested in.
+        Return a list of transactions in a dictionary format.
+        Fetch KB API as long as there are records or until we encounter transactions older than we are interested in.
         """
         result = []
         skip = 0
@@ -112,7 +112,7 @@ class KBTransactionFetcher(TransactionFetcher):
     @staticmethod
     def parse_money_amount(string: str) -> tuple[float, str]:
         """
-        Parses amount and currency from the KB API transaction amount.
+        Parse amount and currency from the KB API transaction amount.
         Example of KB API transaction amount: '4 186,33 EUR'.
         """
         # Parse the amount and currency using regex
@@ -124,7 +124,7 @@ class KBTransactionFetcher(TransactionFetcher):
     @staticmethod
     def parse_date(string: str) -> date:
         """
-        Parses date from the KB API to the date object.
+        Parse date from the KB API to the date object.
         Example of KB API date: '01.&nbsp;01.&nbsp;2022'.
         """
         return datetime.strptime(string, '%d.&nbsp;%m.&nbsp;%Y').date()
@@ -132,7 +132,7 @@ class KBTransactionFetcher(TransactionFetcher):
     @staticmethod
     def parse_details(string: str, t_type: TransactionType) -> tuple[str | None, str, str]:
         """
-        Parses counter_account, type and description from the KB API to the three separate variables.
+        Parse counter_account, type and description from the KB API to the three separate variables.
         Example of KB API details string: 'A<br />B<br />C'.
         :param string: details
         :param t_type: type of transaction
@@ -168,7 +168,7 @@ class KBTransactionFetcher(TransactionFetcher):
     @staticmethod
     def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
         """
-        Determines the category of the transaction.
+        Determine the category of the transaction.
         :param transaction: Transaction to determine the category for
         :return: category if determined, None otherwise
         """

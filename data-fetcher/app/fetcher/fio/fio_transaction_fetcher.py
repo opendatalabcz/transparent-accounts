@@ -37,7 +37,7 @@ class FioTransactionFetcher(TransactionFetcher):
 
     def scrape_transactions(self) -> list[Transaction]:
         """
-        Scrapes all the transactions from the account.
+        Scrape all the transactions from the account.
         Fio shows only 2000 transactions at once, so we have to scrape them in intervals.
         Default interval is 1 year, but if there are more than 2000 transactions in the interval,
         we halve the interval and try again.
@@ -116,7 +116,7 @@ class FioTransactionFetcher(TransactionFetcher):
     @staticmethod
     def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
         """
-        Determines the category of the transaction.
+        Determine the category of the transaction.
         :param transaction: Transaction to determine the category for
         :return: category if determined, None otherwise
         """

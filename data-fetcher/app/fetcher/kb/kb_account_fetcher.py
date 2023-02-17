@@ -26,7 +26,7 @@ class KBAccountFetcher(AccountFetcher):
 
     def get_last_page(self, s: requests.Session) -> int:
         """
-        Scrapes the number of the last page.
+        Scrape the number of the last page.
         Should be determined by class 'pagination__page-number'.
         """
         response_text = s.get(self.URL.format(1)).text
@@ -36,7 +36,7 @@ class KBAccountFetcher(AccountFetcher):
 
     def scrape_page(self, page: int, s: requests.Session) -> list[Account]:
         """
-        Scrapes div by div and maps them to the Account class, and returns them in the list.
+        Scrape div by div and map them to the Account class, then return them in the list.
         """
         # Get list of divs containing account info
         response_text = s.get(self.URL.format(page)).text
@@ -49,7 +49,7 @@ class KBAccountFetcher(AccountFetcher):
 
     def scrape_account(self, div: bs4.element.Tag) -> Account:
         """
-        Scrapes an Account and maps it into Account instance.
+        Scrape an Account and map it into Account instance.
         """
         # Scrape the basic account info
         # It's important to strip whitespaces and to remove all newlines

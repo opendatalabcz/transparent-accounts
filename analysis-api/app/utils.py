@@ -2,13 +2,14 @@ import re
 from datetime import datetime, timedelta
 from typing import Optional
 
-from app.models import Account, Transaction, AccountUpdate, UpdateStatus
+from app.models import Account, Transaction, UpdateStatus
+from app.queries import find_updates
 
 
 def generalize_query(string: Optional[str]) -> Optional[str]:
     """
-    Strips whitespace and tries to find a bank code in the query and removes it.
-    The aim is to generalize the query so that it can be used in a search.
+    Strip whitespace and try to find a bank code in the query and remove it.
+    The aim is to generalize the query so that it can be used more broadly in a search.
     :param string: query string
     :return: generalized query string
     """
@@ -19,17 +20,19 @@ def generalize_query(string: Optional[str]) -> Optional[str]:
     return re.sub(r'/[0-9]{4}$', '', stripped)
 
 
-def is_updatable(updates: list[AccountUpdate]) -> bool:
+def is_updatable(account: Account) -> bool:
     """
-    Checks if the account is updatable. It is expected that the updates are sorted by the started date in descending order.
-    Account is updatable if one of the following conditions is met:
+    Check if the account is updatable.
+    Account is updatable if at least one of the following conditions is met:
     a) the account was never updated
     b) the last update was not from today
     c) the last update is pending for more than 1 hour
     d) the last update failed.
-    :param updates: list of updates sorted by the started date in descending order
+    :param account: Account
     :return: True if the account is updatable, False otherwise
     """
+    updates = find_updates(account.number, account.bank)
+
     # Never updated
     if len(updates) == 0:
         return True
@@ -45,7 +48,7 @@ def is_updatable(updates: list[AccountUpdate]) -> bool:
 
 def object_encode(o) -> dict | str:
     """
-    Encodes any object as dict or str.
+    Encode any object as dict or str.
     Special care is applied for Account and Transaction type, other types are encoded using str function.
     :param o: object of any type
     :return: encoded object as dict or str

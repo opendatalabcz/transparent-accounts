@@ -1,11 +1,10 @@
 def get_kb_formatted_acc_num(acc_num: str, for_api: bool) -> str:
     """
-    Returns KB formatted account number.
+    Return KB formatted account number.
     Account number format required by KB is one that:
     It does not contain leading zeros in the prefix.
     If it is for KB API then it does not contain a dash and the number itself has to be 10 digits long.
-    For html pages, it contains a dash.
-    It does not contain leading zeros in the account number itself.
+    For HTML pages, it contains a dash and the number itself is as short as possible (no leading zeros).
     :param acc_num: account number in the fully qualified format
     :param for_api: True - format for KB API, False - format for KB html pages
     :return: account number in the format required by KB

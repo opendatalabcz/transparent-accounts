@@ -3,73 +3,35 @@ from datetime import datetime
 
 from flask import request
 
-from app import app, celery, bp
+from app import app, celery, bp, banks
 from app.models import Bank, AccountUpdate, UpdateStatus
-from app.queries import find_accounts_count, find_account, find_transactions, find_accounts, find_update, find_updates
-from app.queries import save_update, find_accounts_by_identifier_occurrence, find_accounts_by_counter_account_occurrence
+from app.queries import find_account, find_accounts, get_accounts_count
+from app.queries import find_accounts_by_identifier_occurrence, find_accounts_by_counter_account_occurrence
+from app.queries import find_transactions, find_update, find_updates, save_update
 from app.responses import ok_response, not_found_response, bad_request_response
 from app.utils import is_updatable, generalize_query, object_encode
 
 
 @bp.get("/banks")
 def get_banks():
-    # TODO: move to config
-    banks = [
-        {
-            'shortcut': Bank.CSAS.name,
-            'name': 'Česká spořitelna',
-            'url': 'https://www.csas.cz/',
-            'code': Bank.CSAS.value,
-            'accounts_count': find_accounts_count(Bank.CSAS)
-        },
-        {
-            'shortcut': Bank.CSOB.name,
-            'name': 'Československá obchodní banka',
-            'url': 'https://www.csob.cz/',
-            'code': Bank.CSOB.value,
-            'accounts_count': find_accounts_count(Bank.CSOB)
-        },
-        {
-            'shortcut': Bank.FIO.name,
-            'name': 'Fio banka',
-            'url': 'https://www.fio.cz/',
-            'code': Bank.FIO.value,
-            'accounts_count': find_accounts_count(Bank.FIO)
-        },
-        {
-            'shortcut': Bank.KB.name,
-            'name': 'Komerční banka',
-            'url': 'https://www.kb.cz/',
-            'code': Bank.KB.value,
-            'accounts_count': find_accounts_count(Bank.KB)
-        },
-        {
-            'shortcut': Bank.MONETA.name,
-            'name': 'Moneta Money Bank',
-            'url': 'https://www.moneta.cz/',
-            'code': Bank.MONETA.value,
-            'accounts_count': find_accounts_count(Bank.MONETA)
-        },
-        {
-            'shortcut': Bank.RB.name,
-            'name': 'Raiffeisenbank',
-            'url': 'https://www.rb.cz/',
-            'code': Bank.RB.value,
-            'accounts_count': find_accounts_count(Bank.RB)
-        }
-    ]
+    # Get banks from config and calculate the number of accounts for each bank
+    for bank in banks:
+        bank['accounts_count'] = get_accounts_count(Bank(bank['code']))
 
-    # Filter out not supported banks (no accounts)
-    banks = list(filter(lambda bank: bank['accounts_count'] > 0, banks))
-    return ok_response(json.dumps(banks))
+    # Filter out not supported banks (banks with 0 accounts)
+    filtered_banks = list(filter(lambda b: b['accounts_count'] > 0, banks))
+    return ok_response(json.dumps(filtered_banks))
 
 
 @bp.get("/accounts")
 def get_accounts():
+    # Get and generalize query, so that it can be used more broadly
     query = request.args.get('query')
     query = generalize_query(query)
+    # Get limit and convert it to int or None (meaning no limit)
     limit = request.args.get('limit')
     limit = int(limit) if limit and limit.isdigit() else None
+    # Only allow ordering by 'last_fetched' if requested, otherwise order by 'number'
     order_by = 'last_fetched' if request.args.get('order_by') == 'last_fetched' else 'number'
 
     accounts = find_accounts(query, limit, order_by)
@@ -121,6 +83,11 @@ def fetch_transactions(bank_code: str, acc_num: str):
     if account is None:
         return not_found_response('Account not found')
 
+    # Check if the account is updatable
+    if not is_updatable(account):
+        return bad_request_response('Account is not updatable')
+
+    # Create a new update request, save it to the database and send a task using Celery
     account_request = AccountUpdate(account_number=account.number, account_bank=account.bank,
                                     status=UpdateStatus.PENDING, started=datetime.now())
     save_update(account_request)
@@ -156,6 +123,7 @@ def get_update(bank_code: str, acc_num: str, update_id: int):
 
     update = find_update(update_id)
 
+    # Update not found or the update's account or bank differs from the requested one
     if update is None or update.account_bank != bank or update.account_number != acc_num:
         return not_found_response('Update not found')
 
@@ -169,9 +137,12 @@ def get_status(bank_code: str, acc_num: str):
     except ValueError:
         return not_found_response('Bank not supported')
 
-    if find_account(acc_num, bank) is None:
+    account = find_account(acc_num, bank)
+
+    if account is None:
         return not_found_response('Account not found')
 
+    # Get the last update and check if the account is updatable
     updates = find_updates(acc_num, bank)
     last_update_status = updates[0].status.name if len(updates) > 0 else None
     updatable = is_updatable(updates)
@@ -186,7 +157,7 @@ def get_occurrences():
 
     # Exactly one of identifier or counter_account parameter must be specified
     if (identifier is None and counter_account is None) or (identifier is not None and counter_account is not None):
-        return bad_request_response('Exactly one of the identifier or counter_account parameters must be specified')
+        return bad_request_response('Exactly one of the identifier or counter_account query parameters must be specified')
 
     if identifier is not None:
         occurrences = find_accounts_by_identifier_occurrence(identifier)

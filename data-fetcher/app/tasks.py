@@ -13,7 +13,7 @@ from app.queries import find_account, save_accounts, save_transactions, find_upd
 
 app = Celery('data-fetcher', broker=os.getenv('CELERY_BROKER_URL'))
 
-Fetcher = namedtuple('Fetcher', 'account transaction')
+Fetcher = namedtuple('Fetcher', 'account_fetcher transaction_fetcher')
 
 banks = {
     Bank.CSAS: Fetcher(CSASAccountFetcher, CSASTransactionFetcher),
@@ -26,12 +26,12 @@ banks = {
 def fetch_accounts(bank_code: str):
     try:
         bank = Bank(bank_code)
+        fetcher = banks[bank].account_fetcher()
     except ValueError:
         logging.warning(f"Unsupported bank: {bank_code}")
         return
 
     logging.info(f"Fetching of {bank} accounts for started.")
-    fetcher = banks[bank].account()
 
     try:
         accounts = fetcher.fetch()
@@ -59,7 +59,7 @@ def fetch_transactions(update_id: int):
         return
 
     logging.info(f"Fetching of {account.number}/{account.bank.value} transactions started.")
-    fetcher = banks[account.bank].transaction(account)
+    fetcher = banks[account.bank].transaction_fetcher(account)
 
     try:
         transactions = fetcher.fetch()

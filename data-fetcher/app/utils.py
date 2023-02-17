@@ -3,8 +3,8 @@ import re
 
 def float_from_cz(num: str) -> float:
     """
-    Converts czech localized format of number to float.
-    Replaces the comma with a dot and remove spaces.
+    Convert czech localized format of number to float.
+    Replace the comma with a dot and remove spaces.
     :param num: number in the czech localized format
     :return: converted str to float
     """
@@ -13,7 +13,7 @@ def float_from_cz(num: str) -> float:
 
 def get_fully_qualified_acc_num(acc_num: str) -> str:
     """
-    Checks the validity of the account number and returns it in a fully qualified format.
+    Check the validity of the account number and return it in a fully qualified format.
     Fully qualified account number is one that:
     It contains a six-digit prefix.
     It contains a dash.

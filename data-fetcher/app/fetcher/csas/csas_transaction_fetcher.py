@@ -60,7 +60,7 @@ class CSASTransactionFetcher(TransactionFetcher):
     @staticmethod
     def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
         """
-        Determines the category of the transaction.
+        Determine the category of the transaction.
         :param transaction: Transaction to determine the category for
         :return: category if determined, None otherwise
         """

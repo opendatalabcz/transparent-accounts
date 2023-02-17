@@ -28,7 +28,7 @@ class FioAccountFetcher(AccountFetcher):
 
     def get_last_offset(self, s: requests.Session) -> int:
         """
-        Scrapes the offset number of the last page.
+        Scrape the offset number of the last page.
         Should be determined by class 'paginator' and being the last 'a' tag in there.
         """
         response_text = s.get(self.URL.format(0)).text
@@ -42,7 +42,7 @@ class FioAccountFetcher(AccountFetcher):
 
     def scrape_page(self, offset: int, s: requests.Session) -> list[Account]:
         """
-        Scrapes table row by table row and maps them to the Account class, and returns them in the list.
+        Scrape table row by table row and map them to the Account class, then return them in the list.
         """
         # Get list of table rows containing account info
         response_text = s.get(self.URL.format(offset)).text
@@ -61,7 +61,7 @@ class FioAccountFetcher(AccountFetcher):
 
     def scrape_account(self, tr: bs4.element.Tag) -> Optional[Account]:
         """
-        Scrapes an Account and maps it into Account instance.
+        Scrape an Account and map it into Account instance.
         """
         # Get td tags, first contains owner and second contains number
         owner_td, number_td, *_ = tr.children

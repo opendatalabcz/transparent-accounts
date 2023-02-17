@@ -9,8 +9,8 @@ import { getUpdateStatus, update } from '../../services/accountsAPI';
 
 interface Props {
   account: Account;
-  tab: 'transakce' | 'analyza';
-  setTab: (tab: 'transakce' | 'analyza') => void;
+  tab: 'transactions' | 'analysis';
+  setTab: (tab: 'transactions' | 'analysis') => void;
 }
 
 function AccountMain({ account, tab, setTab }: Props): JSX.Element {
@@ -50,28 +50,28 @@ function AccountMain({ account, tab, setTab }: Props): JSX.Element {
         <div>
           <Button
             className="tab-button-full"
-            onClick={() => setTab('analyza')}
-            active={tab === 'analyza'}>
+            onClick={() => setTab('analysis')}
+            active={tab === 'analysis'}>
             Analyzovat 📈
           </Button>
           <Button
             className="tab-button-short"
-            onClick={() => setTab('analyza')}
-            active={tab === 'analyza'}>
+            onClick={() => setTab('analysis')}
+            active={tab === 'analysis'}>
             📈
           </Button>
         </div>
         <div className="ms-2">
           <Button
             className=" tab-button-full"
-            onClick={() => setTab('transakce')}
-            active={tab === 'transakce'}>
+            onClick={() => setTab('transactions')}
+            active={tab === 'transactions'}>
             Výpis 💸
           </Button>
           <Button
             className="tab-button-short"
-            onClick={() => setTab('transakce')}
-            active={tab === 'transakce'}>
+            onClick={() => setTab('transactions')}
+            active={tab === 'transactions'}>
             💸
           </Button>
         </div>

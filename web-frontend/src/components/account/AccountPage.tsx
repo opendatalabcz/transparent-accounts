@@ -23,7 +23,7 @@ function AccountPage() {
           (transactions: Array<Transaction>) => setTransactions(transactions)
         );
       })
-      .catch((error) => console.log('Error: ' + error))
+      .catch((error) => console.log('Error: ' + error.cause))
       .finally(() => setLoading(false));
   }, [bankCode, accNumber]);
 

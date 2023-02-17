@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 
-function HomePage() {
+function PageNotFound() {
   return (
     <div className="d-flex align-items-center justify-content-center vh-100">
       <div className="text-center">
@@ -18,4 +18,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default PageNotFound;

@@ -5,6 +5,11 @@ const URL = `http://localhost:5000`;
 
 export const getAccount = async (bank_code: string, account_number: string): Promise<Account> => {
   const response: Response = await fetch(`${URL}/api/accounts/${bank_code}/${account_number}`);
+
+  if (response.status !== 200) {
+    throw new Error('Status is not 200', {cause: response});
+  }
+
   return await response.json();
 };
 

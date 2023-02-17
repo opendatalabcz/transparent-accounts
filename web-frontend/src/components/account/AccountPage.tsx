@@ -7,6 +7,9 @@ import Transactions from './Transactions';
 import Analysis from './Analysis';
 import { Account, Transaction } from '../../types';
 import { getAccount, getTransactions } from '../../services/accountsAPI';
+import { AccountNotFound } from '../PageNotFound';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function AccountPage() {
   const { bankCode, accNumber } = useParams<Record<string, string | undefined>>();
@@ -23,14 +26,12 @@ function AccountPage() {
           (transactions: Array<Transaction>) => setTransactions(transactions)
         );
       })
-      .catch((error) => console.log('Error: ' + error.cause))
       .finally(() => setLoading(false));
   }, [bankCode, accNumber]);
 
-  // TODO
-  if (isLoading) return <div>Loading...</div>;
-  // TODO
-  if (account === null) return <div>Account not found</div>;
+  if (isLoading) return <Skeleton count={10} />;
+  // Response from API is not 200 (Maybe distinguish between different error codes)
+  if (account === null) return <AccountNotFound />;
 
   return (
     <main>

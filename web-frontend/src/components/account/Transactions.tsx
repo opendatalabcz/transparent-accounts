@@ -4,6 +4,7 @@ import { format, subYears } from 'date-fns';
 import TransactionsFilter from './TransactionsFilter';
 import TransactionsTable from './TransactionsTable';
 import { Transaction } from '../../types';
+import { transactionToCSV, downloadBlob } from '../../utils/csvDownload';
 
 interface Props {
   transactions: Array<Transaction>;
@@ -17,7 +18,10 @@ function Transactions({ transactions }: Props): JSX.Element {
   const [query, setQuery] = useState<string>('');
 
   const downloadCSV = () => {
-    // TODO
+    // Prepare the CSV file
+    const csv = transactionToCSV(transactions);
+    // Download the CSV file
+    downloadBlob(csv, 'transakce.csv', 'text/csv;charset=utf-8;');
   };
 
   return (

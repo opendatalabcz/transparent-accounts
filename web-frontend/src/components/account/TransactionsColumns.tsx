@@ -10,7 +10,7 @@ export const transactionsColumns: Array<Column> = [
     Cell: ({ value }) => (
       <span className="text-nowrap">{format(new Date(value), 'dd.MM.yyyy')}</span>
     ),
-    filter: 'between'
+    filter: 'date'
   },
   {
     Header: 'Částka',

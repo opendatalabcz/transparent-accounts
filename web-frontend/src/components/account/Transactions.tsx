@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { format, subYears } from 'date-fns';
 import TransactionsFilter from './TransactionsFilter';
 import TransactionsTable from './TransactionsTable';
 import { Transaction } from '../../types';
@@ -11,8 +10,8 @@ interface Props {
 }
 
 function Transactions({ transactions }: Props): JSX.Element {
-  const [startDate, setStartDate] = useState<string>(format(subYears(new Date(), 5), 'yyyy-MM-dd'));
-  const [endDate, setEndDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
   const [type, setType] = useState<'' | 'INCOMING' | 'OUTGOING'>('');
   const [category, setCategory] = useState<'' | 'CARD' | 'ATM' | 'MESSAGE' | 'NO-MESSAGE'>('');
   const [query, setQuery] = useState<string>('');

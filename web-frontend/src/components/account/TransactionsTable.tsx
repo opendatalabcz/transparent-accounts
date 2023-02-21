@@ -28,9 +28,11 @@ function TransactionTable({ transactions, date, type, category, query }: Props):
   // Definition of custom filters
   const filterTypes = useMemo(
     () => ({
-      between: (rows, id, filterValue) => {
+      date: (rows, id, filterValue) => {
         return rows.filter(
-          (row) => filterValue[0] <= row.values[id] && row.values[id] <= filterValue[1]
+          (row) =>
+            (filterValue[0] === '' || filterValue[0] <= row.values[id]) &&
+            (filterValue[1] === '' || row.values[id] <= filterValue[1])
         );
       },
       category: (rows, id, filterValue) => {

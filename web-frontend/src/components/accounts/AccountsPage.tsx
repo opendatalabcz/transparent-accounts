@@ -35,7 +35,7 @@ function AccountsPage(): JSX.Element {
         <SearchBar query={query} setQuery={setQuery} search={search} />
       </div>
       <div className="row">
-        {isLoading ? <Skeleton count={15} /> : <AccountsTable accounts={accounts} />}
+        {isLoading ? <Skeleton count={20} height={25} /> : <AccountsTable accounts={accounts} />}
       </div>
     </Container>
   );

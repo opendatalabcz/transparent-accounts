@@ -20,7 +20,7 @@ function BanksPage(): JSX.Element {
     <Container>
       <h1 className="my-4 text-center">Podporované banky 🏦</h1>
       {isLoading ? (
-        <Skeleton count={15} />
+        <Skeleton count={3} height={100} />
       ) : (
         <div className="row">
           {banks.map(

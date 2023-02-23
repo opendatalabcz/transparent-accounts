@@ -11,7 +11,7 @@ import { AccountNotFound } from '../PageNotFound';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-function AccountPage() {
+function AccountPage(): JSX.Element {
   const { bankCode, accNumber } = useParams<Record<string, string | undefined>>();
   const [tab, setTab] = useState<'analysis' | 'transactions'>('analysis');
   const [account, setAccount] = useState<Account | null>(null);

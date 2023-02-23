@@ -10,7 +10,7 @@ function SearchBar({ query, setQuery, search }: Props): JSX.Element {
   return (
     <div className="d-flex justify-content-center">
       <div>
-        <h1 className="display-6">Vyhledání transparentního účtu 💸</h1>
+        <h1 className="text-center">Vyhledání transparentního účtu 💸</h1>
         <InputGroup className="row mt-4">
           <Form.Control
             type="text"

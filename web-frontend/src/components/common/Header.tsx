@@ -6,7 +6,7 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import { Nav, Navbar } from 'react-bootstrap';
 import './Header.css';
 
-function Header() {
+function Header(): JSX.Element {
   return (
     <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark" className="py-0 px-3">
       <Navbar.Brand>

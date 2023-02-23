@@ -8,7 +8,7 @@ import AboutPage from './about/AboutPage';
 import ApiPage from './api/ApiPage';
 import PageNotFound from './PageNotFound';
 
-function App() {
+function App(): JSX.Element {
   return (
     <>
       <Header />

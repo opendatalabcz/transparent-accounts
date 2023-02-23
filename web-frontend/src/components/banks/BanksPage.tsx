@@ -18,10 +18,10 @@ function BanksPage(): JSX.Element {
 
   return (
     <Container>
-      <div className="d-flex justify-content-center my-4">
-        <h1 className="display-6">Podporované banky 🏦</h1>
-      </div>
-      {isLoading ? <Skeleton count={15} /> : (
+      <h1 className="my-4 text-center">Podporované banky 🏦</h1>
+      {isLoading ? (
+        <Skeleton count={15} />
+      ) : (
         <div className="row">
           {banks.map(
             (bank: Bank): JSX.Element => (
@@ -43,7 +43,7 @@ function BanksPage(): JSX.Element {
             )
           )}
         </div>
-      ) }
+      )}
     </Container>
   );
 }

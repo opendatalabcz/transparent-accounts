@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 
-export function AccountNotFound() {
+export function AccountNotFound(): JSX.Element {
   return (
     <div className="not-found-page d-flex align-items-center justify-content-center">
       <div className="text-center">
@@ -18,7 +18,7 @@ export function AccountNotFound() {
   );
 }
 
-function PageNotFound() {
+function PageNotFound(): JSX.Element {
   return (
     <div className="not-found-page d-flex align-items-center justify-content-center">
       <div className="text-center">

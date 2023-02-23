@@ -31,13 +31,11 @@ function AccountsPage(): JSX.Element {
 
   return (
     <Container>
-      <div className="row gy-5 mt-4">
-        <div className="col-12">
-          <SearchBar query={query} setQuery={setQuery} search={search} />
-        </div>
-        <div className="col-12">
-          {isLoading ? <Skeleton count={15} /> : <AccountsTable accounts={accounts} />}
-        </div>
+      <div className="row my-4">
+        <SearchBar query={query} setQuery={setQuery} search={search} />
+      </div>
+      <div className="row">
+        {isLoading ? <Skeleton count={15} /> : <AccountsTable accounts={accounts} />}
       </div>
     </Container>
   );

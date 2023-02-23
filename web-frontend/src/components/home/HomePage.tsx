@@ -10,7 +10,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 const LIMIT: number = 10;
 
-function HomePage() {
+function HomePage(): JSX.Element {
   const navigate = useNavigate();
   const [query, setQuery] = useState<string>('');
   const [accounts, setAccounts] = useState<Array<Account>>([]);
@@ -32,14 +32,12 @@ function HomePage() {
 
   return (
     <Container>
-      <div className="row gy-5 mt-4">
-        <div className="col-12">
-          <SearchBar query={query} setQuery={setQuery} search={search} />
-        </div>
-        <div className="col-12">
-          <h2 className="display-6 text-center">Naposledy aktualizované účty</h2>
-          {isLoading ? <Skeleton count={15} /> : <AccountsTable accounts={accounts} />}
-        </div>
+      <div className="row my-4">
+        <SearchBar query={query} setQuery={setQuery} search={search} />
+      </div>
+      <div className="row">
+        <h2 className="display-6 text-center">Naposledy aktualizované účty</h2>
+        {isLoading ? <Skeleton count={15} /> : <AccountsTable accounts={accounts} />}
       </div>
     </Container>
   );

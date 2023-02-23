@@ -45,13 +45,17 @@ function AccountPage() {
           </div>
         </div>
       </Container>
-      <div className="mt-5">
-        {tab === 'transactions' ? (
-          <Transactions transactions={transactions} />
-        ) : (
-          <Analysis account={account} transactions={transactions} />
-        )}
-      </div>
+      {account.last_fetched ? (
+        <div className="mt-5">
+          {tab === 'transactions' ? (
+            <Transactions transactions={transactions} />
+          ) : (
+            <Analysis account={account} transactions={transactions} />
+          )}
+        </div>
+      ) : (
+        <p className="mt-5 text-center">Prosím <span className="text-primary fw-bold text-uppercase">aktualizujte</span> účet.</p>
+      )}
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Container, OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
-import { BsQuestionCircle } from 'react-icons/bs';
+import { BsQuestionCircle, BsInfoCircle } from 'react-icons/bs';
 import { BiErrorCircle } from 'react-icons/bi';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
@@ -83,6 +83,19 @@ function AccountMain({ account, tab, setTab }: Props): JSX.Element {
             )}
           </Button>
         </div>
+        {isUpdating && (
+          <div className="ms-2">
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip>Právě probíha aktualizace účtu. To může trvat jednotky sekund až minut. Zkuste obnovit stránku.</Tooltip>
+              }>
+              <span className="update-icon">
+                <BsInfoCircle />
+              </span>
+            </OverlayTrigger>
+          </div>
+        )}
         {isError && (
           <div className="ms-2 text-danger">
             <OverlayTrigger
@@ -90,7 +103,7 @@ function AccountMain({ account, tab, setTab }: Props): JSX.Element {
               overlay={
                 <Tooltip>Při aktualizaci došlo k chybě. Zkuste to prosím znovu později.</Tooltip>
               }>
-              <span className="update-error-icon">
+              <span className="update-icon">
                 <BiErrorCircle />
               </span>
             </OverlayTrigger>

@@ -70,10 +70,10 @@ def find_accounts_by_counter_account_occurrence(counter_account: str) -> Sequenc
 
 def get_accounts_count(bank: Bank) -> ScalarResult['int']:
     """
-    Find the number of Accounts by the Bank.
+    Find the number of active (not archived) Accounts by the Bank.
     """
     with Session(engine) as s:
-        return s.scalars(select(func.count()).select_from(Account).filter_by(bank=bank)).one()
+        return s.scalars(select(func.count()).select_from(Account).filter_by(bank=bank, archived=False)).one()
 
 
 def find_transactions(acc_num: str, bank: Bank) -> Sequence['Transaction']:

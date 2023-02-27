@@ -6,7 +6,7 @@ from flask import Flask, Blueprint
 from flask_cors import CORS
 from sqlalchemy import create_engine
 
-from models import Bank
+from app.models import Bank
 
 app = Flask(__name__)
 app.secret_key = 'dev'

@@ -145,7 +145,7 @@ def get_status(bank_code: str, acc_num: str):
     # Get the last update and check if the account is updatable
     updates = find_updates(acc_num, bank)
     last_update_status = updates[0].status.name if len(updates) > 0 else None
-    updatable = is_updatable(updates)
+    updatable = is_updatable(account)
 
     return ok_response(json.dumps({"status": last_update_status, "updatable": updatable}, default=str))
 

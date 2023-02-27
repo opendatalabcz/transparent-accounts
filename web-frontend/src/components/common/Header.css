@@ -1,21 +1,15 @@
 .navbar {
   font-family: 'Roboto', sans-serif;
   font-size: 1.4em;
-  font-weight: bold;
 }
 
 .inside-nav {
   font-family: 'Lato', sans-serif;
-  font-weight: normal;
 }
 
 @media (max-width: 475px) {
   #brand-container {
     margin-right: 0 !important;
-  }
-
-  #brand-logo {
-    display: none;
   }
 }
 
@@ -31,8 +25,4 @@
 
 .nav-link {
   color: white;
-}
-
-.nav-link:hover {
-  color: rgba(255, 255, 255, 0.55);
 }

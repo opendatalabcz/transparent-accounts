@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { BsBarChartFill, BsGithub } from 'react-icons/bs';
+import { BsGithub } from 'react-icons/bs';
 import { GiCapitol } from 'react-icons/gi';
 import { FaCoins, FaGraduationCap } from 'react-icons/fa';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { Nav, Navbar } from 'react-bootstrap';
 import './Header.css';
+import { Logo } from '../../Icons/';
 
 function Header(): JSX.Element {
   return (
@@ -12,7 +13,7 @@ function Header(): JSX.Element {
       <Navbar.Brand>
         <Nav.Link as={Link} to="/" className="py-0 me-5" id="brand-container">
           <div className="d-flex align-items-end">
-            <BsBarChartFill size={56} id="brand-logo" />
+            <Logo width="50px" height="50px" />
             <span>Zpracování a analýza{'\n'}transparentních účtů</span>
           </div>
         </Nav.Link>

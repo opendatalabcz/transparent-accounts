@@ -35,7 +35,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "svgr": "svgr -d src/Icons/ assets/"
   },
   "eslintConfig": {
     "extends": [
@@ -64,5 +65,8 @@
     "bracketSpacing": true,
     "bracketSameLine": true,
     "arrowParens": "always"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^6.5.1"
   }
 }

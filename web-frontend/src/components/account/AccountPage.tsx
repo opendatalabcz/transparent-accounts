@@ -35,7 +35,7 @@ function AccountPage(): JSX.Element {
 
   return (
     <main>
-      <Container fluid className="mt-5">
+      <Container fluid className="mt-5 pb-1 account-info">
         <div className="row gy-5">
           <div className="col-xl-7 col-lg">
             <AccountMain account={account} tab={tab} setTab={setTab} />
@@ -46,7 +46,7 @@ function AccountPage(): JSX.Element {
         </div>
       </Container>
       {account.last_fetched ? (
-        <div className="mt-5">
+        <div className="mt-3">
           {tab === 'transactions' ? (
             <Transactions transactions={transactions} />
           ) : (

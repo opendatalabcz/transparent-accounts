@@ -1,3 +1,7 @@
+.account-info {
+  background-image: url("../../assets/banknote.png");
+}
+
 .tab-button-short {
   display: none;
 }

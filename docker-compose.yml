@@ -51,6 +51,15 @@ services:
       - data-fetcher
       - rabbitmq
 
+  web-frontend:
+    build: ./web-frontend
+    environment:
+      - TZ=Europe/Prague
+    ports:
+      - "3000:3000"
+    depends_on:
+      - analysis-api
+
   rabbitmq:
     image: rabbitmq
     environment:

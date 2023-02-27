@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# run migrations
+# Run migrations
 venv3/bin/alembic upgrade head
 
-# run worker
+# Run worker
 venv3/bin/celery -A app.tasks worker --loglevel=DEBUG

@@ -67,6 +67,6 @@ banks = [
     }
 ]
 
-from app import controllers
+from app.apis import blueprint as api
 
-app.register_blueprint(bp, url_prefix='/api')
+app.register_blueprint(api, url_prefix='/api')

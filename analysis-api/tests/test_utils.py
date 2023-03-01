@@ -1,10 +1,5 @@
 from app.utils import generalize_query
 
-
-def test_object_encode():
-    pass
-
-
 def test_generalize_query():
     assert generalize_query('1234567890/1234') == '1234567890'
     assert generalize_query('Testovaci uzivatel') == 'Testovaci uzivatel'

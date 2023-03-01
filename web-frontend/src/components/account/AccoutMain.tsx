@@ -88,7 +88,7 @@ function AccountMain({ account, tab, setTab }: Props): JSX.Element {
             <OverlayTrigger
               placement="bottom"
               overlay={
-                <Tooltip>Právě probíha aktualizace účtu. To může trvat jednotky sekund až minut. Zkuste obnovit stránku.</Tooltip>
+                <Tooltip>Právě probíha aktualizace účtu. To může trvat jednotky sekund až minut. Zkuste prosím obnovit stránku.</Tooltip>
               }>
               <span className="update-icon">
                 <BsInfoCircle />

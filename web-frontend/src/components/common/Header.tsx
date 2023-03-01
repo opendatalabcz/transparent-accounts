@@ -33,7 +33,10 @@ function Header(): JSX.Element {
             <FaGraduationCap className="align-text-top" />
             O&nbsp;projektu
           </Nav.Link>
-          <Nav.Link as={Link} to="/api">
+          <Nav.Link
+            href="https://transparentniucty.opendatalab.cz:5000/api/"
+            target="_blank"
+            rel="noreferrer">
             <AiOutlineSetting className="align-text-top" />
             API
           </Nav.Link>

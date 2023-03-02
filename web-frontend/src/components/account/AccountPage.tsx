@@ -29,7 +29,7 @@ function AccountPage(): JSX.Element {
       .finally(() => setLoading(false));
   }, [bankCode, accNumber]);
 
-  if (isLoading) return <Skeleton count={10} />;
+  if (isLoading) return <Skeleton count={10} height={25} />;
   // Response from API is not 200 (Maybe distinguish between different error codes)
   if (account === null) return <AccountNotFound />;
 

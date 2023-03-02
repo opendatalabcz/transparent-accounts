@@ -1,4 +1,4 @@
-import { Card, Container } from 'react-bootstrap';
+import { Container, Table } from 'react-bootstrap';
 import { Bank } from '../../types';
 import { useEffect, useState } from 'react';
 import { getBanks } from '../../services/banksAPI';
@@ -20,29 +20,30 @@ function BanksPage(): JSX.Element {
     <Container>
       <h1 className="my-4 text-center">Podporované banky 🏦</h1>
       {isLoading ? (
-        <Skeleton count={3} height={100} />
+        <Skeleton count={8} height={25} />
       ) : (
-        <div className="row">
-          {banks.map(
-            (bank: Bank): JSX.Element => (
-              <div key={bank.shortcut} className="col-12 mt-2">
-                <Card className="h-100">
-                  <Card.Body>
-                    <Card.Title>
-                      <a href={bank.url} target="_blank" rel="noreferrer">
-                        {bank.name}
-                      </a>
-                    </Card.Title>
-                    <Card.Text className="d-flex justify-content-between">
-                      Počet transparentních účtů:{' '}
-                      <span className="metrics-number">{bank.accounts_count}</span>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </div>
-            )
-          )}
-        </div>
+        <Table striped hover bordered>
+          <thead>
+            <tr>
+              <th scope="col">Název</th>
+              <th scope="col">Počet transparentních účtů</th>
+            </tr>
+          </thead>
+          <tbody>
+            {banks.map(
+              (bank: Bank): JSX.Element => (
+                <tr key={bank.shortcut}>
+                  <td>
+                    <a href={bank.url} target="_blank" rel="noreferrer">
+                      {bank.name}
+                    </a>
+                  </td>
+                  <td>{bank.accounts_count}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </Table>
       )}
     </Container>
   );

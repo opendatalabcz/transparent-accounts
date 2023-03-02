@@ -47,6 +47,32 @@ class Base(DeclarativeBase):
     pass
 
 
+def convert_to_searchable(value: Optional[str]) -> Optional[str]:
+    """
+    Convert string to lowercase and remove diacritics.
+    """
+    if value is None:
+        return None
+
+    value = value.casefold()
+
+    chars_from = ['á', 'č', 'ď', 'é', 'ě', 'í', 'ň', 'ó', 'ř', 'š', 'ť', 'ú', 'ů', 'ý', 'ž']
+    chars_to = ['a', 'c', 'd', 'e', 'e', 'i', 'n', 'o', 'r', 's', 't', 'u', 'u', 'y', 'z']
+
+    for char_from, char_to in zip(chars_from, chars_to):
+        value = value.replace(char_from, char_to)
+
+    return value
+
+
+def default_name_search(context) -> Optional[str]:
+    return convert_to_searchable(context.get_current_parameters().get('name'))
+
+
+def default_owner_search(context) -> Optional[str]:
+    return convert_to_searchable(context.get_current_parameters().get('owner'))
+
+
 class Account(Base):
     __tablename__ = "account"
 
@@ -54,9 +80,11 @@ class Account(Base):
     number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
     bank: Mapped[Bank] = mapped_column(primary_key=True)
     name: Mapped[Optional[str]]
+    name_search: Mapped[Optional[str]] = mapped_column(default=default_name_search, onupdate=default_name_search)
     owner: Mapped[Optional[str]]
+    owner_search: Mapped[Optional[str]] = mapped_column(default=default_owner_search, onupdate=default_owner_search)
     balance: Mapped[Optional[float]]
-    currency: Mapped[str] = mapped_column(String(20))
+    currency: Mapped[Optional[str]] = mapped_column(String(20))
     description: Mapped[Optional[str]]
     created: Mapped[Optional[date]]
     last_updated: Mapped[datetime]

@@ -18,7 +18,7 @@ def find_account(acc_num: str, bank: Bank) -> Optional[Account]:
 def find_accounts(query: Optional[str], limit: Optional[int], order_by: Optional[str]) -> Sequence['Account']:
     """
     Find Accounts by the query string.
-    The query string is case-insensitive compared to the number, name or owner of the account for a partial match.
+    The query string is compared to the number, name or owner of the account for a partial match.
     In case the query string is None, all accounts are returned.
     The result is limited to 'limit' parameter rows and ordered by 'order_by' parameter.
     The result is ordered in such a way that null values are last.
@@ -34,7 +34,7 @@ def find_accounts(query: Optional[str], limit: Optional[int], order_by: Optional
 
     # Query specified - construct the match query
     search = f"%{query}%"
-    or_criteria = or_(Account.number.ilike(search), Account.name.ilike(search), Account.owner.ilike(search))
+    or_criteria = or_(Account.number.like(search), Account.name.like(search), Account.owner.like(search))
 
     with Session(engine) as s:
         return s.execute(select(Account).filter(or_criteria).limit(limit).order_by(nulls_last(desc(order_by)))).scalars().all()

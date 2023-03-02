@@ -2,13 +2,13 @@ import re
 from datetime import datetime, timedelta
 from typing import Optional
 
-from app.models import Account, Transaction, UpdateStatus
+from app.models import convert_to_searchable, Account, UpdateStatus
 from app.queries import find_updates
 
 
 def generalize_query(string: Optional[str]) -> Optional[str]:
     """
-    Strip whitespace and try to find a bank code in the query and remove it.
+    Strip whitespace, try to find a bank code in the query and remove it, convert lo lowercase and remove diacritics.
     The aim is to generalize the query so that it can be used more broadly in a search.
     :param string: query string
     :return: generalized query string
@@ -17,7 +17,8 @@ def generalize_query(string: Optional[str]) -> Optional[str]:
         return None
 
     stripped = string.strip()
-    return re.sub(r'/[0-9]{4}$', '', stripped)
+    without_bank_code = re.sub(r'/[0-9]{4}$', '', stripped)
+    return convert_to_searchable(without_bank_code)
 
 
 def is_updatable(account: Account) -> bool:

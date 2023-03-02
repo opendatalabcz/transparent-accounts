@@ -1,4 +1,4 @@
-import { Analysis, TransactionsAggregation, Transaction } from '../types';
+import { Analysis, Transaction, TransactionsAggregation } from '../types';
 import { format } from 'date-fns';
 
 // TODO REFACTOR AND DOCUMENT!

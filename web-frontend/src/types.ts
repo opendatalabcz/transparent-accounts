@@ -30,7 +30,7 @@ export interface Transaction {
 }
 
 export interface UpdateStatus {
-  status: 'PENDING' | 'SUCCESS' | 'FAILED';
+  status: 'PENDING' | 'SUCCESS' | 'FAILURE';
   updatable: boolean;
 }
 

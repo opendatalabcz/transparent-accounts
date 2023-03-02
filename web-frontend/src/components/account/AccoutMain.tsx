@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
-import { BsQuestionCircle, BsInfoCircle } from 'react-icons/bs';
+import { Button, Container, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
+import { BsInfoCircle, BsQuestionCircle } from 'react-icons/bs';
 import { BiErrorCircle } from 'react-icons/bi';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
@@ -23,7 +23,7 @@ function AccountMain({ account, tab, setTab }: Props): JSX.Element {
       .then((status) => {
         setUpdatable(status.updatable);
         setIsUpdating(status.status === 'PENDING');
-        setIsError(status.status === 'FAILED');
+        setIsError(status.status === 'FAILURE');
       })
       .catch(() => {
         setIsError(true);

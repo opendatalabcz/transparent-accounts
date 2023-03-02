@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import TransactionsFilter from './TransactionsFilter';
 import TransactionsTable from './TransactionsTable';
 import { Transaction } from '../../types';
-import { transactionToCSV, downloadBlob } from '../../utils/csvDownload';
+import { downloadBlob, transactionToCSV } from '../../utils/csvDownload';
 
 interface Props {
   transactions: Array<Transaction>;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 const SvgLogo = (props) => (
   <svg
     width={268.154}

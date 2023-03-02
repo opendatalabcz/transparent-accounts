@@ -43,5 +43,5 @@ def is_updatable(account: Account) -> bool:
     if last_update.started.date() != datetime.now().date():
         return True
     # Last update failed or is pending more than 1 hour - retry
-    return last_update.status == UpdateStatus.FAILED or\
+    return last_update.status == UpdateStatus.FAILURE or\
         (last_update.status == UpdateStatus.PENDING and last_update.started < datetime.now() - timedelta(hours=1))

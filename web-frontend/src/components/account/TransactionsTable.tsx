@@ -1,12 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import {
-  Column,
-  useFilters,
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable
-} from 'react-table';
+import { Column, useFilters, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
 import { Table } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import { transactionsColumns } from './TransactionsColumns';

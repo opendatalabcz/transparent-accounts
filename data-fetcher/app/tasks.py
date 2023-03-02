@@ -55,7 +55,7 @@ def fetch_transactions(update_id: int):
 
     if account is None:
         logging.warning(f"Account {acc_update.account_number}/{acc_update.account_bank.value} not found.")
-        save_update(acc_update, UpdateStatus.FAILED)
+        save_update(acc_update, UpdateStatus.FAILURE)
         return
 
     logging.info(f"Fetching of {account.number}/{account.bank.value} transactions started.")
@@ -67,7 +67,7 @@ def fetch_transactions(update_id: int):
         save_transactions(account, transactions)
     except Exception:
         logging.exception(f"Fetching of {account.number}/{account.bank.value} transactions was interrupted.")
-        save_update(acc_update, UpdateStatus.FAILED)
+        save_update(acc_update, UpdateStatus.FAILURE)
         return
 
     logging.info(f"Fetching of {account.number}/{account.bank.value} transactions was successful.")

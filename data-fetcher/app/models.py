@@ -30,17 +30,17 @@ class TransactionType(Enum):
 
 
 class TransactionCategory(Enum):
-    MESSAGE = "Vzkaz"
-    ATM = "Výběr z bankomatu"
-    FEE = "Poplatek"
-    TAX = "Odvod daně"
-    CARD = "Platba kartou"
+    MESSAGE = 'Vzkaz'
+    ATM = 'Výběr z bankomatu'
+    FEE = 'Poplatek'
+    TAX = 'Odvod daně'
+    CARD = 'Platba kartou'
 
 
 class UpdateStatus(Enum):
     PENDING = 1
     SUCCESS = 2
-    FAILED = 3
+    FAILURE = 3
 
 
 class Base(DeclarativeBase):
@@ -74,7 +74,7 @@ def default_owner_search(context) -> Optional[str]:
 
 
 class Account(Base):
-    __tablename__ = "account"
+    __tablename__ = 'account'
 
     # Fixed length 17 digits (prefix 6, separator 1, account number 10)
     number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
@@ -98,7 +98,7 @@ class Account(Base):
 
 
 class Transaction(Base):
-    __tablename__ = "transaction"
+    __tablename__ = 'transaction'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     date: Mapped[date]
@@ -117,8 +117,8 @@ class Transaction(Base):
     account_number: Mapped[str]
     account_bank: Mapped[Bank]
 
-    __table_args__ = (ForeignKeyConstraint(["account_number", "account_bank"],
-                                           ["account.number", "account.bank"]),
+    __table_args__ = (ForeignKeyConstraint(['account_number', 'account_bank'],
+                                           ['account.number', 'account.bank']),
                       {})
 
     def __repr__(self) -> str:
@@ -126,7 +126,7 @@ class Transaction(Base):
 
 
 class AccountUpdate(Base):
-    __tablename__ = "account_update"
+    __tablename__ = 'account_update'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     status: Mapped[UpdateStatus]
@@ -135,8 +135,8 @@ class AccountUpdate(Base):
     account_number: Mapped[str]
     account_bank: Mapped[Bank]
 
-    __table_args__ = (ForeignKeyConstraint(["account_number", "account_bank"],
-                                           ["account.number", "account.bank"]),
+    __table_args__ = (ForeignKeyConstraint(['account_number', 'account_bank'],
+                                           ['account.number', 'account.bank']),
                       {})
 
     def __repr__(self) -> str:

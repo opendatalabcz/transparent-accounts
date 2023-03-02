@@ -1,11 +1,11 @@
 from flask import Blueprint
 from flask_restx import Api
 
-from app.apis.bank import api as bank_api
 from app.apis.account import api as account_api
+from app.apis.bank import api as bank_api
+from app.apis.occurrence import api as occurrence_api
 from app.apis.transaction import api as transaction_api
 from app.apis.update import api as update_api
-from app.apis.occurrence import api as occurrence_api
 
 blueprint = Blueprint('api', __name__)
 

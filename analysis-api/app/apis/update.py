@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from flask_restx import Namespace, Resource, fields
 
 from app import celery

@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Account } from '../../types';
-import {
-  getOccurrencesByCounterAccount,
-  getOccurrencesByIdentifier
-} from '../../services/accountsAPI';
+import { getOccurrencesByCounterAccount, getOccurrencesByIdentifier } from '../../services/accountsAPI';
 import { Button, OverlayTrigger, Popover, Table } from 'react-bootstrap';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 

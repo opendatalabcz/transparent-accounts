@@ -34,7 +34,7 @@ def find_accounts(query: Optional[str], limit: Optional[int], order_by: Optional
 
     # Query specified - construct the match query
     search = f"%{query}%"
-    or_criteria = or_(Account.number.like(search), Account.name.like(search), Account.owner.like(search))
+    or_criteria = or_(Account.number.like(search), Account.name_search.like(search), Account.owner_search.like(search))
 
     with Session(engine) as s:
         return s.execute(select(Account).filter(or_criteria).limit(limit).order_by(nulls_last(desc(order_by)))).scalars().all()

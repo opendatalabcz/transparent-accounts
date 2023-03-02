@@ -1,8 +1,10 @@
 from app.utils import generalize_query
 
-def test_generalize_query():
+
+def test_generalize_query(monkeypatch):
+    assert generalize_query('Testovací uživatel') == 'testovaci uzivatel'
+    assert generalize_query('Jakub Janeček ') == 'jakub janecek'
     assert generalize_query('1234567890/1234') == '1234567890'
-    assert generalize_query('Testovaci uzivatel') == 'Testovaci uzivatel'
     assert generalize_query('123-1234567890') == '123-1234567890'
     assert generalize_query('123-1234567890/0100') == '123-1234567890'
     assert generalize_query(' 123-1234567890/0100 ') == '123-1234567890'

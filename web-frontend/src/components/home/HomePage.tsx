@@ -36,7 +36,7 @@ function HomePage(): JSX.Element {
         <SearchBar query={query} setQuery={setQuery} search={search} />
       </div>
       <div className="row">
-        <h2 className="display-6 text-center">Naposledy aktualizované účty</h2>
+        <h2 className="text-center">Naposledy aktualizované účty</h2>
         {isLoading ? <Skeleton count={10} height={25} /> : <AccountsTable accounts={accounts} />}
       </div>
     </Container>

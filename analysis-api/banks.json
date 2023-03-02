@@ -1,0 +1,38 @@
+[
+    {
+        "shortcut": "CSAS",
+        "name": "Česká spořitelna",
+        "url": "https://www.csas.cz/",
+        "code": "0800"
+    },
+    {
+        "shortcut": "CSOB",
+        "name": "Československá obchodní banka",
+        "url": "https://www.csob.cz/",
+        "code": "0300"
+    },
+    {
+        "shortcut": "FIO",
+        "name": "Fio banka",
+        "url": "https://www.fio.cz/",
+        "code": "2010"
+    },
+    {
+        "shortcut": "KB",
+        "name": "Komerční banka",
+        "url": "https://www.kb.cz/",
+        "code": "0100"
+    },
+    {
+        "shortcut": "MONETA",
+        "name": "Moneta Money Bank",
+        "url": "https://www.moneta.cz/",
+        "code": "0600"
+    },
+    {
+        "shortcut": "RB",
+        "name": "Raiffeisenbank",
+        "url": "https://www.rb.cz/",
+        "code": "5500"
+    }
+]

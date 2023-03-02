@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -20,12 +20,10 @@ services:
       dockerfile: dockerize/Dockerfile
     environment:
       - DB_HOST=db
-      - DB_PORT=5432
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - DB_NAME=${DB_NAME:-postgres}
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
-      - TZ=Europe/Prague
     depends_on:
       - db
       - rabbitmq
@@ -38,12 +36,16 @@ services:
     depends_on:
       - data-fetcher
       - rabbitmq
-    
+
   analysis-api:
     build: ./analysis-api
     environment:
+      - SECRET_KEY=${SECRET_KEY:-dev}
+      - DB_HOST=db
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_NAME=${DB_NAME:-postgres}
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
-      - TZ=Europe/Prague
     ports:
       - "5000:5000"
     depends_on:
@@ -53,8 +55,6 @@ services:
 
   web-frontend:
     build: ./web-frontend
-    environment:
-      - TZ=Europe/Prague
     ports:
       - "3000:3000"
     depends_on:

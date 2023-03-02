@@ -14,14 +14,14 @@ transaction_model = api.model(
         'currency': fields.String(required=True, example='CZK', description='The transaction currency'),
         'counter_account': fields.String(required=True, example='Jakub Janeček', description='The transaction counter account, may be unknown - null'),
         'type': fields.String(attribute=lambda x: x.type.name, example='OUTGOING', required=True, description='The transaction type, either INCOMING or OUTGOING'),
-        'type_detail': fields.String(required=True, example='Okamžitá odchozí platba', description='The transaction detail type, this type is provided by the bank and may be different for each bank'),
+        'type_detail': fields.String(attribute='str_type', required=True, example='Okamžitá odchozí platba', description='The transaction detail type, this type is provided by the bank and may be different for each bank'),
         'variable_symbol': fields.String(required=True, example='20230001', description='The transaction variable symbol'),
         'constant_symbol': fields.String(required=True, example='', description='The transaction constant symbol'),
         'specific_symbol': fields.String(required=True, example='', description='The transaction specific symbol'),
         'description': fields.String(required=True, example='Testovaci transakce, IČO: 04434081', description='The transaction description, may be empty'),
         'ca_identifier': fields.String(required=True, example='04434081', description='The transaction counter account identifier parsed from the description'),
         'ca_name': fields.String(required=True, example='Profinit EU, s.r.o.', description='The transaction counter account company name, fetched from the https://www.mfcr.cz/ using identifier'),
-        'category': fields.String(required=True, example='Vzkaz', description='The transaction recognized category'),
+        'category': fields.String(attribute=lambda x: x.category.value if x.category else None, required=True, example='Vzkaz', description='The transaction recognized category'),
     }
 )
 

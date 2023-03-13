@@ -15,9 +15,7 @@ api = Api(
     version='1.0',
     description="""
     API for transparent accounts.
-    The API allows you to search for accounts and transactions,
-    update accounts and
-    search for occurrences of identifiers or counter accounts in accounts transactions.
+    The API allows you to search for accounts and transactions, update accounts and search for occurrences of identifiers or counter accounts in accounts transactions.
     """
 )
 

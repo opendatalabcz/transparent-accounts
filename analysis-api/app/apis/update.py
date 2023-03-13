@@ -61,7 +61,6 @@ class UpdateList(Resource):
     @api.response(400, 'Bank not supported or account not updatable')
     @api.response(404, 'Account not found')
     @api.response(500, 'Service unavailable')
-    @api.marshal_with(update_model)
     def post(self, bank_code: str, acc_num: str):
         """
         Post update.

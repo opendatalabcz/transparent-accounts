@@ -1,7 +1,7 @@
-sqlalchemy
-psycopg2-binary
-alembic
-celery
-requests
-bs4
-urllib3
+sqlalchemy~=2.0.5
+psycopg2-binary>=2.9.5
+alembic~=1.10.2
+celery~=5.2.7
+requests~=2.28.2
+bs4~=0.0.1
+urllib3~=1.26.15

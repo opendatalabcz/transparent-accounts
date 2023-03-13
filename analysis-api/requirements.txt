@@ -1,7 +1,7 @@
-flask
-sqlalchemy
-psycopg2-binary
-celery
-flask-cors
-flask-restx
-requests
+flask~=2.2.3
+sqlalchemy~=2.0.5
+psycopg2-binary>=2.9.5
+celery~=5.2.7
+flask-cors~=3.0.10
+flask-restx~=1.1.0
+requests~=2.28.2

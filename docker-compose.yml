@@ -24,6 +24,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - DB_NAME=${DB_NAME:-postgres}
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+      - TZ=Europe/Prague
     depends_on:
       - db
       - rabbitmq
@@ -46,6 +47,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - DB_NAME=${DB_NAME:-postgres}
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+      - TZ=Europe/Prague
     ports:
       - "5000:5000"
     depends_on:

@@ -7,20 +7,24 @@ import BanksPage from './banks/BanksPage';
 import AboutPage from './about/AboutPage';
 import ApiPage from './api/ApiPage';
 import PageNotFound from './PageNotFound';
+import Footer from './common/Footer';
 
 function App(): JSX.Element {
   return (
     <>
       <Header />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/ucty" element={<AccountsPage />} />
-        <Route path="/ucty/:bankCode/:accNumber" element={<AccountPage />} />
-        <Route path="/banky" element={<BanksPage />} />
-        <Route path="/o-projektu" element={<AboutPage />} />
-        <Route path="/api" element={<ApiPage />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/ucty" element={<AccountsPage />} />
+          <Route path="/ucty/:bankCode/:accNumber" element={<AccountPage />} />
+          <Route path="/banky" element={<BanksPage />} />
+          <Route path="/o-projektu" element={<AboutPage />} />
+          <Route path="/api" element={<ApiPage />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </main>
+      <Footer />
     </>
   );
 }

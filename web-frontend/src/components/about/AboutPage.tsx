@@ -4,9 +4,17 @@ function AboutPage(): JSX.Element {
   return (
     <Container>
       <h1 className="my-4 text-center">O projektu 🎓</h1>
-      <p className="text-center fs-4">
-        🚧 Tato stránka je ve výstavbě 🚧
-      </p>
+      <div className="fs-6 text-center">
+        <p>
+          Aplikace zpracovává polostrukturovaná data z transparentních ůčtů podporovaných bank a
+          následně tyto data analyzuje.
+        </p>
+        <p>
+          Projekt byl vytvořen jako bakalářská práce na <a href="https://fit.cvut.cz" target="_blank">Fakultě informačních technologií</a> ve spolupráci
+          s laboratoří <a href="https://opendatalab.cz" target="_blank">OpenDataLab</a>.
+        </p>
+        <p>Autor: <a href="https://www.linkedin.com/in/jakubjanecek12" target="_blank">Jakub Janeček</a></p>
+      </div>
     </Container>
   );
 }

@@ -4,11 +4,8 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional
 
-from sqlalchemy import Boolean, String, ForeignKeyConstraint, CheckConstraint
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, String, ForeignKeyConstraint, CheckConstraint, event
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Bank(Enum):
@@ -47,6 +44,30 @@ class Base(DeclarativeBase):
     pass
 
 
+class Account(Base):
+    __tablename__ = 'account'
+
+    # Fixed length 17 digits (prefix 6, separator 1, account number 10)
+    number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
+    bank: Mapped[Bank] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str]]
+    name_search: Mapped[Optional[str]]
+    owner: Mapped[Optional[str]]
+    owner_search: Mapped[Optional[str]]
+    balance: Mapped[Optional[float]]
+    currency: Mapped[Optional[str]] = mapped_column(String(20))
+    description: Mapped[Optional[str]]
+    created: Mapped[Optional[date]]
+    last_updated: Mapped[datetime]
+    last_fetched: Mapped[Optional[datetime]]
+    archived: Mapped[Any] = mapped_column(Boolean, default=False)
+    inserted: Mapped[datetime] = mapped_column(default=datetime.now())
+    transactions: Mapped[list["Transaction"]] = relationship()
+
+    def __repr__(self) -> str:
+        return f"Account({str(self.__dict__)})"
+
+
 def convert_to_searchable(value: Optional[str]) -> Optional[str]:
     """
     Convert string to lowercase and remove diacritics.
@@ -65,36 +86,14 @@ def convert_to_searchable(value: Optional[str]) -> Optional[str]:
     return value
 
 
-def default_name_search(context) -> Optional[str]:
-    return convert_to_searchable(context.get_current_parameters().get('name'))
+@event.listens_for(Account.name, 'set')
+def update_name_search(target: Account, value: Optional[str], oldvalue: Optional[str], initiator: Any):
+    target.name_search = convert_to_searchable(value)
 
 
-def default_owner_search(context) -> Optional[str]:
-    return convert_to_searchable(context.get_current_parameters().get('owner'))
-
-
-class Account(Base):
-    __tablename__ = 'account'
-
-    # Fixed length 17 digits (prefix 6, separator 1, account number 10)
-    number: Mapped[str] = mapped_column(String(17), CheckConstraint('LENGTH(number) = 17'), primary_key=True)
-    bank: Mapped[Bank] = mapped_column(primary_key=True)
-    name: Mapped[Optional[str]]
-    name_search: Mapped[Optional[str]] = mapped_column(default=default_name_search, onupdate=default_name_search)
-    owner: Mapped[Optional[str]]
-    owner_search: Mapped[Optional[str]] = mapped_column(default=default_owner_search, onupdate=default_owner_search)
-    balance: Mapped[Optional[float]]
-    currency: Mapped[Optional[str]] = mapped_column(String(20))
-    description: Mapped[Optional[str]]
-    created: Mapped[Optional[date]]
-    last_updated: Mapped[datetime]
-    last_fetched: Mapped[Optional[datetime]]
-    archived: Mapped[Any] = mapped_column(Boolean, default=False)
-    inserted: Mapped[datetime] = mapped_column(default=datetime.now())
-    transactions: Mapped[list["Transaction"]] = relationship()
-
-    def __repr__(self) -> str:
-        return f"Account({str(self.__dict__)})"
+@event.listens_for(Account.owner, 'set')
+def update_name_search(target: Account, value: Optional[str], oldvalue: Optional[str], initiator: Any):
+    target.owner_search = convert_to_searchable(value)
 
 
 class Transaction(Base):

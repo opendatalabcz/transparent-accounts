@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   db:
-    image: postgres
+    image: postgres:15.2
     restart: always
     environment:
       - POSTGRES_USER=${DB_USER:-postgres}
@@ -63,7 +63,7 @@ services:
       - analysis-api
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3.11
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin

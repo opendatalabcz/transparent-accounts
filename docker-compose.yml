@@ -29,15 +29,6 @@ services:
       - db
       - rabbitmq
 
-  scheduler:
-    build: ./scheduler
-    environment:
-      - TZ=Europe/Prague
-      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
-    depends_on:
-      - data-fetcher
-      - rabbitmq
-
   analysis-api:
     build: ./analysis-api
     environment:

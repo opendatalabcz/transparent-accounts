@@ -1,16 +1,17 @@
 import os
 
-from celery import Celery
 from celery.schedules import crontab
 
 
 class Config:
     broker_url = os.getenv('CELERY_BROKER_URL')
     timezone = os.getenv('TZ')
+    # Schedule for fetching accounts
+    # The place for adding new banks to be scheduled
     beat_schedule = {
         'fetch-csac-accounts-every-day': {
             'task': 'app.tasks.fetch_accounts',
-            'schedule': crontab(hour=3, minute=0),
+            'schedule': crontab(hour=17, minute=30),
             'args': ['0800']
         },
         'fetch-fio-accounts-every-day': {
@@ -24,7 +25,3 @@ class Config:
             'args': ['0100']
         }
     }
-
-
-app = Celery('scheduler')
-app.config_from_object(Config)

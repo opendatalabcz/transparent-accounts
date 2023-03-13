@@ -32,6 +32,10 @@ def is_updatable(account: Account) -> bool:
     :param account: Account
     :return: True if the account is updatable, False otherwise
     """
+    # Account is archived - not updatable
+    if account.archived:
+        return False
+
     updates = find_updates(account.number, account.bank)
 
     # Never updated

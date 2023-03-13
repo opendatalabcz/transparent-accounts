@@ -6,15 +6,15 @@ function Footer(): JSX.Element {
       <div className="p-3 mt-4 bg-light">
         <div className="row gx-3 align-items-center">
           <div className="col text-lg-start text-center">
-            <p className="mb-1">
+            <p className="mb-0">
               Janeček Jakub, <i>Zpracování transparentních účtů</i> [online]. Bakalářská práce.
               Praha: ČVUT, Fakulta informačních technologií &amp; OpenDataLab, 2023. [cit. TBD]
               Dostupné z TBA.
             </p>
-            <p className="mb-1">
+            <p className="mb-0">
               Zdroje dat: <i>vybrané banky</i>
             </p>
-            <p className="mb-1">
+            <p className="mb-0">
               Kontakt: <a href="mailto: janecja9@fit.cvut.cz">janecja9@fit.cvut.cz</a>
             </p>
             <p className="mb-0 fst-italic">

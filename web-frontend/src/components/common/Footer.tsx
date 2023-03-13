@@ -24,11 +24,11 @@ function Footer(): JSX.Element {
             </p>
           </div>
           <div className="col-lg-auto text-center">
-            <a href="https://fit.cvut.cz/" target="_blank">
+            <a href="https://fit.cvut.cz/" target="_blank" rel="noreferrer">
               <Fitcvut height="70px" width="200px" />
             </a>
             &nbsp;
-            <a href="https://opendatalab.cz/" target="_blank">
+            <a href="https://opendatalab.cz/" target="_blank" rel="noreferrer">
               <Opendatalab height="70px" width="100px" />
             </a>
           </div>

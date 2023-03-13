@@ -10,10 +10,22 @@ function AboutPage(): JSX.Element {
           následně tyto data analyzuje.
         </p>
         <p>
-          Projekt byl vytvořen jako bakalářská práce na <a href="https://fit.cvut.cz" target="_blank">Fakultě informačních technologií</a> ve spolupráci
-          s laboratoří <a href="https://opendatalab.cz" target="_blank">OpenDataLab</a>.
+          Projekt byl vytvořen jako bakalářská práce na{' '}
+          <a href="https://fit.cvut.cz" target="_blank" rel="noreferrer">
+            Fakultě informačních technologií
+          </a>{' '}
+          ve spolupráci s laboratoří{' '}
+          <a href="https://opendatalab.cz" target="_blank" rel="noreferrer">
+            OpenDataLab
+          </a>
+          .
         </p>
-        <p>Autor: <a href="https://www.linkedin.com/in/jakubjanecek12" target="_blank">Jakub Janeček</a></p>
+        <p>
+          Autor:{' '}
+          <a href="https://www.linkedin.com/in/jakubjanecek12" target="_blank" rel="noreferrer">
+            Jakub Janeček
+          </a>
+        </p>
       </div>
     </Container>
   );

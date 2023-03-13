@@ -12,7 +12,7 @@ from app.models import Bank
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
-CORS(app)  # TODO remove in production
+CORS(app)  # Enable cross-origin resource sharing
 
 bp = Blueprint('api', __name__)
 

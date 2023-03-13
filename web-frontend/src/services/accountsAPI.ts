@@ -1,6 +1,5 @@
 import { Account, Transaction, UpdateStatus } from '../types';
 
-// TODO
 const URL = `http://localhost:5000`;
 
 export const getAccount = async (bank_code: string, account_number: string): Promise<Account> => {

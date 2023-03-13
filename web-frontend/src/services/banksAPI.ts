@@ -1,6 +1,5 @@
 import { Bank } from '../types';
 
-// TODO
 const URL = `http://localhost:5000`;
 
 export const getBanks = async (): Promise<Array<Bank>> => {

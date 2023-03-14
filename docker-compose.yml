@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=${DB_USER:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME:-postgres}
       - TZ=Europe/Prague
     ports:
@@ -21,9 +21,9 @@ services:
     environment:
       - DB_HOST=db
       - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME:-postgres}
-      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq
       - TZ=Europe/Prague
     depends_on:
       - db
@@ -32,12 +32,12 @@ services:
   analysis-api:
     build: ./analysis-api
     environment:
-      - SECRET_KEY=${SECRET_KEY:-dev}
+      - SECRET_KEY=${SECRET_KEY}
       - DB_HOST=db
       - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME:-postgres}
-      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq
       - TZ=Europe/Prague
     ports:
       - "5000:5000"
@@ -60,8 +60,8 @@ services:
   rabbitmq:
     image: rabbitmq:3.11
     environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
       - TZ=Europe/Prague
     ports:
       - "5672:5672"
@@ -70,7 +70,7 @@ services:
   flower:
     image: mher/flower
     environment:
-      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq
       - FLOWER_PORT=8888
       - TZ=Europe/Prague
     ports:

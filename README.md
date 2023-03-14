@@ -13,12 +13,17 @@ Autor: [Jakub Janeček](https://github.com/KasenX)
 0. Nainstalovat [Docker](https://www.docker.com/)
 1. Stáhnout projekt
 2. `$ cd transparent-accounts`
-3. Vytvořit secrets (mimo secrets je možné do `.env` souboru přidat `DB_USER` a `DB_NAME`)
+3. Nastavit proměnné prostředí (pro inspiraci lze použít také soubor `.env.example`)
 
 ```bash
 $ cat > .env <<EOF
-DB_PASSWORD=secret123
-SECRET_KEY=secret456
+SECRET_KEY=secret123
+DB_PASSWORD=secret456
+DB_USER=postgres # Optional
+DB_NAME=postgres # Optional
+RABBITMQ_USER=admin
+RABBITMQ_PASS=secret789
+ANALYSIS_API_URL=http://localhost:5000
 EOF
 ```
 

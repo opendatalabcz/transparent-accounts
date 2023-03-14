@@ -1,6 +1,7 @@
+import Config from '../config';
 import { Account, Transaction, UpdateStatus } from '../types';
 
-const URL = `http://localhost:5000`;
+const URL = Config.API_URL;
 
 export const getAccount = async (bank_code: string, account_number: string): Promise<Account> => {
   const response: Response = await fetch(`${URL}/api/accounts/${bank_code}/${account_number}`);

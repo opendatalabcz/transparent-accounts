@@ -4,6 +4,10 @@ WORKDIR /web-frontend
 
 COPY . .
 
+# Create environment variables
+ARG API_URL
+RUN sh dockerize/create-env-file.sh REACT_APP_API_URL=$API_URL
+
 # Install dependencies
 RUN npm ci
 

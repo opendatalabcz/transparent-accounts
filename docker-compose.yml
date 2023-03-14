@@ -47,7 +47,11 @@ services:
       - rabbitmq
 
   web-frontend:
-    build: ./web-frontend
+    build:
+      context: ./web-frontend
+      dockerfile: dockerize/Dockerfile
+      args:
+        - API_URL=${ANALYSIS_API_URL}
     ports:
       - "3000:3000"
     depends_on:

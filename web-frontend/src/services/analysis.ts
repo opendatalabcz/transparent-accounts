@@ -1,38 +1,54 @@
 import { Analysis, Transaction, TransactionsAggregation } from '../types';
 import { format } from 'date-fns';
 
-// TODO REFACTOR AND DOCUMENT!
+// TODO: REFACTOR, DOCUMENT AND TEST
 export const analyse = (
   transactions: Array<Transaction>,
   balance: number | null,
   currency: string | null
 ): Analysis => {
   // Create an empty Analysis instance
-  const analysis: Analysis = {} as Analysis;
-  // Set known values
-  analysis.balance = balance;
-  analysis.currency = currency;
-  analysis.transactionsCount = transactions.length;
-  // Set initial values
-  analysis.incomingAmount = 0;
-  analysis.outgoingAmount = 0;
-  analysis.dateAggregation = [];
-  analysis.identifiers = [];
-  analysis.counterAccounts = [];
-
+  const analysis: Analysis = {
+    currency: currency,
+    transactionsCount: transactions.length,
+    incomingCount: 0,
+    outgoingCount: 0,
+    balance: balance,
+    incomingAmount: 0,
+    outgoingAmount: 0,
+    incomingAverage: null,
+    outgoingAverage: null,
+    incomingMedian: null,
+    outgoingMedian: null,
+    transparency: null,
+    withDescription: null,
+    identifiers: [],
+    counterAccounts: [],
+    dateAggregation: []
+  };
   // Create auxiliary variables
   const incomingTransactions: Array<Transaction> = [];
   const outgoingTransactions: Array<Transaction> = [];
   let describableTransactionCount: number = 0;
   let transparentDescriptionCount: number = 0;
   let descriptionCount: number = 0;
-  // Calculate first set of values
+  let currentBalance: number = balance || 0;
+  let lastDate: string = format(new Date(), 'yyyy-MM-d');
+  analysis.dateAggregation.push({
+    date: lastDate,
+    balance: currentBalance,
+    incomingCount: 0,
+    outgoingCount: 0
+  });
+  // Analyse
   transactions.forEach((transaction: Transaction) => {
+    // Incoming x outgoing transactions + descriptions percentages
     if (transaction.type === 'INCOMING') {
       incomingTransactions.push(transaction);
       analysis.incomingAmount += transaction.amount;
     } else if (transaction.type === 'OUTGOING') {
       outgoingTransactions.push(transaction);
+      analysis.outgoingAmount += transaction.amount;
       // Owner could have described the transaction
       if (
         transaction.category !== 'Platba kartou' &&
@@ -47,30 +63,8 @@ export const analyse = (
             : transparentDescriptionCount;
         descriptionCount = transaction.description !== '' ? descriptionCount + 1 : descriptionCount;
       }
-      analysis.outgoingAmount += transaction.amount;
     }
-  });
-  // Set calculated values
-  analysis.incomingCount = incomingTransactions.length;
-  analysis.outgoingCount = outgoingTransactions.length;
-  analysis.incomingAverage = analysis.incomingAmount / analysis.incomingCount;
-  analysis.outgoingAverage = analysis.outgoingAmount / analysis.outgoingCount;
-  analysis.incomingMedian = getMedian(incomingTransactions);
-  analysis.outgoingMedian = getMedian(outgoingTransactions);
-  analysis.transparency = transparentDescriptionCount / describableTransactionCount;
-  analysis.withDescription = descriptionCount / describableTransactionCount;
-
-  // Create auxiliary variables
-  let currentBalance: number = balance || 0;
-  let lastDate: string = format(new Date(), 'yyyy-MM-d');
-  analysis.dateAggregation.push({
-    date: lastDate,
-    balance: currentBalance,
-    incomingCount: 0,
-    outgoingCount: 0
-  });
-  // Calculate second set of values
-  transactions.forEach((transaction: Transaction) => {
+    // Date aggregation
     if (lastDate !== transaction.date) {
       lastDate = transaction.date;
       analysis.dateAggregation.push({
@@ -86,12 +80,7 @@ export const analyse = (
       transaction.type === 'INCOMING' ? 1 : 0;
     analysis.dateAggregation[analysis.dateAggregation.length - 1].outgoingCount +=
       transaction.type === 'OUTGOING' ? 1 : 0;
-  });
-  // Reverse the array
-  analysis.dateAggregation.reverse();
-
-  // Calculate third set of values
-  transactions.forEach((transaction: Transaction) => {
+    // Identifiers aggregation
     if (
       transaction.type === 'OUTGOING' &&
       transaction.ca_identifier !== null &&
@@ -130,6 +119,16 @@ export const analyse = (
       }
     }
   });
+  // Set calculated values
+  analysis.incomingCount = incomingTransactions.length;
+  analysis.outgoingCount = outgoingTransactions.length;
+  analysis.incomingAverage = analysis.incomingAmount / analysis.incomingCount;
+  analysis.outgoingAverage = analysis.outgoingAmount / analysis.outgoingCount;
+  analysis.incomingMedian = getMedian(incomingTransactions);
+  analysis.outgoingMedian = getMedian(outgoingTransactions);
+  analysis.transparency = transparentDescriptionCount / describableTransactionCount;
+  analysis.withDescription = descriptionCount / describableTransactionCount;
+  analysis.dateAggregation.reverse(); // Reverse the array
   // Sort by total amount
   analysis.identifiers.sort(
     (a: TransactionsAggregation, b: TransactionsAggregation): number =>
@@ -144,6 +143,7 @@ export const analyse = (
 };
 
 const getMedian = (transactions: Array<Transaction>): number | null => {
+  // Empty array -> no median
   if (transactions.length === 0) {
     return null;
   }

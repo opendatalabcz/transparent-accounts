@@ -17,7 +17,7 @@ CORS(app)  # Enable cross-origin resource sharing
 bp = Blueprint('api', __name__)
 
 # Setup logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s')
 
 # Connection to Celery
 celery = Celery('analysis-api', broker=os.getenv('CELERY_BROKER_URL'))

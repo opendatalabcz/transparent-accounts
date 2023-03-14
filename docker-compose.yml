@@ -67,16 +67,5 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  flower:
-    image: mher/flower
-    environment:
-      - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq
-      - FLOWER_PORT=8888
-      - TZ=Europe/Prague
-    ports:
-      - "8888:8888"
-    depends_on:
-      - rabbitmq
-
 volumes:
   db_data: {}

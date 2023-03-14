@@ -4,7 +4,7 @@ import logging
 from sqlalchemy import create_engine
 
 # Setup logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s')
 
 # Connection to database
 DB_USER = os.getenv('DB_USER')

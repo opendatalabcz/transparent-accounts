@@ -11,7 +11,7 @@ class Config:
     beat_schedule = {
         'fetch-csac-accounts-every-day': {
             'task': 'app.tasks.fetch_accounts',
-            'schedule': crontab(hour=17, minute=30),
+            'schedule': crontab(hour=3, minute=0),
             'args': ['0800']
         },
         'fetch-fio-accounts-every-day': {

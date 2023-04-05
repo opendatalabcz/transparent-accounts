@@ -44,7 +44,7 @@ def test_kb_transaction_to_class_incoming():
     assert t.amount == 0.01
     assert t.counter_account == 'Testovací uživatel'
     assert t.type == TransactionType.INCOMING
-    assert t.str_type == 'Příchozí platba'
+    assert t.type_str == 'Příchozí platba'
     assert t.variable_symbol == '1'
     assert t.constant_symbol == '2'
     assert t.specific_symbol == '3'
@@ -70,7 +70,7 @@ def test_kb_transaction_to_class_outgoing():
     assert t.amount == -10000
     assert t.counter_account is None
     assert t.type == TransactionType.OUTGOING
-    assert t.str_type == 'Odchozí platba'
+    assert t.type_str == 'Odchozí platba'
     assert t.variable_symbol == '0'
     assert t.constant_symbol == '0'
     assert t.specific_symbol == '12345'

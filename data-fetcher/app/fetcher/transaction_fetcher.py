@@ -8,7 +8,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from app.models import Account, Transaction, TransactionType, TransactionCategory
+from app.models import Account, Transaction, TransactionType, TransactionTypeDetail
+from app.utils import convert_to_searchable
 
 
 class TransactionFetcher(ABC):
@@ -31,8 +32,7 @@ class TransactionFetcher(ABC):
             return date(2015, 1, 1)
         return self.account.last_fetched.date()
 
-    @staticmethod
-    def get_date_to() -> date:
+    def get_date_to(self) -> date:
         """
         Return the date to which the transactions should be fetched. The date is ALWAYS yesterday.
         :return: the date to which the transactions should be fetched
@@ -82,15 +82,52 @@ class TransactionFetcher(ABC):
         return element.text if element is not None else None
 
     @staticmethod
-    def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
+    def determine_detail_type(transaction: Transaction) -> TransactionTypeDetail:
+        """
+        Determine the detail type of the transaction.
+        It is expected that every transaction fetcher has its own implementation of this method
+        and this concrete implementation is called as a fallback when the fetcher does not determine the detail type.
+        :param transaction: Transaction to determine the detail type for
+        :return: detail type if determined, None otherwise
+        """
+        # Only resolve INCOMING x OUTGOING transactions
+        return TransactionTypeDetail.INCOMING if transaction.type == TransactionType.INCOMING else TransactionTypeDetail.OUTGOING
+
+    @staticmethod
+    def determine_category(transaction: Transaction) -> Optional[str]:
         """
         Determine the category of the transaction.
-        It is expected that every transaction fetcher has its own implementation of this method
-        and this concrete implementation is called as a fallback when the fetcher does not determine the category.
         :param transaction: Transaction to determine the category for
         :return: category if determined, None otherwise
         """
         # Incoming transaction with a very small amount is considered as a message (probably hateful) for the receiver
-        if 1 >= transaction.amount > 0 and transaction.type == TransactionType.INCOMING:
-            return TransactionCategory.MESSAGE
+        if transaction.type == TransactionType.INCOMING and 1 >= transaction.amount > 0:
+            return 'Vzkaz'
+        # No more categories to determine for incoming transactions
+        if transaction.type == TransactionType.INCOMING:
+            return None
+        if TransactionFetcher.search(r'google', transaction.description):
+            return 'Google'
+        if TransactionFetcher.search(r'fb.me/ads', transaction.description):
+            return 'Facebook'
+        if TransactionFetcher.search(r'marketing|plakat|letak|billboard|banner|samolepky|vylep|tisk|propagac', transaction.description):
+            return 'Marketing'
+        if TransactionFetcher.search(r'pronajem', transaction.description):
+            return 'Pronájem    '
+        if TransactionFetcher.search(r'socialni síte|socialnich siti|soc. siti|socialni media', transaction.description):
+            return 'Sociální sítě'
+        if TransactionFetcher.search(r'podpis', transaction.description):
+            return 'Sběr podpisů'
         return None
+
+    @staticmethod
+    def search(pattern: str, string: str) -> bool:
+        """
+        Search for the pattern in the searchable version of the string.
+        Searchable version of the string is the string converted to lowercase and with diacritics removed.
+        :param pattern: pattern to search for
+        :param string: string to search in
+        :return: True if the pattern was found, False otherwise
+        """
+        string = convert_to_searchable(string)
+        return re.search(pattern, string) is not None

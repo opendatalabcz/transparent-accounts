@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 
 def float_from_cz(num: str) -> float:
@@ -41,3 +42,21 @@ def get_fully_qualified_acc_num(acc_num: str) -> str:
     number = number.zfill(10)
 
     return f"{prefix}-{number}"
+
+
+def convert_to_searchable(value: Optional[str]) -> Optional[str]:
+    """
+    Convert string to lowercase and remove diacritics.
+    """
+    if value is None:
+        return None
+
+    value = value.casefold()
+
+    chars_from = ['á', 'č', 'ď', 'é', 'ě', 'í', 'ň', 'ó', 'ř', 'š', 'ť', 'ú', 'ů', 'ý', 'ž']
+    chars_to = ['a', 'c', 'd', 'e', 'e', 'i', 'n', 'o', 'r', 's', 't', 'u', 'u', 'y', 'z']
+
+    for char_from, char_to in zip(chars_from, chars_to):
+        value = value.replace(char_from, char_to)
+
+    return value

@@ -7,6 +7,8 @@ from typing import Any, Optional
 from sqlalchemy import Boolean, String, ForeignKeyConstraint, CheckConstraint, event
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from app.utils import convert_to_searchable
+
 
 class Bank(Enum):
     CSAS = '0800'
@@ -26,8 +28,9 @@ class TransactionType(Enum):
         return TransactionType.INCOMING if num > 0 else TransactionType.OUTGOING
 
 
-class TransactionCategory(Enum):
-    MESSAGE = 'Vzkaz'
+class TransactionTypeDetail(Enum):
+    INCOMING = 'Příchozí platba'
+    OUTGOING = 'Odchozí platba'
     ATM = 'Výběr z bankomatu'
     FEE = 'Poplatek'
     TAX = 'Odvod daně'
@@ -68,31 +71,21 @@ class Account(Base):
         return f"Account({str(self.__dict__)})"
 
 
-def convert_to_searchable(value: Optional[str]) -> Optional[str]:
-    """
-    Convert string to lowercase and remove diacritics.
-    """
-    if value is None:
-        return None
-
-    value = value.casefold()
-
-    chars_from = ['á', 'č', 'ď', 'é', 'ě', 'í', 'ň', 'ó', 'ř', 'š', 'ť', 'ú', 'ů', 'ý', 'ž']
-    chars_to = ['a', 'c', 'd', 'e', 'e', 'i', 'n', 'o', 'r', 's', 't', 'u', 'u', 'y', 'z']
-
-    for char_from, char_to in zip(chars_from, chars_to):
-        value = value.replace(char_from, char_to)
-
-    return value
-
-
 @event.listens_for(Account.name, 'set')
 def update_name_search(target: Account, value: Optional[str], oldvalue: Optional[str], initiator: Any):
+    """
+    Convert the name to a searchable string and store it in the name_search column.
+    Searchable string is a string with all diacritics removed and all characters converted to lowercase.
+    """
     target.name_search = convert_to_searchable(value)
 
 
 @event.listens_for(Account.owner, 'set')
 def update_name_search(target: Account, value: Optional[str], oldvalue: Optional[str], initiator: Any):
+    """
+        Convert the owner to a searchable string and store it in the owner_search column.
+        Searchable string is a string with all diacritics removed and all characters converted to lowercase.
+        """
     target.owner_search = convert_to_searchable(value)
 
 
@@ -105,14 +98,15 @@ class Transaction(Base):
     currency: Mapped[str] = mapped_column(String(20))
     counter_account: Mapped[Optional[str]] = mapped_column(index=True)
     type: Mapped[TransactionType]
-    str_type: Mapped[str]
+    type_detail: Mapped[TransactionTypeDetail]
+    type_str: Mapped[str]
     variable_symbol: Mapped[str]
     constant_symbol: Mapped[str]
     specific_symbol: Mapped[str]
     description: Mapped[str]
     ca_identifier: Mapped[Optional[str]] = mapped_column(String(8), index=True)
     ca_name: Mapped[Optional[str]]
-    category: Mapped[Optional[TransactionCategory]]
+    category: Mapped[Optional[str]]
     account_number: Mapped[str]
     account_bank: Mapped[Bank]
 

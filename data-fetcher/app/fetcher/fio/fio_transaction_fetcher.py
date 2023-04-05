@@ -7,7 +7,7 @@ import requests
 
 from app.fetcher.fio.utils import get_fio_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Transaction, TransactionType, TransactionCategory
+from app.models import Transaction, TransactionType, TransactionTypeDetail
 from app.utils import float_from_cz
 
 
@@ -92,7 +92,7 @@ class FioTransactionFetcher(TransactionFetcher):
             currency=currency,
             counter_account=counter_account,
             type=t_type,
-            str_type=cells[2].get_text(strip=True),
+            type_str=cells[2].get_text(strip=True),
             variable_symbol=cells[6].get_text(strip=True),
             constant_symbol=cells[5].get_text(strip=True),
             specific_symbol=cells[7].get_text(strip=True),
@@ -102,6 +102,7 @@ class FioTransactionFetcher(TransactionFetcher):
             account_number=self.account.number,
             account_bank=self.account.bank
         )
+        transaction.type_detail = self.determine_detail_type(transaction)
         transaction.category = self.determine_category(transaction)
         return transaction
 
@@ -114,23 +115,23 @@ class FioTransactionFetcher(TransactionFetcher):
         return float_from_cz(balance), currency
 
     @staticmethod
-    def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
+    def determine_detail_type(transaction: Transaction) -> TransactionTypeDetail:
         """
-        Determine the category of the transaction.
-        :param transaction: Transaction to determine the category for
-        :return: category if determined, None otherwise
+        Determine the detail type of the transaction.
+        :param transaction: Transaction to determine the detail type for
+        :return: detail type if determined, None otherwise
         """
         # ATM withdrawals
-        if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.str_type and 'Výběr z bankomatu' in transaction.description:
-            return TransactionCategory.ATM
+        if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.type_str and 'Výběr z bankomatu' in transaction.description:
+            return TransactionTypeDetail.ATM
         # Fee
-        if transaction.type == TransactionType.OUTGOING and 'Poplatek' in transaction.str_type:
-            return TransactionCategory.FEE
+        if transaction.type == TransactionType.OUTGOING and 'Poplatek' in transaction.type_str:
+            return TransactionTypeDetail.FEE
         # Tax
-        if transaction.type == TransactionType.OUTGOING and 'daně' in transaction.str_type:
-            return TransactionCategory.TAX
+        if transaction.type == TransactionType.OUTGOING and 'daně' in transaction.type_str:
+            return TransactionTypeDetail.TAX
         # Card payments
-        if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.str_type:
-            return TransactionCategory.CARD
-        # Try default category determination
-        return TransactionFetcher.determine_category(transaction)
+        if transaction.type == TransactionType.OUTGOING and 'Karetní transakce' == transaction.type_str:
+            return TransactionTypeDetail.CARD
+        # Try default detail type determination
+        return TransactionFetcher.determine_detail_type(transaction)

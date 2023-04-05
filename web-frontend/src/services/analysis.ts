@@ -51,10 +51,10 @@ export const analyse = (
       analysis.outgoingAmount += transaction.amount;
       // Owner could have described the transaction
       if (
-        transaction.category !== 'Platba kartou' &&
-        transaction.category !== 'Výběr z bankomatu' &&
-        transaction.category !== 'Poplatek' &&
-        transaction.category !== 'Odvod daně'
+        transaction.type_detail !== 'Platba kartou' &&
+        transaction.type_detail !== 'Výběr z bankomatu' &&
+        transaction.type_detail !== 'Poplatek' &&
+        transaction.type_detail !== 'Odvod daně'
       ) {
         describableTransactionCount++;
         transparentDescriptionCount =

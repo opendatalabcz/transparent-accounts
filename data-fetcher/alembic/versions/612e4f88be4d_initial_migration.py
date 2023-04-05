@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: e67732f5a2c9
+Revision ID: 612e4f88be4d
 Revises: 
-Create Date: 2023-03-02 11:40:15.090374
+Create Date: 2023-04-05 09:46:24.372948
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e67732f5a2c9'
+revision = '612e4f88be4d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -52,14 +52,15 @@ def upgrade() -> None:
     sa.Column('currency', sa.String(length=20), nullable=False),
     sa.Column('counter_account', sa.String(), nullable=True),
     sa.Column('type', sa.Enum('INCOMING', 'OUTGOING', name='transactiontype'), nullable=False),
-    sa.Column('str_type', sa.String(), nullable=False),
+    sa.Column('type_detail', sa.Enum('INCOMING', 'OUTGOING', 'ATM', 'FEE', 'TAX', 'CARD', name='transactiontypedetail'), nullable=False),
+    sa.Column('type_str', sa.String(), nullable=False),
     sa.Column('variable_symbol', sa.String(), nullable=False),
     sa.Column('constant_symbol', sa.String(), nullable=False),
     sa.Column('specific_symbol', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('ca_identifier', sa.String(length=8), nullable=True),
     sa.Column('ca_name', sa.String(), nullable=True),
-    sa.Column('category', sa.Enum('MESSAGE', 'ATM', 'FEE', 'TAX', 'CARD', name='transactioncategory'), nullable=True),
+    sa.Column('category', sa.String(), nullable=True),
     sa.Column('account_number', sa.String(), nullable=False),
     sa.Column('account_bank', sa.Enum('CSAS', 'CSOB', 'FIO', 'KB', 'MONETA', 'RB', name='bank'), nullable=False),
     sa.ForeignKeyConstraint(['account_number', 'account_bank'], ['account.number', 'account.bank'], ),

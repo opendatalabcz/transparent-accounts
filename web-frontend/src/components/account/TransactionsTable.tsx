@@ -1,5 +1,12 @@
 import { useEffect, useMemo } from 'react';
-import { Column, useFilters, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
+import {
+  Column,
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { Table } from 'react-bootstrap';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import { transactionsColumns } from './TransactionsColumns';
@@ -33,10 +40,8 @@ function TransactionTable({ transactions, date, type, category, query }: Props):
           const rowValue = row.values[id];
           return rowValue !== undefined
             ? filterValue === '' ||
-                (filterValue === 'CARD' && rowValue === 'Platba kartou') ||
-                (filterValue === 'ATM' && rowValue === 'Výběr z bankomatu') ||
-                (filterValue === 'MESSAGE' && rowValue === 'Vzkaz') ||
-                (filterValue === 'NO-MESSAGE' && rowValue !== 'Vzkaz')
+                filterValue === rowValue ||
+                (filterValue === 'NO-MESSAGES' && rowValue !== 'Vzkaz')
             : true;
         });
       }

@@ -19,6 +19,7 @@ export interface Transaction {
   currency: string;
   type: 'INCOMING' | 'OUTGOING';
   type_detail: string;
+  type_str: string;
   counter_account: string | null;
   variable_symbol: string;
   constant_symbol: string;

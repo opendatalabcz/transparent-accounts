@@ -2,7 +2,7 @@ import re
 from datetime import datetime, timedelta
 from typing import Optional
 
-from app.models import convert_to_searchable, Account, UpdateStatus
+from app.models import Account, UpdateStatus
 from app.queries import find_updates
 
 
@@ -49,3 +49,21 @@ def is_updatable(account: Account) -> bool:
     # Last update failed or is pending more than 1 hour - retry
     return last_update.status == UpdateStatus.FAILURE or\
         (last_update.status == UpdateStatus.PENDING and last_update.started < datetime.now() - timedelta(hours=1))
+
+
+def convert_to_searchable(value: Optional[str]) -> Optional[str]:
+    """
+    Convert string to lowercase and remove diacritics.
+    """
+    if value is None:
+        return None
+
+    value = value.casefold()
+
+    chars_from = ['á', 'č', 'ď', 'é', 'ě', 'í', 'ň', 'ó', 'ř', 'š', 'ť', 'ú', 'ů', 'ý', 'ž']
+    chars_to = ['a', 'c', 'd', 'e', 'e', 'i', 'n', 'o', 'r', 's', 't', 'u', 'u', 'y', 'z']
+
+    for char_from, char_to in zip(chars_from, chars_to):
+        value = value.replace(char_from, char_to)
+
+    return value

@@ -69,7 +69,7 @@ def test_csas_transaction_to_class():
     assert t.amount == -10000
     assert t.counter_account == '000000-9876543210/3030'
     assert t.type == TransactionType.OUTGOING
-    assert t.str_type == 'Tuzemská odchozí úhrada'
+    assert t.type_str == 'Tuzemská odchozí úhrada'
     assert t.variable_symbol == ''
     assert t.constant_symbol == '0'
     assert t.specific_symbol == '12345'

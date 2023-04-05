@@ -7,7 +7,7 @@ import requests
 
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Account, Transaction, TransactionType, TransactionCategory
+from app.models import Account, Transaction, TransactionType, TransactionTypeDetail
 from app.utils import float_from_cz
 
 
@@ -85,7 +85,7 @@ class KBTransactionFetcher(TransactionFetcher):
         t_type = TransactionType.from_float(amount)
         # Split symbols by slashes and remove whitespaces from them
         variable_s, constant_s, specific_s = map(lambda s: s.replace(' ', ''),  t['symbols'].split('/'))
-        counter_account, str_type, description = self.parse_details(t['notes'], t_type)
+        counter_account, type_str, description = self.parse_details(t['notes'], t_type)
         # Parse the counter account identifier and name
         ca_identifier = self.parse_identifier(description)
         ca_name = self.fetch_identifier_name(ca_identifier) if ca_identifier else None
@@ -96,7 +96,7 @@ class KBTransactionFetcher(TransactionFetcher):
             currency=currency,
             counter_account=counter_account,
             type=t_type,
-            str_type=str_type,
+            type_str=type_str,
             variable_symbol=variable_s,
             constant_symbol=constant_s,
             specific_symbol=specific_s,
@@ -106,6 +106,7 @@ class KBTransactionFetcher(TransactionFetcher):
             account_number=self.account.number,
             account_bank=self.account.bank,
         )
+        transaction.type_detail = self.determine_detail_type(transaction)
         transaction.category = self.determine_category(transaction)
         return transaction
 
@@ -144,36 +145,36 @@ class KBTransactionFetcher(TransactionFetcher):
         description = ''
         match len(parsed):
             case 1:
-                str_type = parsed[0]
+                type_str = parsed[0]
             case 2:
                 # In case of incoming transaction, the counter account is always shown,
                 # while in case of outgoing transaction it is never shown
                 if t_type == TransactionType.INCOMING:
                     counter_account = parsed[0]
-                    str_type = parsed[1]
+                    type_str = parsed[1]
                     # Special case - if the type is 'Vklad' then values are swapped
-                    if str_type == 'Vklad':
-                        counter_account, str_type = str_type, counter_account
+                    if type_str == 'Vklad':
+                        counter_account, type_str = type_str, counter_account
                 else:
-                    str_type = parsed[0]
+                    type_str = parsed[0]
                     description = parsed[1]
             case 3:
                 counter_account = parsed[0]
-                str_type = parsed[1]
+                type_str = parsed[1]
                 description = parsed[2]
             case _:
                 raise AttributeError(string)
-        return counter_account, str_type, description
+        return counter_account, type_str, description
 
     @staticmethod
-    def determine_category(transaction: Transaction) -> Optional[TransactionCategory]:
+    def determine_detail_type(transaction: Transaction) -> Optional[TransactionTypeDetail]:
         """
-        Determine the category of the transaction.
-        :param transaction: Transaction to determine the category for
-        :return: category if determined, None otherwise
+        Determine the detail type of the transaction.
+        :param transaction: Transaction to determine the detail type for
+        :return: detail type if determined, None otherwise
         """
         # Fee
-        if transaction.type == TransactionType.OUTGOING and transaction.str_type == 'Poplatek':
-            return TransactionCategory.FEE
-        # Try default category determination
-        return TransactionFetcher.determine_category(transaction)
+        if transaction.type == TransactionType.OUTGOING and transaction.type_str == 'Poplatek':
+            return TransactionTypeDetail.FEE
+        # Try default detail type determination
+        return TransactionFetcher.determine_detail_type(transaction)

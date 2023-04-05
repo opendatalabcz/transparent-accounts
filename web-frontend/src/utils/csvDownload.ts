@@ -29,7 +29,7 @@ export const transactionToCSV = (data: Array<Transaction>) => {
             maximumFractionDigits: 2
           }),
           t.currency,
-          t.type_detail.replaceAll('"', '""'), // Escape double quotes,
+          t.type_str.replaceAll('"', '""'), // Escape double quotes,
           t.counter_account != null ? t.counter_account.replaceAll('"', '""') : null, // Escape double quotes
           t.variable_symbol,
           t.constant_symbol,
@@ -37,7 +37,7 @@ export const transactionToCSV = (data: Array<Transaction>) => {
           t.description.replaceAll('"', '""'), // Escape double quotes
           t.ca_identifier,
           t.ca_name != null ? t.ca_name.replaceAll('"', '""') : null, // Escape double quotes,
-          t.category
+          t.category != null ? t.category.replaceAll('"', '""') : null // Escape double quotes
         ]
           .map((v: string | null) => (v ? `"${v}"` : '')) // Quote values
           .join(',') // Comma-separated

@@ -1,3 +1,6 @@
+from app.models import Base
+import os
+
 from logging.config import fileConfig
 
 from alembic import context
@@ -13,9 +16,16 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# Connection to database
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_NAME = os.getenv('DB_NAME')
+DB_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
+config.set_main_option('sqlalchemy.url', DB_URI)
+
 # add your model's MetaData object here
 # for 'autogenerate' support
-from app.models import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

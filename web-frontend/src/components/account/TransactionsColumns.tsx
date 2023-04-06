@@ -25,7 +25,7 @@ export const transactionsColumns: Array<Column> = [
   },
   {
     Header: 'Typ',
-    accessor: 'type_detail',
+    accessor: 'type_str',
     Cell: ({ value }) => <span className="text-nowrap">{value}</span>
   },
   {

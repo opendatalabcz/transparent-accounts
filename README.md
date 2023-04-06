@@ -19,8 +19,8 @@ Autor: [Jakub Janeček](https://github.com/KasenX)
 $ cat > .env <<EOF
 SECRET_KEY=secret123
 DB_PASSWORD=secret456
-DB_USER=postgres
-DB_NAME=postgres
+DB_USER=postgres # Optional
+DB_NAME=postgres # Optional
 RABBITMQ_USER=admin
 RABBITMQ_PASS=secret789
 ANALYSIS_API_URL=http://localhost:5000/api

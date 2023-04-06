@@ -15,18 +15,32 @@ function AccountsPage(): JSX.Element {
   const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getAccounts({ query }).then((accounts: Array<Account>) => {
-      setAccounts(accounts);
-      setLoading(false);
-    });
+    search();
   }, []);
 
   const search = async () => {
+    setLoading(true);
     // Remove unnecessary whitespaces
     const cleanQuery: string = query.trim();
+    // Query is empty, show most recently updated accounts and remove query parameter from URL
+    if (cleanQuery === '') {
+      getAccounts({ limit: 20 }).then((accounts: Array<Account>) => {
+        setAccounts(accounts);
+        setLoading(false);
+      });
+      // Remove query parameter from URL
+      if (searchParams.has('query')) {
+        searchParams.delete('query');
+        setSearchParams(searchParams);
+      }
+      return;
+    }
     // Update URL parameters and search for accounts
     setSearchParams({ query: cleanQuery });
-    getAccounts({ query: cleanQuery }).then((accounts: Array<Account>) => setAccounts(accounts));
+    getAccounts({ query: cleanQuery }).then((accounts: Array<Account>) => {
+      setAccounts(accounts);
+      setLoading(false);
+    });
   };
 
   return (
@@ -35,7 +49,13 @@ function AccountsPage(): JSX.Element {
         <SearchBar query={query} setQuery={setQuery} search={search} />
       </div>
       <div className="row">
-        {isLoading ? <Skeleton count={20} height={25} /> : <AccountsTable accounts={accounts} />}
+        {accounts.length === 0 && !isLoading ? (
+          <></>
+        ) : isLoading ? (
+          <Skeleton count={20} height={25} />
+        ) : (
+          <AccountsTable accounts={accounts} />
+        )}
       </div>
     </Container>
   );

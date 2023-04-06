@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Wait for database to be ready
+/wait
+
 # Run migrations
 venv3/bin/alembic upgrade head
 

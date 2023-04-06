@@ -5,9 +5,9 @@ services:
     image: postgres:15.2
     restart: always
     environment:
-      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME:-postgres}
+      - POSTGRES_DB=${DB_NAME}
       - TZ=Europe/Prague
     ports:
       - "5432:5432"
@@ -20,11 +20,12 @@ services:
       dockerfile: dockerize/Dockerfile
     environment:
       - DB_HOST=db
-      - DB_USER=${DB_USER:-postgres}
+      - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME:-postgres}
+      - DB_NAME=${DB_NAME}
       - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq
       - TZ=Europe/Prague
+      - WAIT_HOSTS=db:5432
     depends_on:
       - db
       - rabbitmq
@@ -34,9 +35,9 @@ services:
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DB_HOST=db
-      - DB_USER=${DB_USER:-postgres}
+      - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME:-postgres}
+      - DB_NAME=${DB_NAME}
       - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq
       - TZ=Europe/Prague
     ports:

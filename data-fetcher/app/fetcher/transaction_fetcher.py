@@ -49,16 +49,15 @@ class TransactionFetcher(ABC):
     def parse_identifier(string: str) -> Optional[str]:
         """
         Parse the personal identification number (IČO) from the string.
-        Identifier is an 8-digit number.
+        Identifier is an 8-digit number. Identifier is parsed only if the string contains the word 'IČ'.
         :param string:
         :return: the parsed identifier or None if the identifier was not found
         """
-        # Pattern is saying that we are looking for an exactly 8-digit sequence
-        # Preceded by start of string, whitespace or colon and followed by end of string, whitespace or comma
-        # Example: "IČO: 12345678" or "IČO:12345678" or "12345678 ..."
-        pattern = r'(?:^|\s|:)([0-9]{8})(?:$|\s|,)'
+        # Pattern is saying that we are looking for an exactly 8-digit sequence (not longer, not shorter)
+        pattern = r'((?<![0-9])[0-9]{8}(?![0-9]))'
         search = re.search(pattern, string)
-        return search.group(1) if search is not None else None
+        # Identifier found and string contains the word IČ
+        return search.group(1) if search is not None and 'IČ' in string else None
 
     @staticmethod
     def fetch_identifier_name(identifier: str) -> Optional[str]:

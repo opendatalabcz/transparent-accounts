@@ -112,7 +112,7 @@ class TransactionFetcher(ABC):
         if TransactionFetcher.search(r'marketing|plakat|letak|billboard|banner|samolepky|vylep|tisk|propagac', transaction.description):
             return 'Marketing'
         if TransactionFetcher.search(r'pronajem', transaction.description):
-            return 'Pronájem    '
+            return 'Pronájem'
         if TransactionFetcher.search(r'socialni síte|socialnich siti|soc. siti|socialni media', transaction.description):
             return 'Sociální sítě'
         if TransactionFetcher.search(r'podpis', transaction.description):

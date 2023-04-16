@@ -30,6 +30,8 @@ EOF
 4. `$ docker-compose up`
 5. Otevřít v prohlížeči: http://localhost:3000
 
+Fetchování účtů probíhá každý den ve 3:00 (plánování lze změnit v [konfiguračním souboru](data-fetcher/app/config.py)). Až po té bude k dispozici seznam účtů a seznam podporovaných bank.
+
 ## Contributing
 
 🚧

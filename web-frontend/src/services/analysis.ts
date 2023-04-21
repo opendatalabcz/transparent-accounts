@@ -142,7 +142,7 @@ export const analyse = (
   return analysis;
 };
 
-const getMedian = (transactions: Array<Transaction>): number | null => {
+export const getMedian = (transactions: Array<Transaction>): number | null => {
   // Empty array -> no median
   if (transactions.length === 0) {
     return null;

@@ -46,12 +46,16 @@ def get_fully_qualified_acc_num(acc_num: str) -> str:
 
 def convert_to_searchable(value: Optional[str]) -> Optional[str]:
     """
-    Convert string to lowercase and remove diacritics.
+    Convert string to lowercase, strip whitespace and remove punctuation and diacritics.
     """
     if value is None:
         return None
 
     value = value.casefold()
+    value = value.strip()
+    # Replace multiple whitespace characters with a single space
+    value = ' '.join(value.split())
+    value = value.replace(',', '')
 
     chars_from = ['á', 'č', 'ď', 'é', 'ě', 'í', 'ň', 'ó', 'ř', 'š', 'ť', 'ú', 'ů', 'ý', 'ž']
     chars_to = ['a', 'c', 'd', 'e', 'e', 'i', 'n', 'o', 'r', 's', 't', 'u', 'u', 'y', 'z']

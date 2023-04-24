@@ -32,7 +32,11 @@ class KBTransactionFetcher(TransactionFetcher):
         # First request to get the number of records
         response_data = s.post(self.API_URL, json=body).json()
         # Set the limit to the number of records
-        body['limit'] = response_data['payload']['pagination']['rowsCount']
+        pagination = response_data['payload']['pagination']
+        # No transactions to fetch
+        if pagination is None:
+            return []
+        body['limit'] = pagination['rowsCount']
         # Second request to get all records
         response_data = s.post(self.API_URL, json=body).json()
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Container, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
-import { BsInfoCircle, BsQuestionCircle } from 'react-icons/bs';
+import { BsQuestionCircle } from 'react-icons/bs';
 import { BiErrorCircle } from 'react-icons/bi';
 import { shortenAccNum } from '../../utils/accountNumberUtils';
 import { Account } from '../../types';
@@ -76,26 +76,20 @@ function AccountMain({ account, tab, setTab }: Props): JSX.Element {
           </Button>
         </div>
         <div className="separator ms-2">
-          <Button onClick={sendUpdate} disabled={!updatable}>
-            Aktualizovat
-            {isUpdating && (
-              <Spinner as="span" animation="border" size="sm" role="status" className="ms-1" />
-            )}
-          </Button>
+          <OverlayTrigger
+            placement="auto"
+            show={isUpdating}
+            overlay={
+              <Tooltip>Právě probíha aktualizace účtu. To může trvat jednotky sekund až minut. Zkuste prosím obnovit stránku.</Tooltip>
+            }>
+            <Button onClick={sendUpdate} disabled={!updatable}>
+              Aktualizovat
+              {isUpdating && (
+                <Spinner as="span" animation="border" size="sm" role="status" className="ms-1" />
+              )}
+            </Button>
+          </OverlayTrigger>
         </div>
-        {isUpdating && (
-          <div className="ms-2">
-            <OverlayTrigger
-              placement="bottom"
-              overlay={
-                <Tooltip>Právě probíha aktualizace účtu. To může trvat jednotky sekund až minut. Zkuste prosím obnovit stránku.</Tooltip>
-              }>
-              <span className="update-icon">
-                <BsInfoCircle />
-              </span>
-            </OverlayTrigger>
-          </div>
-        )}
         {isError && (
           <div className="ms-2 text-danger">
             <OverlayTrigger

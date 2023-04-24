@@ -54,7 +54,7 @@ function AccountPage(): JSX.Element {
           )}
         </div>
       ) : (
-        <p className="mt-5 text-center">Prosím <span className="text-primary fw-bold text-uppercase">aktualizujte</span> účet.</p>
+        <p className="mt-5 text-center">Prosím <span className="fw-bold text-uppercase">aktualizujte</span> účet.</p>
       )}
     </main>
   );

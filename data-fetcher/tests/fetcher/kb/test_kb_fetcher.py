@@ -10,75 +10,32 @@ def test_parse_account_details():
     assert KBAccountFetcher.parse_details('majitel účtu: BOJIŠTĚ s.r.o., \r\n                                   číslo účtu: 115-7210610247/0100, \r\n                                   měna: CZK') == ('BOJIŠTĚ s.r.o.', '115-7210610247', 'CZK')
 
 
+def test_parse_date():
+    assert KBTransactionFetcher.parse_date({'date': '17. 3.', 'year': ''}) == date(2023, 3, 17)
+    assert KBTransactionFetcher.parse_date({'date': '1. 1.', 'year': '2022'}) == date(2022, 1, 1)
+    assert KBTransactionFetcher.parse_date({'date': '31. 12.', 'year': '2021'}) == date(2021, 12, 31)
+
+
 def test_parse_money_amount():
     assert KBTransactionFetcher.parse_money_amount('100,00 CZK') == (100, 'CZK')
     assert KBTransactionFetcher.parse_money_amount('-6,00 CZK') == (-6, 'CZK')
-    assert KBTransactionFetcher.parse_money_amount('4 186,33 EUR') == (4186.33, 'EUR')
-    assert KBTransactionFetcher.parse_money_amount('-1 100,00 EUR') == (-1100, 'EUR')
+    assert KBTransactionFetcher.parse_money_amount('4 186,33 EUR') == (4186.33, 'EUR')
+    assert KBTransactionFetcher.parse_money_amount('-1 100,00 EUR') == (-1100, 'EUR')
     assert KBTransactionFetcher.parse_money_amount('-2,47 EUR') == (-2.47, 'EUR')
     assert KBTransactionFetcher.parse_money_amount('0,01 CZK') == (0.01, 'CZK')
-    assert KBTransactionFetcher.parse_money_amount('1 567 601,25 CZK') == (1567601.25, 'CZK')
-    assert KBTransactionFetcher.parse_money_amount('-1 567 601,25 CZK') == (-1567601.25, 'CZK')
+    assert KBTransactionFetcher.parse_money_amount('1 567 601,25 CZK') == (1567601.25, 'CZK')
+    assert KBTransactionFetcher.parse_money_amount('-1 567 601,25 CZK') == (-1567601.25, 'CZK')
 
 
-def test_parse_date():
-    assert KBTransactionFetcher.parse_date('01.&nbsp;01.&nbsp;2022') == date(2022, 1, 1)
+def test_parse_symbols():
+    assert KBTransactionFetcher.parse_symbols('VS: 1, KS: 2, SS: 3') == ('1', '2', '3')
+    assert KBTransactionFetcher.parse_symbols('SS: 1, VS: 2, KS: 3') == ('2', '3', '1')
+    assert KBTransactionFetcher.parse_symbols('VS: 111, KS: 222') == ('111', '222', '')
+    assert KBTransactionFetcher.parse_symbols('VS: 123456780') == ('123456780', '', '')
+    assert KBTransactionFetcher.parse_symbols('KS: 123456780') == ('', '123456780', '')
+    assert KBTransactionFetcher.parse_symbols('SS: 123456780') == ('', '', '123456780')
 
 
 def test_parse_details():
-    assert KBTransactionFetcher.parse_details('1<br />2<br />3', TransactionType.INCOMING) == ('1', '2', '3')
-    assert KBTransactionFetcher.parse_details('1<br />2', TransactionType.INCOMING) == ('1', '2', '')
-    assert KBTransactionFetcher.parse_details('1<br />2', TransactionType.OUTGOING) == (None, '1', '2')
-    assert KBTransactionFetcher.parse_details('1', TransactionType.OUTGOING) == (None, '1', '')
-
-
-def test_kb_transaction_to_class_incoming():
-    raw = {
-            "id": "361-24122022 1086 086143 100448",
-            "date": "24.&nbsp;11.&nbsp;2022",
-            "amount": "0,01 EUR",
-            "symbols": "1 / 2 / 3",
-            "notes": "Testovací uživatel<br />Příchozí platba<br />Testovací popis"
-        }
-
-    account = Account(number='000000-0123456789')
-    fetcher = KBTransactionFetcher(account)
-
-    t = fetcher.transaction_to_class(raw)
-
-    assert t.date == date(2022, 11, 24)
-    assert t.amount == 0.01
-    assert t.counter_account == 'Testovací uživatel'
-    assert t.type == TransactionType.INCOMING
-    assert t.type_str == 'Příchozí platba'
-    assert t.variable_symbol == '1'
-    assert t.constant_symbol == '2'
-    assert t.specific_symbol == '3'
-    assert t.description == 'Testovací popis'
-    assert t.account_number == '000000-0123456789'
-
-
-def test_kb_transaction_to_class_outgoing():
-    raw = {
-            "id": "361-24122022 1086 086143 100448",
-            "date": "24.&nbsp;11.&nbsp;2022",
-            "amount": "-10 000,00 CZK",
-            "symbols": "0 / 0 / 12345",
-            "notes": "Odchozí platba<br />Testovací popis"
-        }
-
-    account = Account(number='000000-0123456789')
-    fetcher = KBTransactionFetcher(account)
-
-    t = fetcher.transaction_to_class(raw)
-
-    assert t.date == date(2022, 11, 24)
-    assert t.amount == -10000
-    assert t.counter_account is None
-    assert t.type == TransactionType.OUTGOING
-    assert t.type_str == 'Odchozí platba'
-    assert t.variable_symbol == '0'
-    assert t.constant_symbol == '0'
-    assert t.specific_symbol == '12345'
-    assert t.description == 'Testovací popis'
-    assert t.account_number == '000000-0123456789'
+    assert KBTransactionFetcher.parse_details({'info': {'title': 'Odchozí platba', 'transparentAccountInfo': ''}, 'amount': {'type': 'expense'}}) == (None, 'Odchozí platba', '')
+    assert KBTransactionFetcher.parse_details({'info': {'title': 'Jakub Janeček', 'transparentAccountInfo': 'Poznámka'}, 'amount': {'type': 'income'}}) == ('Jakub Janeček', 'Příchozí platba', 'Poznámka')

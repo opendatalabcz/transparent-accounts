@@ -1,170 +1,116 @@
-import hashlib
 import re
 from datetime import datetime, date
 from typing import Optional
 
 import requests
+import bs4
 
 from app.fetcher.kb.utils import get_kb_formatted_acc_num
 from app.fetcher.transaction_fetcher import TransactionFetcher
-from app.models import Account, Transaction, TransactionType, TransactionTypeDetail
+from app.models import Transaction, TransactionType, TransactionTypeDetail
 from app.utils import float_from_cz
 
 
 class KBTransactionFetcher(TransactionFetcher):
 
     URL = 'https://www.kb.cz/cs/transparentni-ucty/{}'
-    API_URL = 'https://www.kb.cz/transparentsapi/transactions/{}?skip={}&token={}'
-    API_BALANCE_URL = 'https://www.kb.cz/transparentsapi/balance/{}'
-    SALT = 'ab5ac41b-4d25-4c49-a97b-a160d0b41204'
-    RECORDS_PER_REQUEST = 50
-
-    def __init__(self, account: Account):
-        super().__init__(account)
-        # Modify the account number so that it can be used in KB API
-        self.acc_num = get_kb_formatted_acc_num(self.account.number, True)
-        # It is crucial to use session here because of the required session cookies
-        self.s = requests.Session()
+    API_URL = 'https://www.kb.cz/api/transparentaccount/detail'
 
     def fetch(self) -> list[Transaction]:
-        # Set account balance
-        self.account.balance = self.fetch_balance()
-        # Get initial pure token and set session cookies by accessing the html page
-        pure_token = self.get_token_and_set_cookies()
-        # Get transactions
-        fetched = self.fetch_transactions(pure_token)
-        # Close the session
-        self.s.close()
+        # Scrape and set account info
+        self.scrape_account_info()
+        # Prepare body
+        body = {
+            'query': get_kb_formatted_acc_num(self.account.number, True),
+            'limit': 1,
+            'offset': 0,
+            'cultureCode': 'cs-CZ',
+            'maxVisibleDays': (date.today() - self.get_date_from()).days + 1
+        }
+        # Prepare session
+        s = requests.Session()
+        # First request to get the number of records
+        response_data = s.post(self.API_URL, json=body).json()
+        # Set the limit to the number of records
+        body['limit'] = response_data['payload']['pagination']['rowsCount']
+        # Second request to get all records
+        response_data = s.post(self.API_URL, json=body).json()
 
-        transactions = map(self.transaction_to_class, fetched)
+        return list(map(self.transaction_to_class, response_data['payload']['data']))
 
-        # Filter out transactions that does not belong to the desired interval
-        return list(filter(self.check_date_interval, transactions))
-
-    def get_token_and_set_cookies(self) -> str:
-        # First request to get the initial pure token and session cookies
-        url = self.URL.format(get_kb_formatted_acc_num(self.account.number, False))
-        response = self.s.get(url)
-        # Parse the initial pure token using regex
-        pattern = r"token: '(.*)'"
-        search = re.search(pattern, response.text)
-        return search.group(1)
-
-    def fetch_balance(self) -> float:
-        url = self.API_BALANCE_URL.format(self.acc_num)
-        response = requests.get(url).json()
-        balance, _ = self.parse_money_amount(response['balance'])
-        return balance
-
-    def fetch_transactions(self, pure_token) -> list:
-        """
-        Return a list of transactions in a dictionary format.
-        Fetch KB API as long as there are records or until we encounter transactions older than we are interested in.
-        """
-        result = []
-        skip = 0
-
-        while True:
-            # The resulting token is a sha256 of the static salt and the pure token
-            token = hashlib.sha256((self.SALT + pure_token).encode('utf-8')).hexdigest()
-            url = self.API_URL.format(self.acc_num, skip, token)
-            response_data = self.s.get(url).json()
-            # Add response to the result list
-            result += response_data['items']
-            # No more records to fetch - either the KB API announced the end of records
-            # or we have encountered a transaction that is older than we are interested in
-            if not response_data['loadMore'] or self.parse_date(result[-1]['date']) < self.get_date_from():
-                return result
-            # Pure token for the next request
-            pure_token = response_data['token']
-            skip += self.RECORDS_PER_REQUEST
+    def scrape_account_info(self) -> None:
+        response_text = requests.get(self.URL.format(get_kb_formatted_acc_num(self.account.number, False))).text
+        # Set balance
+        balance = re.search(r'\"balance\":\s+{\s+\"amount\":\s+\"(-?[\d\s]+,[\d\s]+) ([A-Z]{3})\"', response_text).group(1)
+        self.account.balance = float_from_cz(balance)
+        # Set description
+        soup = bs4.BeautifulSoup(response_text, 'html.parser')
+        self.account.description = soup.select_one('div.mb-4.text-base.text-grey-200').get_text(strip=True)
 
     def transaction_to_class(self, t: dict) -> Transaction:
-        t_date = self.parse_date(t['date'])
-        amount, currency = self.parse_money_amount(t['amount'])
-        t_type = TransactionType.from_float(amount)
-        # Split symbols by slashes and remove whitespaces from them
-        variable_s, constant_s, specific_s = map(lambda s: s.replace(' ', ''),  t['symbols'].split('/'))
-        counter_account, type_str, description = self.parse_details(t['notes'], t_type)
+        amount, currency = self.parse_money_amount(t['amount']['value'])
+        counter_account, type_str, description = self.parse_details(t)
+        variable_symbol, constant_symbol, specific_symbol = self.parse_symbols(t['info']['additionalInfo'])
         # Parse the counter account identifier and name
         ca_identifier = self.parse_identifier(description)
         ca_name = self.fetch_identifier_name(ca_identifier) if ca_identifier else None
 
         transaction = Transaction(
-            date=t_date,
+            date=self.parse_date(t),
             amount=amount,
             currency=currency,
             counter_account=counter_account,
-            type=t_type,
+            type=TransactionType.from_float(amount),
             type_str=type_str,
-            variable_symbol=variable_s,
-            constant_symbol=constant_s,
-            specific_symbol=specific_s,
+            variable_symbol=variable_symbol,
+            constant_symbol=constant_symbol,
+            specific_symbol=specific_symbol,
             description=description,
             ca_identifier=ca_identifier,
             ca_name=ca_name,
             account_number=self.account.number,
-            account_bank=self.account.bank,
+            account_bank=self.account.bank
         )
         transaction.type_detail = self.determine_detail_type(transaction)
         transaction.category = self.determine_category(transaction)
         return transaction
 
     @staticmethod
+    def parse_date(t: dict) -> date:
+        day, month = re.search(r'([0-9]{1,2})\. ([0-9]{1,2})\.', t['date']).groups()
+        year = t['year'] if t['year'] != '' else datetime.now().year
+        return date(int(year), int(month), int(day))
+
+    @staticmethod
     def parse_money_amount(string: str) -> tuple[float, str]:
         """
         Parse amount and currency from the KB API transaction amount.
-        Example of KB API transaction amount: '4 186,33 EUR'.
+        Example of KB API transaction amount: '-19 057,50 CZK'.
         """
         # Parse the amount and currency using regex
-        pattern = r'(-?[\d ]+,[\d ]+) ([A-Z]{3})'
+        pattern = r'(-?[\d\s]+,[\d\s]+) ([A-Z]{3})'
         search = re.search(pattern, string)
         amount, currency = search.groups()
         return float_from_cz(amount), currency
 
     @staticmethod
-    def parse_date(string: str) -> date:
-        """
-        Parse date from the KB API to the date object.
-        Example of KB API date: '01.&nbsp;01.&nbsp;2022'.
-        """
-        return datetime.strptime(string, '%d.&nbsp;%m.&nbsp;%Y').date()
+    def parse_symbols(string: str) -> tuple[str, str, str]:
+        # Parse the symbols using regex
+        pattern = r'VS: ([0-9]{1,10})'
+        variable_symbol = re.search(pattern, string).group(1) if re.search(pattern, string) else ''
+        pattern = r'KS: ([0-9]{1,10})'
+        constant_symbol = re.search(pattern, string).group(1) if re.search(pattern, string) else ''
+        pattern = r'SS: ([0-9]{1,10})'
+        specific_symbol = re.search(pattern, string).group(1) if re.search(pattern, string) else ''
+        return variable_symbol, constant_symbol, specific_symbol
 
     @staticmethod
-    def parse_details(string: str, t_type: TransactionType) -> tuple[str | None, str, str]:
-        """
-        Parse counter_account, type and description from the KB API to the three separate variables.
-        Example of KB API details string: 'A<br />B<br />C'.
-        :param string: details
-        :param t_type: type of transaction
-        :return: counter_account, type and description
-        :raises AttributeError: unsupported format of details string
-        """
-        parsed = string.split('<br />')
-        counter_account = None
-        description = ''
-        match len(parsed):
-            case 1:
-                type_str = parsed[0]
-            case 2:
-                # In case of incoming transaction, the counter account is always shown,
-                # while in case of outgoing transaction it is never shown
-                if t_type == TransactionType.INCOMING:
-                    counter_account = parsed[0]
-                    type_str = parsed[1]
-                    # Special case - if the type is 'Vklad' then values are swapped
-                    if type_str == 'Vklad':
-                        counter_account, type_str = type_str, counter_account
-                else:
-                    type_str = parsed[0]
-                    description = parsed[1]
-            case 3:
-                counter_account = parsed[0]
-                type_str = parsed[1]
-                description = parsed[2]
-            case _:
-                raise AttributeError(string)
-        return counter_account, type_str, description
+    def parse_details(t: dict) -> tuple[Optional[str], str, str]:
+        # Outgoing transaction, no info about the counter account
+        if t['amount']['type'] == 'expense':
+            return None, t['info']['title'], t['info']['transparentAccountInfo']
+        # Incoming transaction
+        return t['info']['title'] if t['info']['title'] != '' else None, 'Příchozí platba', t['info']['transparentAccountInfo']
 
     @staticmethod
     def determine_detail_type(transaction: Transaction) -> Optional[TransactionTypeDetail]:

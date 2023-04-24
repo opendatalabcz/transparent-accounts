@@ -1,7 +1,13 @@
 from datetime import date
 
-from app.fetcher.kb import KBTransactionFetcher
+from app.fetcher.kb import KBAccountFetcher, KBTransactionFetcher
 from app.models import Account, TransactionType
+
+
+def test_parse_account_details():
+    assert KBAccountFetcher.parse_details('majitel účtu: \"Hnutí Praha - Kunratice\", \r\n                                   číslo účtu: 115-5000730217/0100, \r\n                                   měna: CZK') == ('\"Hnutí Praha - Kunratice\"', '115-5000730217', 'CZK')
+    assert KBAccountFetcher.parse_details('majitel účtu: Habžanský Jiří, \r\n                                   číslo účtu: 115-9594910247/0100, \r\n                                   měna: CZK') == ('Habžanský Jiří', '115-9594910247', 'CZK')
+    assert KBAccountFetcher.parse_details('majitel účtu: BOJIŠTĚ s.r.o., \r\n                                   číslo účtu: 115-7210610247/0100, \r\n                                   měna: CZK') == ('BOJIŠTĚ s.r.o.', '115-7210610247', 'CZK')
 
 
 def test_parse_money_amount():

@@ -1,6 +1,12 @@
 # Zpracování transparentních účtů
 
-Aplikace zpracovává polostrukturovaná data z transparentních ůčtů podporovaných bank a následně tyto data analyzuje.
+Transparentní bankovní účty jsou jedním z nástrojů podporující otevřenost při financování.
+Politické subjekty mají povinnost používání transparentních účtů uloženou ze zákona.
+Takové účty standardně obsahují velké množství transakcí, a proto jejich detailní analýza
+může přinést zajímavé informace. Tato webová aplikace zpracovává data transparentních účtů
+z webových stránek bank. Aplikace následně získaná data analyzuje. Součástí analýzy jsou
+statistické údaje, agregace transakcí podle protistrany s vyhledáním protistrany v
+transakcích jiných transparentních účtů a vizualizace transakcí v čase.
 
 Projekt byl vytvořen jako bakalářská práce na [Fakultě informačních technologií](https://fit.cvut.cz/) ve spolupráci s laboratoří [OpenDataLab](https://opendatalab.cz/).
 
@@ -32,6 +38,10 @@ EOF
 
 Fetchování účtů probíhá každý den ve 3:00 (plánování lze změnit v [konfiguračním souboru](data-fetcher/app/config.py)). Až po té bude k dispozici seznam účtů a seznam podporovaných bank.
 
-## Contributing
+## Přidání podpory pro další banku
 
-🚧
+Přidání podpory pro další banku je potřeba provést v komponentě [fetcher](data-fetcher/app/fetcher), která má za úkol získávání dat.
+
+Aby aplikace mohla plně pracovat s transparentními účty další banky, je potřeba implementovat, jak získávání transparentních účtů, tak získávání transakcí. Do adresáře [fetcher](data-fetcher/app/fetcher) je potřeba přidat nový balíček, který bude obsahovat dvě třídy. První třída bude dědit z abstraktní třídy [AccountFetcher](data-fetcher/app/fetcher/account_fetcher.py) a bude se starat o získání dat o transparentních účtech z dané banky. Druhá třída bude dědit z abstraktní třídy [TransactionFetcher](data-fetcher/app/fetcher/transaction_fetcher.py) a bude mít za úkol získávání transakcí z daného transparentního účtu. Při implementaci nových tříd je vhodné využít pomocné funkce implementované v abstraktních třídách a zároveň se inspirovat u implementací tříd podporovaných bank. Mimo tyto dvě hlavní třídy je možné mít v balíčku další pomocné třídy nebo funkce. Testy by měly být umístěny do adresáře [tests](data-fetcher/tests).
+
+Až bude implementace nových tříd funkční, je potřeba tyto třídy zaregistrovat v souboru [tasks.py](data-fetcher/app/tasks.py). V případě, že se bude jednat o novou banku poskytující transparentní účty, bude ještě potřeba rozšířit výčet bank nacházející se v souboru [tasks.py](data-fetcher/app/tasks.py) a doplnit metadata o bance do souboru [banks.json](analysis-api/banks.json) v komponentě [analysis-api](analysis-api).

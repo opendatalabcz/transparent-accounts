@@ -4,10 +4,15 @@ function AboutPage(): JSX.Element {
   return (
     <Container>
       <h1 className="my-4 text-center">O projektu 🎓</h1>
-      <div className="fs-6 text-center">
+      <div className="fs-6 text-start">
         <p>
-          Aplikace zpracovává polostrukturovaná data z transparentních ůčtů podporovaných bank a
-          následně tyto data analyzuje.
+          Transparentní bankovní účty jsou jedním z nástrojů podporující otevřenost při financování.
+          Politické subjekty mají povinnost používání transparentních účtů uloženou ze zákona.
+          Takové účty standardně obsahují velké množství transakcí, a proto jejich detailní analýza
+          může přinést zajímavé informace. Tato webová aplikace zpracovává data transparentních účtů
+          z webových stránek bank. Aplikace následně získaná data analyzuje. Součástí analýzy jsou
+          statistické údaje, agregace transakcí podle protistrany s vyhledáním protistrany v
+          transakcích jiných transparentních účtů a vizualizace transakcí v čase.
         </p>
         <p>
           Projekt byl vytvořen jako bakalářská práce na{' '}

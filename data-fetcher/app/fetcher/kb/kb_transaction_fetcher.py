@@ -117,7 +117,11 @@ class KBTransactionFetcher(TransactionFetcher):
         if t['amount']['type'] == 'expense':
             return None, t['info']['title'], t['info']['transparentAccountInfo']
         # Incoming transaction
-        return t['info']['title'] if t['info']['title'] != '' else None, 'Příchozí platba', t['info']['transparentAccountInfo']
+        if '<br />' in t['info']['title']:
+            counter_account, type_str = re.search(r'(.*)<br />(.*)', t['info']['title']).groups()
+        else:
+            counter_account, type_str = None, t['info']['title']
+        return counter_account, type_str, t['info']['transparentAccountInfo']
 
     @staticmethod
     def determine_detail_type(transaction: Transaction) -> Optional[TransactionTypeDetail]:

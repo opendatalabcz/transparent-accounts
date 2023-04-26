@@ -1,5 +1,6 @@
 import re
 
+import bs4
 import requests
 
 from app.fetcher.account_fetcher import AccountFetcher
@@ -9,9 +10,17 @@ from app.utils import get_fully_qualified_acc_num
 
 class KBAccountFetcher(AccountFetcher):
 
+    URL = 'https://www.kb.cz/cs/transparentni-ucty'
     API_URL = 'https://www.kb.cz/api/transparentaccount/list'
 
     def fetch(self) -> list[Account]:
+        # Prepare session (for mandatory cookies)
+        s = requests.Session()
+        # Get verification token from the html page
+        response_text = s.get(self.URL).text
+        soup = bs4.BeautifulSoup(response_text, 'html.parser')
+        verification_token = soup.select_one('input[name="__RequestVerificationToken"]')['value']
+        s.headers.update({'__RequestVerificationToken': verification_token})
         # Prepare body
         body = {
             'query': '',
@@ -20,8 +29,6 @@ class KBAccountFetcher(AccountFetcher):
             'cultureCode': 'cs-CZ',
             'baseUrl': '/cs/transparentni-ucty'
         }
-        # Prepare session
-        s = requests.Session()
         # First request to get the number of records
         response_data = s.post(self.API_URL, json=body).json()
         # Set the limit to the number of records

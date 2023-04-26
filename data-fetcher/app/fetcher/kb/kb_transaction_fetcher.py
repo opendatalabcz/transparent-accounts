@@ -17,8 +17,14 @@ class KBTransactionFetcher(TransactionFetcher):
     API_URL = 'https://www.kb.cz/api/transparentaccount/detail'
 
     def fetch(self) -> list[Transaction]:
+        # Prepare session (for mandatory cookies)
+        s = requests.Session()
+        # Get verification token from the html page
+        response_text = s.get(self.URL.format(get_kb_formatted_acc_num(self.account.number, False))).text
+        verification_token = re.search(r'\"requestVerificationToken\":\s\"(.*)\"', response_text).group(1)
+        s.headers.update({'__RequestVerificationToken': verification_token})
         # Scrape and set account info
-        self.scrape_account_info()
+        self.scrape_account_info(response_text)
         # Prepare body
         body = {
             'query': get_kb_formatted_acc_num(self.account.number, True),
@@ -27,8 +33,6 @@ class KBTransactionFetcher(TransactionFetcher):
             'cultureCode': 'cs-CZ',
             'maxVisibleDays': (date.today() - self.get_date_from()).days + 1
         }
-        # Prepare session
-        s = requests.Session()
         # First request to get the number of records
         response_data = s.post(self.API_URL, json=body).json()
         # Set the limit to the number of records
@@ -42,13 +46,12 @@ class KBTransactionFetcher(TransactionFetcher):
 
         return list(map(self.transaction_to_class, response_data['payload']['data']))
 
-    def scrape_account_info(self) -> None:
-        response_text = requests.get(self.URL.format(get_kb_formatted_acc_num(self.account.number, False))).text
+    def scrape_account_info(self, text: str) -> None:
         # Set balance
-        balance = re.search(r'\"balance\":\s+{\s+\"amount\":\s+\"(-?[\d\s]+,[\d\s]+) ([A-Z]{3})\"', response_text).group(1)
+        balance = re.search(r'\"balance\":\s+{\s+\"amount\":\s+\"(-?[\d\s]+,[\d\s]+) ([A-Z]{3})\"', text).group(1)
         self.account.balance = float_from_cz(balance)
         # Set description
-        soup = bs4.BeautifulSoup(response_text, 'html.parser')
+        soup = bs4.BeautifulSoup(text, 'html.parser')
         self.account.description = soup.select_one('div.mb-4.text-base.text-grey-200').get_text(strip=True)
 
     def transaction_to_class(self, t: dict) -> Transaction:

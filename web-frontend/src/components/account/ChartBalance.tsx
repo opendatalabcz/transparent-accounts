@@ -56,7 +56,6 @@ function ChartBalance({ data, currency }: Props): JSX.Element {
       {
         label: `Zůstatek v ${currency}`,
         data: data,
-        lineTension: 1,
         borderColor: 'rgb(0, 0, 255)',
         backgroundColor: 'rgba(0, 0, 255, 0.5)',
         parsing: {

@@ -38,4 +38,4 @@ def test_parse_symbols():
 
 def test_parse_details():
     assert KBTransactionFetcher.parse_details({'info': {'title': 'Odchozí platba', 'transparentAccountInfo': ''}, 'amount': {'type': 'expense'}}) == (None, 'Odchozí platba', '')
-    assert KBTransactionFetcher.parse_details({'info': {'title': 'Jakub Janeček', 'transparentAccountInfo': 'Poznámka'}, 'amount': {'type': 'income'}}) == ('Jakub Janeček', 'Příchozí platba', 'Poznámka')
+    assert KBTransactionFetcher.parse_details({'info': {'title': 'Jakub Janeček<br />Příchozí platba', 'transparentAccountInfo': 'Poznámka'}, 'amount': {'type': 'income'}}) == ('Jakub Janeček', 'Příchozí platba', 'Poznámka')

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { getMedian, analyse } from '../analysis';
 import { Transaction } from '../../types';
 
@@ -278,7 +279,7 @@ describe('analyse', () => {
         outgoingCount: 0
       },
       {
-        date: '2023-04-21',
+        date: format(new Date(), 'yyyy-MM-dd'),
         balance: 500,
         incomingCount: 0,
         outgoingCount: 0

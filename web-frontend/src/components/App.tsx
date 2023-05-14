@@ -1,4 +1,6 @@
-import { Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Header from './common/Header';
 import HomePage from './home/HomePage';
 import AccountsPage from './accounts/AccountsPage';
@@ -10,10 +12,20 @@ import PageNotFound from './PageNotFound';
 import Footer from './common/Footer';
 
 function App(): JSX.Element {
+  const LinkTracker = () => {
+    const location = useLocation();
+    const { trackPageView } = useMatomo();
+
+    useEffect(() => trackPageView({}), [location, trackPageView]);
+
+    return null;
+  };
+
   return (
     <>
       <Header />
       <main>
+        <LinkTracker />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/ucty" element={<AccountsPage />} />

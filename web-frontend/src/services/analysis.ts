@@ -33,7 +33,7 @@ export const analyse = (
   let transparentDescriptionCount: number = 0;
   let descriptionCount: number = 0;
   let currentBalance: number = balance || 0;
-  let lastDate: string = format(new Date(), 'yyyy-MM-d');
+  let lastDate: string = format(new Date(), 'yyyy-MM-dd');
   analysis.dateAggregation.push({
     date: lastDate,
     balance: currentBalance,

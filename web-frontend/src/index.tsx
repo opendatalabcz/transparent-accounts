@@ -5,7 +5,6 @@ import './style.css';
 import { BrowserRouter } from 'react-router-dom';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
-import ErrorBoundary from './components/ErrorBoundary';
 import { createInstance, MatomoProvider } from '@jonkoops/matomo-tracker-react';
 
 const instance = createInstance({
@@ -17,13 +16,11 @@ const instance = createInstance({
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <ErrorBoundary>
       <BrowserRouter>
         <MatomoProvider value={instance}>
         <App />
         </MatomoProvider>
       </BrowserRouter>
-    </ErrorBoundary>
   </React.StrictMode>
 );
 

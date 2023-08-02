@@ -22,7 +22,7 @@ Autor: [Jakub Janeček](https://github.com/KasenX)
 3. Nastavit proměnné prostředí (pro inspiraci lze použít také soubor `.env.example`)
 
 ```bash
-$ cat > .env <<EOF
+cat > .env <<EOF
 SECRET_KEY=secret123
 DB_PASSWORD=secret456
 DB_USER=postgres # Optional
@@ -36,7 +36,7 @@ EOF
 4. `$ docker-compose up`
 5. Otevřít v prohlížeči: http://localhost:3000
 
-Fetchování účtů probíhá každý den ve 3:00 (plánování lze změnit v [konfiguračním souboru](data-fetcher/app/config.py)). Až po té bude k dispozici seznam účtů a seznam podporovaných bank.
+Fetchování účtů probíhá každý den ve 3:00 (plánování lze změnit v [konfiguračním souboru](data-fetcher/app/config.py)). Až po té bude v aplikaci k dispozici zobrazení seznamu účtů a seznamu podporovaných bank.
 
 ## Přidání podpory pro další banku
 
@@ -44,4 +44,4 @@ Přidání podpory pro další banku je potřeba provést v komponentě [fetcher
 
 Aby aplikace mohla plně pracovat s transparentními účty další banky, je potřeba implementovat, jak získávání transparentních účtů, tak získávání transakcí. Do adresáře [fetcher](data-fetcher/app/fetcher) je potřeba přidat nový balíček, který bude obsahovat dvě třídy. První třída bude dědit z abstraktní třídy [AccountFetcher](data-fetcher/app/fetcher/account_fetcher.py) a bude se starat o získání dat o transparentních účtech z dané banky. Druhá třída bude dědit z abstraktní třídy [TransactionFetcher](data-fetcher/app/fetcher/transaction_fetcher.py) a bude mít za úkol získávání transakcí z daného transparentního účtu. Při implementaci nových tříd je vhodné využít pomocné funkce implementované v abstraktních třídách a zároveň se inspirovat u implementací tříd podporovaných bank. Mimo tyto dvě hlavní třídy je možné mít v balíčku další pomocné třídy nebo funkce. Testy by měly být umístěny do adresáře [tests](data-fetcher/tests).
 
-Až bude implementace nových tříd funkční, je potřeba tyto třídy zaregistrovat v souboru [tasks.py](data-fetcher/app/tasks.py). V případě, že se bude jednat o novou banku poskytující transparentní účty, bude ještě potřeba rozšířit výčet bank nacházející se v souboru [tasks.py](data-fetcher/app/tasks.py) a doplnit metadata o bance do souboru [banks.json](analysis-api/banks.json) v komponentě [analysis-api](analysis-api).
+Až bude implementace nových tříd funkční, je potřeba tyto třídy zaregistrovat v souboru [tasks.py](data-fetcher/app/tasks.py). V případě, že se bude jednat o novou banku poskytující transparentní účty, bude ještě potřeba rozšířit výčet bank nacházející se v souboru [models.py](data-fetcher/app/models.py) a [models.py](analysis-api/app/models.py) a následně doplnit metadata o bance do souboru [banks.json](analysis-api/banks.json).

@@ -8,7 +8,11 @@ function Footer(): JSX.Element {
           <div className="col text-lg-start text-center">
             <p className="mb-0">
               Janeček Jakub, <i>Zpracování transparentních účtů</i> [online]. Bakalářská práce.
-              Praha: ČVUT, Fakulta informačních technologií &amp; OpenDataLab, 2023. Dostupné z TBA.
+              Praha: ČVUT, Fakulta informačních technologií &amp; OpenDataLab, 2023. Dostupné z{' '}
+              <a href="https://dspace.cvut.cz/handle/10467/109558" target="_blank">
+                dspace.cvut.cz/handle/10467/109558
+              </a>
+              .
             </p>
             <p className="mb-0">
               Kontakt: <a href="mailto: janecja9@fit.cvut.cz">janecja9@fit.cvut.cz</a>

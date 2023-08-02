@@ -15,7 +15,11 @@ function AboutPage(): JSX.Element {
           transakcích jiných transparentních účtů a vizualizace transakcí v čase.
         </p>
         <p>
-          Projekt byl vytvořen jako bakalářská práce na{' '}
+          Projekt byl vytvořen jako{' '}
+          <a href="https://dspace.cvut.cz/handle/10467/109558" target="_blank">
+            bakalářská práce
+          </a>{' '}
+          na{' '}
           <a href="https://fit.cvut.cz" target="_blank" rel="noreferrer">
             Fakultě informačních technologií
           </a>{' '}

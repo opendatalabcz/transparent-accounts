@@ -32,7 +32,7 @@ DB_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
 engine = create_engine(DB_URI)
 
 # Load banks details from JSON file
-with open('banks.json') as json_file:
+with open('banks.json', 'rb') as json_file:
     banks = json.load(json_file)
 
 # Register API

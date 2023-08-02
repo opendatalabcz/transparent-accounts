@@ -50,7 +50,6 @@ services:
   web-frontend:
     build:
       context: ./web-frontend
-      dockerfile: dockerize/Dockerfile
       args:
         - API_URL=${ANALYSIS_API_URL}
     ports:

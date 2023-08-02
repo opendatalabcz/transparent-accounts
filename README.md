@@ -22,7 +22,7 @@ Autor: [Jakub Janeček](https://github.com/KasenX)
 3. Nastavit proměnné prostředí (pro inspiraci lze použít také soubor `.env.example`)
 
 ```bash
-$ cat > .env <<EOF
+cat > .env <<EOF
 SECRET_KEY=secret123
 DB_PASSWORD=secret456
 DB_USER=postgres # Optional
@@ -36,7 +36,7 @@ EOF
 4. `$ docker-compose up`
 5. Otevřít v prohlížeči: http://localhost:3000
 
-Fetchování účtů probíhá každý den ve 3:00 (plánování lze změnit v [konfiguračním souboru](data-fetcher/app/config.py)). Až po té bude k dispozici seznam účtů a seznam podporovaných bank.
+Fetchování účtů probíhá každý den ve 3:00 (plánování lze změnit v [konfiguračním souboru](data-fetcher/app/config.py)). Až po té bude v aplikaci k dispozici zobrazení seznamu účtů a seznamu podporovaných bank.
 
 ## Přidání podpory pro další banku
 

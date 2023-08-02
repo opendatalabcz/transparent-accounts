@@ -1,0 +1,30 @@
+name: test-analysis-api
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.10
+    - name: Install dependencies
+      run: |
+        cd analysis-api
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+        pip install pytest flexmock
+    - name: Test
+      run: |
+        cd analysis-api
+        source venv/bin/activate
+        python -m pytest

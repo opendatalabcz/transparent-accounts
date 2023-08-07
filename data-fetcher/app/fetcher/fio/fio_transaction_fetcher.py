@@ -25,7 +25,7 @@ class FioTransactionFetcher(TransactionFetcher):
         # Parse transactions
         transactions = self.scrape_transactions()
         # Filter out transactions that does not belong to the desired interval
-        return list(filter(self.check_date_interval, transactions))
+        return [transaction for transaction in transactions if self.check_date_interval(transaction)]
 
     def scrape_account_info(self, soup: bs4.BeautifulSoup) -> tuple[str, float, str]:
         # Parse name

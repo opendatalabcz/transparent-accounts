@@ -44,7 +44,7 @@ class KBTransactionFetcher(TransactionFetcher):
         # Second request to get all records
         response_data = s.post(self.API_URL, json=body).json()
 
-        return list(map(self.transaction_to_class, response_data['payload']['data']))
+        return [self.transaction_to_class(t) for t in response_data['payload']['data']]
 
     def scrape_account_info(self, text: str) -> None:
         # Set balance

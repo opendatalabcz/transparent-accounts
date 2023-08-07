@@ -27,7 +27,7 @@ class CSASTransactionFetcher(TransactionFetcher):
         # Close the session
         s.close()
 
-        return list(map(self.transaction_to_class, response_data.get('transactions', [])))
+        return [self.transaction_to_class(transaction) for transaction in response_data.get('transactions', [])]
 
     def transaction_to_class(self, t: dict) -> Transaction:
         amount = t['amount']['value']

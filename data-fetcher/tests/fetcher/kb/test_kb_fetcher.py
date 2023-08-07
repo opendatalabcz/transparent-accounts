@@ -1,7 +1,6 @@
 from datetime import date
 
 from app.fetcher.kb import KBAccountFetcher, KBTransactionFetcher
-from app.models import Account, TransactionType
 
 
 def test_parse_account_details():

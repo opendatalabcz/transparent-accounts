@@ -2,6 +2,7 @@ from datetime import datetime
 
 import requests
 
+from app.fetcher.csob.utils import headers
 from app.fetcher.account_fetcher import AccountFetcher
 from app.models import Account, Bank
 from app.utils import get_fully_qualified_acc_num
@@ -14,17 +15,13 @@ class CSOBAccountFetcher(AccountFetcher):
     def fetch(self) -> list[Account]:
         with requests.Session() as s:
             # Set mandatory headers
-            headers = {
-                'Referer': 'https://www.csob.cz/portal/firmy/bezne-ucty/transparentni-ucty',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0'
-            }
             s.headers.update(headers)
             # First request to get the number of records
             body = {'displayParams': {'pagingRequest': {'rowsPerPage': 1, 'pageNumber': 1}}}
             response_data = s.post(self.API_URL, json=body).json()
             record_count = response_data['pagingResponse']['recordCount']
             # Second request to get all records
-            body = {'displayParams': {'pagingRequest': {'rowsPerPage': record_count, 'pageNumber': 1}}}
+            body['displayParams']['pagingRequest']['rowsPerPage'] = record_count
             response_data = s.post(self.API_URL, json=body).json()
 
             return list(map(self.account_to_class, response_data['accountList']))

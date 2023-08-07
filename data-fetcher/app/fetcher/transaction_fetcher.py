@@ -100,7 +100,7 @@ class TransactionFetcher(ABC):
         :return: category if determined, None otherwise
         """
         # Incoming transaction with a very small amount is considered as a message (probably hateful) for the receiver
-        if transaction.type == TransactionType.INCOMING and 1 >= transaction.amount > 0:
+        if transaction.type == TransactionType.INCOMING and 0.1 >= transaction.amount > 0:
             return 'Vzkaz'
         # No more categories to determine for incoming transactions
         if transaction.type == TransactionType.INCOMING:

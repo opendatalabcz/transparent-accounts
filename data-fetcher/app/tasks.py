@@ -6,6 +6,7 @@ from celery import Celery
 
 from app.config import Config
 from app.fetcher.csas import CSASAccountFetcher, CSASTransactionFetcher
+from app.fetcher.csob import CSOBAccountFetcher, CSOBTransactionFetcher
 from app.fetcher.fio import FioAccountFetcher, FioTransactionFetcher
 from app.fetcher.kb import KBAccountFetcher, KBTransactionFetcher
 from app.models import Bank, UpdateStatus
@@ -18,6 +19,7 @@ Fetcher = namedtuple('Fetcher', 'account_fetcher transaction_fetcher')
 
 banks = {
     Bank.CSAS: Fetcher(CSASAccountFetcher, CSASTransactionFetcher),
+    Bank.CSOB: Fetcher(CSOBAccountFetcher, CSOBTransactionFetcher),
     Bank.FIO: Fetcher(FioAccountFetcher, FioTransactionFetcher),
     Bank.KB: Fetcher(KBAccountFetcher, KBTransactionFetcher),
 }

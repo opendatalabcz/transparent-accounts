@@ -14,6 +14,11 @@ class Config:
             'schedule': crontab(hour=3, minute=0),
             'args': ['0800']
         },
+        'fetch-csob-accounts-every-day': {
+            'task': 'app.tasks.fetch_accounts',
+            'schedule': crontab(hour=3, minute=0),
+            'args': ['0300']
+        },
         'fetch-fio-accounts-every-day': {
             'task': 'app.tasks.fetch_accounts',
             'schedule': crontab(hour=3, minute=0),

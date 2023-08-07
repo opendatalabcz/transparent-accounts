@@ -13,6 +13,10 @@ export const getAccountLink = (acc: string, bankCode: string): string => {
   switch (bankCode) {
     case '0800':
       return `https://www.csas.cz/cs/transparentni-ucty#/${acc}`;
+    case '0300':
+      return `https://www.csob.cz/portal/firmy/bezne-ucty/transparentni-ucty/ucet?account=${shortenAccNum(
+        acc
+      )}`;
     case '2010':
       return `https://ib.fio.cz/ib/transparent?a=${getFioFormattedAccNum(acc)}`;
     case '0100':

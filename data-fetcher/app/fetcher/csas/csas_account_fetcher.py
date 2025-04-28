@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from dateutil import parser
 import requests
 
 from app.fetcher.account_fetcher import AccountFetcher
@@ -32,4 +31,4 @@ class CSASAccountFetcher(AccountFetcher):
                        owner=acc.get('name'),
                        balance=acc.get('balance'),
                        currency=acc['currency'],
-                       created=datetime.strptime(acc.get('transparencyFrom'), '%Y-%m-%dT00:00:00').date())
+                       created=parser.parse(acc.get('transparencyFrom')).date())

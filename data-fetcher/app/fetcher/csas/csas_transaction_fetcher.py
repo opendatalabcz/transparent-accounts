@@ -1,6 +1,6 @@
-from datetime import datetime
 from typing import Optional
 
+from dateutil import parser
 import requests
 
 from app.fetcher.transaction_fetcher import TransactionFetcher
@@ -39,7 +39,7 @@ class CSASTransactionFetcher(TransactionFetcher):
         ca_name = self.fetch_identifier_name(ca_identifier) if ca_identifier else None
 
         transaction = Transaction(
-            date=datetime.strptime(t['processingDate'], '%Y-%m-%dT00:00:00').date(),
+            date=parser.parse(t['processingDate']).date(),
             amount=amount,
             currency=t['amount'].get('currency', self.account.currency),  # API may not return the currency
             counter_account=counter_account,

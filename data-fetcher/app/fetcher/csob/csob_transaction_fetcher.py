@@ -10,7 +10,7 @@ from app.models import Transaction, TransactionType, TransactionTypeDetail
 
 class CSOBTransactionFetcher(TransactionFetcher):
 
-    API_URL = 'https://www.csob.cz/et-npw-lta-view/api/detail/transactionList'
+    API_URL = 'https://www.csob.cz/spa/finance/lta/detail/transactionList'
     ROWS_PER_PAGE = 1500
 
     def fetch(self) -> list[Transaction]:

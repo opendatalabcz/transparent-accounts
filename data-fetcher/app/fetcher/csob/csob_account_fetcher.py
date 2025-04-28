@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from dateutil import parser
 import requests
 
 from app.fetcher.csob.utils import headers
@@ -34,6 +33,5 @@ class CSOBAccountFetcher(AccountFetcher):
                        owner=acc['accountName'],
                        balance=acc['balance']['actualBalance'],
                        currency=acc['accountPoIdentificationDisplay']['currencyCode'],
-                       # Timestamp in milliseconds provided
-                       created=datetime.fromtimestamp(acc['transparentAccountDetail']['periodFrom'] / 1000).date())
+                       created=parser.parse(acc['transparentAccountDetail']['periodFrom']).date())
 

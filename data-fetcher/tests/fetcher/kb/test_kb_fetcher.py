@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from app.fetcher.kb import KBAccountFetcher, KBTransactionFetcher
 
@@ -10,7 +10,7 @@ def test_parse_account_details():
 
 
 def test_parse_date():
-    assert KBTransactionFetcher.parse_date({'date': '17. 3.', 'year': ''}) == date(2023, 3, 17)
+    assert KBTransactionFetcher.parse_date({'date': '17. 3.', 'year': ''}) == date(datetime.now().year, 3, 17)
     assert KBTransactionFetcher.parse_date({'date': '1. 1.', 'year': '2022'}) == date(2022, 1, 1)
     assert KBTransactionFetcher.parse_date({'date': '31. 12.', 'year': '2021'}) == date(2021, 12, 31)
 

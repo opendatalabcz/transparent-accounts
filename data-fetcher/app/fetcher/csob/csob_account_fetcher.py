@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from dateutil import parser
 import requests
 
 from app.fetcher.csob.utils import headers
@@ -10,7 +9,7 @@ from app.utils import get_fully_qualified_acc_num
 
 class CSOBAccountFetcher(AccountFetcher):
 
-    API_URL = 'https://www.csob.cz/et-npw-lta-view/api/overview/accountList'
+    API_URL = 'https://www.csob.cz/spa/finance/lta/overview/accountList'
 
     def fetch(self) -> list[Account]:
         with requests.Session() as s:
@@ -34,6 +33,5 @@ class CSOBAccountFetcher(AccountFetcher):
                        owner=acc['accountName'],
                        balance=acc['balance']['actualBalance'],
                        currency=acc['accountPoIdentificationDisplay']['currencyCode'],
-                       # Timestamp in milliseconds provided
-                       created=datetime.fromtimestamp(acc['transparentAccountDetail']['periodFrom'] / 1000).date())
+                       created=parser.parse(acc['transparentAccountDetail']['periodFrom']).date())
 

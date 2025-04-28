@@ -1,6 +1,6 @@
-from datetime import datetime
 from typing import Optional
 
+from dateutil import parser
 import requests
 
 from app.fetcher.csob.utils import headers, get_csob_formatted_acc_num
@@ -10,7 +10,7 @@ from app.models import Transaction, TransactionType, TransactionTypeDetail
 
 class CSOBTransactionFetcher(TransactionFetcher):
 
-    API_URL = 'https://www.csob.cz/et-npw-lta-view/api/detail/transactionList'
+    API_URL = 'https://www.csob.cz/spa/finance/lta/detail/transactionList'
     ROWS_PER_PAGE = 1500
 
     def fetch(self) -> list[Transaction]:
@@ -67,7 +67,7 @@ class CSOBTransactionFetcher(TransactionFetcher):
 
         transaction = Transaction(
             # Timestamp in milliseconds provided
-            date=datetime.fromtimestamp(t['baseInfo']['accountingDate'] / 1000).date(),
+            date=parser.parse(t['baseInfo']['accountingDate']).date(),
             amount=amount,
             currency=t['baseInfo']['accountAmountData']['currencyCode'],
             counter_account=transaction_data.get('counter_account'),

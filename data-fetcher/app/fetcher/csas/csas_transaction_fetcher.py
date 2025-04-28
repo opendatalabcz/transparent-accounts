@@ -33,7 +33,7 @@ class CSASTransactionFetcher(TransactionFetcher):
         amount = t['amount']['value']
         counter_account = t['sender'].get('name') if t['sender'].get('name') != '-' else None
         t_type = TransactionType.from_float(amount)
-        description = t['sender'].get('description', '')
+        description = t['sender'].get('description') or ''
         # Parse the counter account identifier and name
         ca_identifier = self.parse_identifier(description)
         ca_name = self.fetch_identifier_name(ca_identifier) if ca_identifier else None
@@ -45,9 +45,9 @@ class CSASTransactionFetcher(TransactionFetcher):
             counter_account=counter_account,
             type=t_type,
             type_str=t['typeDescription'],
-            variable_symbol=t['sender'].get('variableSymbol', ''),
-            constant_symbol=t['sender'].get('constantSymbol', ''),
-            specific_symbol=t['sender'].get('specificSymbol', ''),
+            variable_symbol=t['sender'].get('variableSymbol') or '',
+            constant_symbol=t['sender'].get('constantSymbol') or '',
+            specific_symbol=t['sender'].get('specificSymbol') or '',
             description=description,
             ca_identifier=ca_identifier,
             ca_name=ca_name,

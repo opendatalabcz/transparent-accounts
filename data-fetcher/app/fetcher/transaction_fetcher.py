@@ -1,3 +1,4 @@
+import logging
 import re
 from abc import ABC, abstractmethod
 from datetime import date, timedelta
@@ -71,14 +72,16 @@ class TransactionFetcher(ABC):
         retry = Retry(connect=3, backoff_factor=0.5)
         adapter = HTTPAdapter(max_retries=retry)
         s.mount('https://', adapter)
-        # Fetch the XML response from the ARES database
-        response = s.get(f"https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_std.cgi?ico={identifier}")
-        tree = ElementTree.fromstring(response.content)
-        # Namespace of the ARES XML schema
-        ns = {'are': 'http://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_answer/v_1.0.1'}
-        # Use XML path's './/' to search for the element in the whole tree
-        element = tree.find('.//are:Obchodni_firma', ns)
-        return element.text if element is not None else None
+        # Fetch the JSON response from the ARES database
+        try:
+            response = s.get(f"https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/{identifier}")
+            response.raise_for_status()
+            data = response.json()
+        except (requests.RequestException, ValueError) as e:
+            logging.error(f"Failed to fetch or parse ARES data for {identifier}: {e}")
+            return None
+
+        return data.get('obchodniJmeno')
 
     @staticmethod
     def determine_detail_type(transaction: Transaction) -> TransactionTypeDetail:
